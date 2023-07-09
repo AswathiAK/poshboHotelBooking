@@ -21,8 +21,9 @@ app.get('/', (req, res) => {
 });
 
 //Routes
-app.use('/', userRoute);
+app.use('/user', userRoute);
 app.use('/admin', adminRoute);
+
 
 app.listen(PORT, () => {
   console.log(`Server is Running on http://localhost:${PORT}`);
