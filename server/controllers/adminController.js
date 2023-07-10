@@ -1,11 +1,10 @@
 require('dotenv').config();
 const jwt = require("jsonwebtoken");
 
-const adminEmail = process.env.ADMINEMAIL;
-const adminPassword = process.env.ADMINPASSWORD;
-
 const adminLogin = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body;  
+  const adminEmail = process.env.ADMINEMAIL;
+  const adminPassword = process.env.ADMINPASSWORD;
   try {
     if (email && password) {
       if (email === adminEmail && password === adminPassword) {
