@@ -13,12 +13,13 @@ const passwordHashing = async (password) => {
 }
 
 const userRegister = async (req, res) => {
-  const { name, mobile, email, password } = req.body;
+  const { name, mobile, email, password } = req.body; 
   const securePassword = await passwordHashing(password);
   try {
     if (name && mobile && email && password) {      
-      const isUser = await User.find({$or:[{email:email},{mobile:mobile}]});
-      if (isUser) {
+      const isUserEmail = await User.findOne({ email: email }); 
+      const isUserMobile = await User.findOne({ mobile: mobile });
+      if (isUserEmail || isUserMobile) {        
         res.status(400).json({ message: "User is Already Exist" });
       } else {
         const userData = new User({
@@ -37,6 +38,8 @@ const userRegister = async (req, res) => {
     res.status(422).json({ message: error.message });
   }
 };
+
+
 
 module.exports = {
   userRegister
