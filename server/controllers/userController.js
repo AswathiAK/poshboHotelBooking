@@ -1,6 +1,8 @@
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('../models/userModel');
+const User = require('../models/userModel.js');
+const createError = require('../middlewares/errorHandling.js');
 
 const passwordHashing = async (password) => {
   try {
@@ -10,37 +12,96 @@ const passwordHashing = async (password) => {
   } catch (error) {
     console.log(error.message);
   }
-}
+};
 
-const userRegister = async (req, res) => {
-  const { name, mobile, email, password } = req.body; 
+const userRegister = async (req, res, next) => {
+  const { name, mobile, email, password, isHost } = req.body; 
   const securePassword = await passwordHashing(password);
   try {
-    if (name && mobile && email && password) {      
       const isUserEmail = await User.findOne({ email: email }); 
       const isUserMobile = await User.findOne({ mobile: mobile });
       if (isUserEmail || isUserMobile) {        
-        res.status(400).json({ message: "User is Already Exist" });
+        return next(createError(409, "User is Already Exist"));
       } else {
         const userData = new User({
           name,
           mobile,
           email,
-          password: securePassword
+          password: securePassword,
+          isHost
         });
         const user = await userData.save();
         res.status(201).json({ message: "Registered Successfully", user });
-      }
-    } else {
-      res.status(400).json({ message: "All Fields are Required" });
-    } 
+      }    
   } catch (error) {
-    res.status(422).json({ message: error.message });
+    next(error);
   }
 };
+
+const userLogin = async (req, res, next) => {
+  const { email: userEmail, password: userPassword } = req.body;
+  try {
+    const isUserExist = await User.findOne({ email: userEmail });
+    if (!isUserExist) {
+      return next(createError(404, "User not found"));
+    }
+    const isPasswordCorrect = await bcrypt.compare(userPassword, isUserExist.password);
+    if (!isPasswordCorrect) {
+      return next(createError(400, "Wrong Password "));
+    }
+    const { password, ...otherDetails } = isUserExist._doc;
+    jwt.sign(
+      { id: isUserExist._id, isHost: isUserExist.isHost },
+      process.env.JWT_SECRET,
+      { expiresIn: "2d" },
+      (err, token) => {
+        if (err) throw err;
+        res.status(200).cookie('userToken', token).json({ message: "Login Successfull", ...otherDetails });
+      }
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+const userProfile = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+}
+
+const updateProfile = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      { _id: id },
+      { $set: req.body },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const deleteProfile = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    await User.findByIdAndDelete({ _id: id });
+    res.status(200).json({ message: "You have deleted your Account" });
+  } catch (error) {
+    next(error);
+  }
+}
 
 
 
 module.exports = {
-  userRegister
+  userRegister, userLogin,
+  userProfile, updateProfile,
+  deleteProfile
 }
