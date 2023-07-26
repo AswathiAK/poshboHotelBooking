@@ -4,8 +4,8 @@ const Hotel = require("../models/hotelModel.js");
 const createHotel = async (req, res, next) => { 
   try {
     const newHotel = new Hotel(req.body);
-    const saveHotel = await newHotel.save();
-    res.status(200).json(saveHotel);
+    const savedHotel = await newHotel.save();
+    res.status(200).json(savedHotel);
   } catch (error) {
     next(error); 
   }
@@ -40,7 +40,7 @@ const deleteHotel = async (req, res, next) => {
 //GET ALL 
 const getAllHotels = async (req, res, next) => { 
   try {
-    const allHotels = await Hotel.find();
+    const allHotels = await Hotel.find({isVerified:true});
     res.status(200).json(allHotels);
   } catch (error) {
     next(error);

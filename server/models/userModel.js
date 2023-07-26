@@ -18,7 +18,10 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  isHost: {
+  role: {
+    type: String,    
+  },
+  isBlock: {
     type: Boolean,
     default:false
   }

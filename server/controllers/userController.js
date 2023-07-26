@@ -15,7 +15,7 @@ const passwordHashing = async (password) => {
 };
 
 const userRegister = async (req, res, next) => {
-  const { name, mobile, email, password, isHost } = req.body; 
+  const { name, mobile, email, password, role } = req.body; 
   const securePassword = await passwordHashing(password);
   try {
       const isUserEmail = await User.findOne({ email: email }); 
@@ -28,7 +28,7 @@ const userRegister = async (req, res, next) => {
           mobile,
           email,
           password: securePassword,
-          isHost
+          role
         });
         const user = await userData.save();
         res.status(201).json({ message: "Registered Successfully", user });
@@ -51,7 +51,7 @@ const userLogin = async (req, res, next) => {
     }
     const { password, ...otherDetails } = isUserExist._doc;
     jwt.sign(
-      { id: isUserExist._id, isHost: isUserExist.isHost },
+      { id: isUserExist._id, role: isUserExist.role },
       process.env.JWT_SECRET,
       { expiresIn: "2d" },
       (err, token) => {
@@ -96,7 +96,7 @@ const deleteProfile = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 
 

@@ -50,7 +50,7 @@ const verifyAdmin = (req, res, next) => {
 const verifyHotel = (req, res, next) => {
   verifyUserToken(req, res, (err) => {
     if (err) return next(err); console.log(req.user);
-    if (req.user.isHost) {
+    if (req.user.role==='host') {
       next();
     } else {
       return next(createError(403, "you are not authorized"));

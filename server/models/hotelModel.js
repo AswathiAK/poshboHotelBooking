@@ -34,10 +34,10 @@ const hotelSchema = new mongoose.Schema({
   perks: {
     type:[String]
   },
-  price: {
-    type: Number,
-    required:true
-  },
+  // price: {
+  //   type: Number,
+  //   required:true
+  // },
   extraInfo: {
     type: String,
   },
@@ -47,8 +47,23 @@ const hotelSchema = new mongoose.Schema({
   checkOutTime: {
     type:String
   },
-  maxGuests: {
-    type:Number
+  // maxGuests: {
+  //   type:Number
+  // },
+  rooms: {
+    type:[String]
+  },
+  cheapestPrice: {
+    type: Number
+    //required:true
+  },
+  isVerified: {
+    type: Boolean,
+    default:false
+  },
+  isBlock: {
+    type: Boolean,
+    default:false
   }
 });
 module.exports = mongoose.model('Hotel', hotelSchema);

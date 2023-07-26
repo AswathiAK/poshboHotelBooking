@@ -22,6 +22,7 @@ const cookieParser = require('cookie-parser');
 const userRoute = require('./routes/userRoute.js');
 const adminRoute = require('./routes/adminRoute.js');
 const hotelRoute = require('./routes/hotelRoute.js');
+const roomRoute = require('./routes/roomRoute.js');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -39,6 +40,7 @@ app.use(cookieParser());
 app.use('/users', userRoute);
 app.use('/admin', adminRoute);
 app.use('/hotels', hotelRoute);
+app.use('/rooms', roomRoute);
 
 app.use((err,req, res, next) => {
   const errorStatus = err.status || 500;
