@@ -2,8 +2,24 @@ const Hotel = require("../models/hotelModel.js");
 
 //CREATION
 const createHotel = async (req, res, next) => { 
+  console.log('req.user', req.user);
+  const { name, type, title,
+    city, address, photos, description,
+    perks, extraInfo,
+    checkInTime, checkOutTime,
+    rooms, cheapestPrice, documentProof,
+    isVerified, isBlock } = req.body;
   try {
-    const newHotel = new Hotel(req.body);
+    //const newHotel = new Hotel(req.body);  
+    const newHotel = new Hotel({
+      owner: req.user.id,
+      name, type, title,
+      city, address, photos, description,
+      perks, extraInfo,
+      checkInTime, checkOutTime,
+      rooms, cheapestPrice,documentProof,
+      isVerified,isBlock
+    });
     const savedHotel = await newHotel.save();
     res.status(200).json(savedHotel);
   } catch (error) {
@@ -13,7 +29,7 @@ const createHotel = async (req, res, next) => {
 
 //UPDATION
 const updateHotel = async (req, res, next) => {
-  const { id } = req.params;
+  const { id } = req.params; 
   try {
       const updatedHotel = await Hotel.findByIdAndUpdate(
         { _id: id },
@@ -37,18 +53,44 @@ const deleteHotel = async (req, res, next) => {
   }
 };
 
-//GET ALL 
-const getAllHotels = async (req, res, next) => { 
+//GET ALL for Hosts
+const hotelsOfHost = async (req, res, next) => {
   try {
-    const allHotels = await Hotel.find({isVerified:true});
-    res.status(200).json(allHotels);
+    const allHotelsOfHost = await Hotel.find();
+    res.status(200).json(allHotelsOfHost);
+  } catch (error) {
+    next(error);
+  }
+};
+//GET SINGLE for Hosts
+const singleHotelOfHost = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const singleHotel = await Hotel.findById(id);
+    res.status(200).json(singleHotel);
   } catch (error) {
     next(error);
   }
 };
 
-//GET SINGLE
-const getSingleHotel = async (req, res,next) => {
+//GET ALL for Users
+const getAllHotels = async (req, res, next) => { 
+  try {
+    const allHotels = await Hotel.find(
+      {
+        $and: [
+          { isVerified: true },
+          {isBlock:false}
+        ]
+      }
+    );
+    res.status(200).json(allHotels);
+  } catch (error) {
+    next(error);
+  }
+};
+//GET SINGLE for user
+const getSingleHotel = async (req, res, next) => {
   const { id } = req.params;
   try {
     const singleHotel = await Hotel.findById(id); 
@@ -62,5 +104,6 @@ const getSingleHotel = async (req, res,next) => {
 module.exports = {
   createHotel, updateHotel,
   deleteHotel,
+  hotelsOfHost,singleHotelOfHost,
   getAllHotels,getSingleHotel
 }

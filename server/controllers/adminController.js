@@ -67,7 +67,31 @@ const deleteUser = async (req, res, next) => {
   const { id } = req.params;
   try {
     await User.findByIdAndDelete({ _id: id });
-    res.status(200).json({ message: "You have deleted your Account" });
+    res.status(200).json({ message: "User account has been deleted" });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const blockUser = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById({ _id: id });
+    if (user.isBlock) {
+      const updatedUser = await User.findByIdAndUpdate(
+        { _id: id },
+        { $set: { isBlock: false } },
+        { new: true }
+      );
+      res.status(200).json({ message:"unblocked successfully",updatedUser });
+    } else {
+      const updatedUser = await User.findByIdAndUpdate(
+        { _id: id },
+        { $set: { isBlock: true } },
+        { new: true }
+      );
+      res.status(200).cookie('userToken', '').json({message:"blocked successfully", updatedUser });
+    }
   } catch (error) {
     next(error);
   }
@@ -116,10 +140,59 @@ const deleteHotel = async (req, res, next) => {
   }
 };
 
+const verifyHotel = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const updatedHotel = await Hotel.findByIdAndUpdate(
+      { _id: id },
+      { $set: {isVerified:true} },
+      { new: true }
+    );
+    res.status(200).json(updatedHotel);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const blockHotel = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const hotel = await Hotel.findById({ _id: id });
+    if (hotel.isBlock) {
+      const updatedHotel = await Hotel.findByIdAndUpdate(
+        { _id: id },
+        { $set: { isBlock: false } },
+        { new: true }
+      );
+      res.status(200).json({ message:"unblocked successfully",updatedHotel });
+    } else {
+      const updatedHotel = await Hotel.findByIdAndUpdate(
+        { _id: id },
+        { $set: { isBlock: true } },
+        { new: true }
+      );
+      res.status(200).json({message:"blocked successfully", updatedHotel });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const adminLogout = async (req, res, next) => {
+  try {
+    res.status(200).cookie('adminToken', '').json({ message: "Logout successfully" });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   adminLogin,
-  usersList, updateUser,
+  usersList, updateUser, 
   singleUser, deleteUser,
+  blockUser,
   hotelsList, updateHotel,
-  singleHotel, deleteHotel  
+  singleHotel, deleteHotel,
+  verifyHotel, blockHotel,
+  adminLogout
 };

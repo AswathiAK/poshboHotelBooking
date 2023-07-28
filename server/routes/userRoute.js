@@ -17,5 +17,8 @@ user_route.post('/login', userController.userLogin);
 user_route.get('/:id', verifyUser, userController.userProfile);
 user_route.put('/:id', verifyUser, userController.updateProfile);
 user_route.delete('/:id', verifyUser, userController.deleteProfile);
+user_route.post('/forgot-password', userController.forgotPassword);
+user_route.post('/forgot-password/:id/:token', userController.resetPassword);
+user_route.post('/logout', userController.userLogout); 
 
-module.exports = user_route;
+module.exports = user_route;  

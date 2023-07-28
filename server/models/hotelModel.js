@@ -57,6 +57,9 @@ const hotelSchema = new mongoose.Schema({
     type: Number
     //required:true
   },
+  documentProof: {
+    type:String,
+  },
   isVerified: {
     type: Boolean,
     default:false

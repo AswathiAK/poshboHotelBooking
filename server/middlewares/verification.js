@@ -1,6 +1,7 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const createError = require('./errorHandling');
+const Hotel = require('../models/hotelModel');
 
 const verifyUserToken = (req, res, next) => {
   const token = req.cookies.userToken; 
@@ -47,10 +48,10 @@ const verifyAdmin = (req, res, next) => {
   });
 };
 
-const verifyHotel = (req, res, next) => {
+const isUserHost = (req, res, next) => {
   verifyUserToken(req, res, (err) => {
-    if (err) return next(err); console.log(req.user);
-    if (req.user.role==='host') {
+    if (err) return next(err);
+    if (req.user.id && req.user.role==='host') {
       next();
     } else {
       return next(createError(403, "you are not authorized"));
@@ -58,8 +59,38 @@ const verifyHotel = (req, res, next) => {
   });
 };
 
+// const isUserLoggedIn = (req, res, next) => {
+//   verifyUserToken(req, res, (err) => {
+//     if (err) return next(err);
+//     if (req.user) {
+//       next();
+//     } else {
+//       return next(createError(403, "you are not authorized"));
+//     }
+//   });
+// };
+
+const verifyHotel = async (req, res, next) => {
+  try {
+    const hotelId = req.params.id;
+    const userId = req.user.id;
+    const hotel = await Hotel.findById(hotelId); 
+    if (!hotel) {
+      return next(createError(404, "Hotel not found"));
+    }
+    if (hotel.owner.toString() !== userId) {
+      return next(createError(403, "You are not authorized to modify the hotel"));
+    }
+    next(); 
+  } catch (error) {
+    next(error);
+  }  
+};
+
 module.exports = {
   verifyUser,
   verifyAdmin,
-  verifyHotel
+  isUserHost,
+  verifyHotel,verifyUserToken,
+  // isUserLoggedIn
 };
