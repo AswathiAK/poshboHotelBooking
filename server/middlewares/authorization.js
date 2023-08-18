@@ -15,13 +15,13 @@ const verifyUserToken = (req, res, next) => {
   });
 };
 const verifyAdminToken = (req, res, next) => {
-  const token = req.cookies.adminToken;
+  const token = req.cookies.adminToken; 
   if (!token) {
     return next(createError(401, "You are not authenticated"));
   }
-  jwt.verify(token, process.env.JWT_ADMINSECRET, (err, admin) => {
+  jwt.verify(token, process.env.JWT_ADMINSECRET, (err, admin) => { 
     if (err) return next(createError(403, "Token is not valid"));
-    req.admin = admin;
+    req.admin = admin; 
     next();
   });
 };
@@ -39,7 +39,7 @@ const verifyUser = (req, res, next) => {
 
 const verifyAdmin = (req, res, next) => {
   verifyAdminToken(req, res, (err) => {
-    if (err) return next(err);
+    if (err) return next(err); 
     if (req.admin) {
       next();
     } else {
@@ -72,7 +72,7 @@ const isUserHost = (req, res, next) => {
 
 const verifyHotel = async (req, res, next) => {
   try {
-    const hotelId = req.params.id;
+    const hotelId = req.params.id; 
     const userId = req.user.id;
     const hotel = await Hotel.findById(hotelId); 
     if (!hotel) {

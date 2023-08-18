@@ -9,9 +9,7 @@ const adminLogin = async (req, res, next) => {
   const adminEmail = process.env.ADMINEMAIL;
   const adminPassword = process.env.ADMINPASSWORD;
   try {
-    if (email === adminEmail && password === adminPassword) {
-      //const adminToken = jwt.sign({ userName: adminEmail }, "adminPanel", { expiresIn: "2d" });
-      //res.status(200).json({ message: "Login Successfully", adminToken });
+    if (email === adminEmail && password === adminPassword) {      
       jwt.sign(
         { userName: adminEmail },
         process.env.JWT_ADMINSECRET,
@@ -22,8 +20,7 @@ const adminLogin = async (req, res, next) => {
         }
       );
     } else {
-      //res.status(400).json({ message: "Invalid Credentials" });
-      return next(createError(400, "Invalid Credentials"));
+      return next(createError(400, "Incorrect Email or Password"));
     }
   } catch (error) {
     next(error);
@@ -32,7 +29,7 @@ const adminLogin = async (req, res, next) => {
 
 const usersList = async (req, res, next) => {
   try {
-    const allUsers = await User.find().select("-password");
+    const allUsers = await User.find().select("-password"); 
     res.status(200).json(allUsers);
   } catch (error) {
     next(error);
@@ -83,14 +80,14 @@ const blockUser = async (req, res, next) => {
         { $set: { isBlock: false } },
         { new: true }
       );
-      res.status(200).json({ message:"unblocked successfully",updatedUser });
+      res.status(200).json({ message:"unblocked successfully",newData:updatedUser });
     } else {
       const updatedUser = await User.findByIdAndUpdate(
         { _id: id },
         { $set: { isBlock: true } },
         { new: true }
       );
-      res.status(200).cookie('userToken', '').json({message:"blocked successfully", updatedUser });
+      res.status(200).cookie('userToken', '').json({message:"blocked successfully", newData:updatedUser });
     }
   } catch (error) {
     next(error);
@@ -99,7 +96,7 @@ const blockUser = async (req, res, next) => {
 
 const hotelsList = async (req, res, next) => {
   try {
-    const allHotels = await Hotel.find();
+    const allHotels = await Hotel.find().populate('owner');
     res.status(200).json(allHotels);
   } catch (error) {
     next(error);
@@ -123,7 +120,7 @@ const updateHotel = async (req, res, next) => {
 const singleHotel = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const singleHotel = await Hotel.findById(id);
+    const singleHotel = await Hotel.findById(id).populate('owner'); 
     res.status(200).json(singleHotel);
   } catch (error) {
     next(error);
@@ -148,7 +145,7 @@ const verifyHotel = async (req, res, next) => {
       { $set: {isVerified:true} },
       { new: true }
     );
-    res.status(200).json(updatedHotel);
+    res.status(200).json({ message:"Verified successfully", newData:updatedHotel });
   } catch (error) {
     next(error);
   }
@@ -164,14 +161,14 @@ const blockHotel = async (req, res, next) => {
         { $set: { isBlock: false } },
         { new: true }
       );
-      res.status(200).json({ message:"unblocked successfully",updatedHotel });
+      res.status(200).json({ message:"unblocked successfully", newData:updatedHotel });
     } else {
       const updatedHotel = await Hotel.findByIdAndUpdate(
         { _id: id },
         { $set: { isBlock: true } },
         { new: true }
       );
-      res.status(200).json({message:"blocked successfully", updatedHotel });
+      res.status(200).json({message:"blocked successfully", newData:updatedHotel });
     }
   } catch (error) {
     next(error);
@@ -186,6 +183,8 @@ const adminLogout = async (req, res, next) => {
   }
 };
 
+
+
 module.exports = {
   adminLogin,
   usersList, updateUser, 
@@ -194,5 +193,5 @@ module.exports = {
   hotelsList, updateHotel,
   singleHotel, deleteHotel,
   verifyHotel, blockHotel,
-  adminLogout
+  adminLogout,
 };

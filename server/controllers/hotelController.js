@@ -1,8 +1,7 @@
 const Hotel = require("../models/hotelModel.js");
 
 //CREATION
-const createHotel = async (req, res, next) => { 
-  console.log('req.user', req.user);
+const createHotel = async (req, res, next) => {   
   const { name, type, title,
     city, address, photos, description,
     perks, extraInfo,
@@ -54,11 +53,12 @@ const deleteHotel = async (req, res, next) => {
 };
 
 //GET ALL for Hosts
-const hotelsOfHost = async (req, res, next) => {
+const hotelsOfHost = async (req, res, next) => {  
+  const { hostId } = req.params; console.log('id',hostId);
   try {
-    const allHotelsOfHost = await Hotel.find();
+    const allHotelsOfHost = await Hotel.find({owner:hostId}); 
     res.status(200).json(allHotelsOfHost);
-  } catch (error) {
+  } catch (error) {console.log(error.message);
     next(error);
   }
 };
@@ -66,7 +66,7 @@ const hotelsOfHost = async (req, res, next) => {
 const singleHotelOfHost = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const singleHotel = await Hotel.findById(id);
+    const singleHotel = await Hotel.findById(id); console.log('singlehotel',singleHotel); 
     res.status(200).json(singleHotel);
   } catch (error) {
     next(error);

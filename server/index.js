@@ -32,26 +32,31 @@ app.get('/', (req, res) => {
 });
 
 //Middlewares
-app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
 app.use(cookieParser());
+app.use(express.static('public'));
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost:3001'],
+  credentials: true,
+}));
+
 //Routes
 app.use('/users', userRoute);
 app.use('/admin', adminRoute);
 app.use('/hotels', hotelRoute);
 app.use('/rooms', roomRoute);
 
-app.use((err,req, res, next) => {
+app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;
   const errorMessage = err.message || "Something went wrong";
   return res.status(errorStatus).json({
     success: false,
     status: errorStatus,
     message: errorMessage,
-    stack:err.stack
-  })
-})
+    stack: err.stack
+  });
+});
+
 
 app.listen(PORT, () => {
   connect();

@@ -59,7 +59,7 @@ const hotelSchema = new mongoose.Schema({
   },
   documentProof: {
     type:String,
-  },
+  },  
   isVerified: {
     type: Boolean,
     default:false
@@ -67,7 +67,11 @@ const hotelSchema = new mongoose.Schema({
   isBlock: {
     type: Boolean,
     default:false
-  }
+  },
+  reviews: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:'Review'
+  }]
 });
 module.exports = mongoose.model('Hotel', hotelSchema);
 

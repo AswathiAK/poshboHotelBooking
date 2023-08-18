@@ -1,6 +1,6 @@
 const express = require("express");
 const adminController = require("../controllers/adminController.js");
-const { verifyAdmin } = require("../middlewares/verification.js");
+const { verifyAdmin } = require("../middlewares/authorization.js");
 const admin_route = express.Router();
 
 admin_route.post('/', adminController.adminLogin);
@@ -19,5 +19,8 @@ admin_route.post('/hotels/verify/:id', verifyAdmin, adminController.verifyHotel)
 admin_route.post('/hotels/block/:id', verifyAdmin, adminController.blockHotel);
 
 admin_route.post('/logout', adminController.adminLogout);
+
+
+
 
 module.exports = admin_route; 
