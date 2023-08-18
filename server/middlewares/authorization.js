@@ -73,7 +73,7 @@ const isUserHost = (req, res, next) => {
 const verifyHotel = async (req, res, next) => {
   try {
     const hotelId = req.params.id; 
-    const userId = req.user.id;
+    const userId = req.user.id; 
     const hotel = await Hotel.findById(hotelId); 
     if (!hotel) {
       return next(createError(404, "Hotel not found"));

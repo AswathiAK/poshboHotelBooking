@@ -3,7 +3,7 @@ const Hotel = require("../models/hotelModel.js");
 
 //CREATION
 const createRoom = async (req, res, next) => { 
-  const hotelId = req.params.hotelId;
+  const hotelId = req.params.id; 
   const newRoom = new Room(req.body);
   try {
     const savedRoom = await newRoom.save();
@@ -23,10 +23,10 @@ const createRoom = async (req, res, next) => {
 
 //UPDATION
 const updateRoom = async (req, res, next) => {
-  const { id } = req.params;
+  const { roomId } = req.params;
   try {
       const updatedRoom = await Room.findByIdAndUpdate(
-        { _id: id },
+        { _id: roomId },
         { $set: req.body },
         { new: true }
       );
@@ -38,8 +38,8 @@ const updateRoom = async (req, res, next) => {
 
 //DELETION
 const deleteRoom = async (req, res, next) => {
-  const hotelId = req.params.hotelId;
-  const roomId = req.params.id;
+  const hotelId = req.params.id;
+  const roomId = req.params.roomId;
   try {
     await Room.findByIdAndDelete({ _id: roomId });
     try {
@@ -68,7 +68,7 @@ const getAllRooms = async (req, res, next) => {
 
 //GET SINGLE
 const getSingleRoom = async (req, res,next) => {
-  const { id } = req.params;
+  const { id } = req.params; 
   try {
     const singleRoom = await Room.findById(id); 
     res.status(200).json(singleRoom);

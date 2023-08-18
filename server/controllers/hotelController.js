@@ -54,7 +54,7 @@ const deleteHotel = async (req, res, next) => {
 
 //GET ALL for Hosts
 const hotelsOfHost = async (req, res, next) => {  
-  const { hostId } = req.params; console.log('id',hostId);
+  const { hostId } = req.params; 
   try {
     const allHotelsOfHost = await Hotel.find({owner:hostId}); 
     res.status(200).json(allHotelsOfHost);
@@ -66,7 +66,7 @@ const hotelsOfHost = async (req, res, next) => {
 const singleHotelOfHost = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const singleHotel = await Hotel.findById(id); console.log('singlehotel',singleHotel); 
+    const singleHotel = await Hotel.findById(id); 
     res.status(200).json(singleHotel);
   } catch (error) {
     next(error);

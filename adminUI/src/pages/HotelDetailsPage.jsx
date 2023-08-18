@@ -7,6 +7,7 @@ import useFetch from '../hooks/useFetch';
 import Loader from '../components/Loader';
 import StandardImageList from '../components/ImageList';
 import axios from "../services/axios";
+import ModalComponent from '../components/ModalComponent';
 
 const HotelDetailsPage = () => {
   const location = useLocation();
@@ -27,7 +28,7 @@ const HotelDetailsPage = () => {
       const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
       console.log(errorMessage);
     }
-  }
+  };
   return (
     <div className="flex flex-col h-full w-full  overflow-auto">
       {loading ? (
@@ -130,7 +131,11 @@ const HotelDetailsPage = () => {
                   </div>
                   <span className="text-lg mx-2">:</span>
                   <div className="w-2/3">
-                    <p className="text-lg">{hotel?.rooms}</p>
+                    {hotel?.rooms?.length> 0 && hotel.rooms.map((room, index) => (
+                      <p className="text-lg" key={index}>
+                        {room.title} &rarr; Rs. {room.price} /-
+                      </p>
+                    ))}                    
                   </div>
                 </div>         
               </div>
@@ -156,13 +161,17 @@ const HotelDetailsPage = () => {
                 {/* Bottom right */}
                 <div className="h-1/2  p-4">
                   <h1 className="text-lg font-bold pb-5">Document Proof</h1>
-                  <div className="flex justify-center mb-8">
+                  <div className="flex mb-8 justify-center relative" >
                     <img
                       src="https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"
                       alt="photo"
                       className='border rounded-md w-1/2'
                     />
+                    <div className="flex items-end  bottom-3 absolute">
+                      <ModalComponent image={"https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"}  />
+                    </div>
                   </div>
+
                   <div className="font-medium">
                     Verify the Property :
                     {hotel.isVerified ?

@@ -96,7 +96,7 @@ const blockUser = async (req, res, next) => {
 
 const hotelsList = async (req, res, next) => {
   try {
-    const allHotels = await Hotel.find().populate('owner');
+    const allHotels = await Hotel.find().populate('owner');    
     res.status(200).json(allHotels);
   } catch (error) {
     next(error);
@@ -120,7 +120,7 @@ const updateHotel = async (req, res, next) => {
 const singleHotel = async (req, res, next) => {
   const { id } = req.params;
   try {
-    const singleHotel = await Hotel.findById(id).populate('owner'); 
+    const singleHotel = await Hotel.findById(id).populate('owner').populate('rooms'); 
     res.status(200).json(singleHotel);
   } catch (error) {
     next(error);
