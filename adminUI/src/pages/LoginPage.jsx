@@ -1,6 +1,7 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { toast, Flip } from "react-toastify";
+import Cookies from "js-cookie";
 import { useFormik } from "formik";
 import background from "../assets/loginbackground.jpg";
 import poshbo from "../assets/poshbo.svg";
@@ -9,8 +10,13 @@ import { loginValidation } from '../formValidate';
 import passwordToggle from '../hooks/passwordToggle';
 
 const LoginPage = () => {
-  const [passwordInputType, toggleIcon] = passwordToggle();
 
+  const auth = Cookies.get('adminToken');
+  if (auth) {
+    return <Navigate to='/'/>
+  }
+
+  const [passwordInputType, toggleIcon] = passwordToggle();
   const navigate = useNavigate();
   const initialValues = {
     email: "",
@@ -40,7 +46,6 @@ const LoginPage = () => {
     validationSchema:loginValidation,    
     onSubmit:handleLogin
   });
-  
 
   return (
     <div className='flex flex-col flex-auto w-full h-screen'>

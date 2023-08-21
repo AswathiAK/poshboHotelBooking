@@ -37,7 +37,7 @@ const HotelDetailsPage = () => {
         </div>
       ) : error ? (
         <div className="flex items-center justify-center h-full">
-          error
+          {error}
         </div>
       ) : hotel ? (
             <div className="flex flex-grow overflow-auto gap-3">
@@ -151,7 +151,7 @@ const HotelDetailsPage = () => {
                       alt="photo"
                       className='w-52 rounded-md'
                     /> */}
-                  <StandardImageList />
+                  <StandardImageList hotel={hotel} />
                   
                       {/* </div> */}
                       {/* )) */}
@@ -168,7 +168,8 @@ const HotelDetailsPage = () => {
                       className='border rounded-md w-1/2'
                     />
                     <div className="flex items-end  bottom-3 absolute">
-                      <ModalComponent image={"https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"}  />
+                      <ModalComponent image={"https://images.unsplash.com/photo-1551963831-b3b1ca40c98e"} />
+                      {/* <ModalComponent image={hotel?.documentProof}  /> */}                      
                     </div>
                   </div>
 

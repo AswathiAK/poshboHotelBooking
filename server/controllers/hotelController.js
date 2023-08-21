@@ -58,7 +58,7 @@ const hotelsOfHost = async (req, res, next) => {
   try {
     const allHotelsOfHost = await Hotel.find({owner:hostId}); 
     res.status(200).json(allHotelsOfHost);
-  } catch (error) {console.log(error.message);
+  } catch (error) {
     next(error);
   }
 };

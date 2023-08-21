@@ -20,7 +20,7 @@ const UserDetailsPage = () => {
         </div>
       ) : error ? (
           <div className="flex items-center justify-center h-full">
-            error
+            {error}
           </div>
       ) : user ? (
             <div className="w-full border rounded-md flex flex-col">                

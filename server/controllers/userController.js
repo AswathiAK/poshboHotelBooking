@@ -81,7 +81,7 @@ const userLogin = async (req, res, next) => {
       } else {
         const { password, ...otherDetails } = isUserExist._doc;
         jwt.sign(
-          { id: isUserExist._id, role: isUserExist.role },
+          { id: isUserExist._id, role: isUserExist.role, isBlock:isUserExist.isBlock },
           process.env.JWT_SECRET,
           { expiresIn: "2d" },
           (err, token) => {

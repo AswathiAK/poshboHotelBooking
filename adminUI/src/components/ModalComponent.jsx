@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Modal, Typography } from '@mui/material';
+import {Modal} from '@mui/material';
 import PanoramaIcon from '@mui/icons-material/Panorama';
 
 const ModalComponent = ({image}) => {
@@ -12,10 +12,7 @@ const ModalComponent = ({image}) => {
         <PanoramaIcon/>
       </button>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <Box position='absolute' top='10%' left='20%' >
-          {/* <Typography>It is a Modal</Typography> */}
-          <img src={image} alt="document" className='w-2/3 rounded-md object-cover'/>
-        </Box>
+        <img src={image} alt="document" className='absolute w-1/2 top-24 left-1/4 rounded-md object-cover '/>        
       </Modal>
     </div>
   )
