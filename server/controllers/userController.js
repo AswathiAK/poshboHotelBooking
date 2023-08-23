@@ -5,6 +5,7 @@ const nodemailer = require('nodemailer');
 const User = require('../models/userModel.js');
 const createError = require('../middlewares/errorHandling.js');
 
+
 const passwordHashing = async (password) => {
   try {
     const bcryptSalt = await bcrypt.genSalt(10);
@@ -15,8 +16,8 @@ const passwordHashing = async (password) => {
   }
 };
 
-const sendResetPasswordMail = async (id, name, email, token) => {
-  const link = `http://localhost:3000/users/reset/${id}/${token}`;
+const sendResetPasswordMail = async (id, name, email, token) => { 
+  const link = `http://localhost:3000/reset_password/${token}/${id}`; 
   const transport = nodemailer.createTransport({
     service: "gmail",
     host: "smtp.gmail.com",
@@ -131,14 +132,14 @@ const deleteProfile = async (req, res, next) => {
 };
 
 const forgotPassword = async (req, res, next) => {
-  const { email } = req.body;
+  const { email } = req.body; 
   try {
     const isUserExist = await User.findOne({ email: email });
     if (!isUserExist) {
       return next(createError(404, "User not found"));
     } else {
-      const token = jwt.sign({ id: isUserExist._id }, process.env.JWT_SECRET, { expiresIn: "5m" });  
-      sendResetPasswordMail(isUserExist._id, isUserExist.name, isUserExist.email, token);
+      const token = jwt.sign({ id: isUserExist._id }, process.env.JWT_SECRET, { expiresIn: "5m" });       
+      sendResetPasswordMail(isUserExist._id, isUserExist.name, isUserExist.email, token); 
       res.status(200).json({ message: "Please Check your email to reset the Password" });
     }
   } catch (error) {
@@ -147,22 +148,26 @@ const forgotPassword = async (req, res, next) => {
 };
 
 const resetPassword = async (req, res, next) => {
-  const { newPassword } = req.body;
-  const { id, token } = req.params;
+  const { password,confirmPassword } = req.body; 
+  const { token, id } = req.params; 
   try {
-    const isUser = await User.findById(id);
-    const isValidUser = jwt.verify(token, process.env.JWT_SECRET);
-    if (isValidUser) {
-      const securePassword = await passwordHashing(newPassword);
-      const updatedUser = await User.findByIdAndUpdate(
-        { id: isUser._id },
-        { $set: { password: securePassword } },
-        { new: true }
-      );
-      res.status(200).json({ message: "Password has been changed successfully" });
+    if (password === confirmPassword) {
+      const isUser = await User.findById(id); 
+      const isValidUser = jwt.verify(token, process.env.JWT_SECRET); 
+      if (isValidUser) {
+        const securePassword = await passwordHashing(password);
+        const updatedUser = await User.findByIdAndUpdate(
+          { _id: isUser._id },
+          { $set: { password: securePassword } },
+          { new: true }
+        ); 
+        res.status(200).json({ message: "Password has been changed successfully", updatedUser });
+      } else {
+        return next(createError(400, "Link Has been expired "));      
+      }
     } else {
-      return next(createError(400, "Link Has been expired "));      
-    }
+      return next(createError(400, "Passwords do not match"));
+    }    
   } catch (error) {
     next(error);
   }

@@ -10,12 +10,10 @@ import { loginValidation } from '../formValidate';
 import passwordToggle from '../hooks/passwordToggle';
 
 const LoginPage = () => {
-
   const auth = Cookies.get('adminToken');
   if (auth) {
     return <Navigate to='/'/>
   }
-
   const [passwordInputType, toggleIcon] = passwordToggle();
   const navigate = useNavigate();
   const initialValues = {
@@ -24,7 +22,7 @@ const LoginPage = () => {
   };
   const handleLogin = async (values, action) => {
     try {
-      const { data } = await axios.post('/admin', values); console.log('data',data);
+      const { data } = await axios.post('/admin', values); 
       toast.success(data.message, {
         position: toast.POSITION.TOP_CENTER,
         transition: Flip,
@@ -70,7 +68,7 @@ const LoginPage = () => {
                     onBlur={handleBlur}
                   />
                   {errors.email && touched.email ? (
-                    <div className="text-red-800 px-4 py-2 rounded-lg text-sm">
+                    <div className="text-red-500 px-4 py-2 rounded-lg text-sm">
                       {errors.email}
                     </div>
                   ): null}
@@ -88,7 +86,7 @@ const LoginPage = () => {
                   />
                   <span className="absolute top-10 right-2.5 cursor-pointer z-10">{toggleIcon}</span>
                   {errors.password && touched.password ? (
-                    <div className="text-red-800 px-4 py-2 rounded-lg text-sm">
+                    <div className="text-red-500 px-4 py-2 rounded-lg text-sm">
                       {errors.password}
                     </div>
                   ): null}
