@@ -8,7 +8,6 @@ import {
   HomePage, ErrorPage
 } from "./pages";
 
-
 function App() {
   return (
     <>

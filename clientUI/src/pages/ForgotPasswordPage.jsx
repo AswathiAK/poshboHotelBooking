@@ -3,7 +3,7 @@ import { toast, Flip } from "react-toastify";
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from "formik";
 import { forgotPasswordValidation } from '../formValidate';
-import LoginHeader from '../components/LoginHeader';
+import UserLoginHeader from '../components/UserLoginHeader';
 import Footer from '../components/Footer';
 import axios from "../services/axios";
 
@@ -38,7 +38,7 @@ const ForgotPasswordPage = () => {
   });
   return (
     <div>
-      <LoginHeader />
+      <UserLoginHeader />
       <main className=" pt-3 flex justify-center h-auto sm:h-[678px]">
         <div className="relative top-6 bottom-0 my-8 border border-neutral-500 rounded-xl w-auto sm:w-[566px] h-fit">
           <div className="flex items-center justify-center px-6 border-b h-16">
@@ -57,7 +57,7 @@ const ForgotPasswordPage = () => {
                   <label className='font-normal'>Email</label>
                   <input type="email" name='email'
                     placeholder='your@email.com'
-                    className='border border-neutral-400 rounded-lg w-full p-3'
+                    className='border border-neutral-400 rounded-lg w-full p-3 mt-2'
                     value={values.email}
                     onChange={handleChange}
                     onBlur={handleBlur}

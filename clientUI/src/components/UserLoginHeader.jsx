@@ -9,8 +9,14 @@ import MenuItem from '@mui/material/MenuItem';
 import CloseIcon from '@mui/icons-material/Close';
 import logo from "../assets/poshbo.svg";
 
-const LoginHeader = () => {
+const UserLoginHeader = () => {
   const [openHamburger, setOpenHamburger] = useState(false);
+  const menuItems = [
+    { text: 'Log in', link: '/login' },
+    { text: 'Sign up', link: '/register', borderBottom: '1px solid rgba(0,0,0,0.10)' },
+    { text: 'List your property', link: '/' },
+    { text: 'Help center', link: '#' }
+  ];
   const hamburgerMenuItems = [
     { text: 'Log in', link: '/login' },
     { text: 'Sign up', link: '/register' },
@@ -94,21 +100,21 @@ const LoginHeader = () => {
             transformOrigin={{ horizontal: 'right', vertical: 'top' }}
             anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
           >
-            <MenuItem onClick={handleClose} sx={{ fontSize: '14px', fontWeight: 'bold', pt: 1, pb: 2 }}>
-              <Link to={'/login'}>Log in</Link> 
-            </MenuItem>
-            <MenuItem
-              onClick={handleClose}
-              sx={{ fontSize: '14px', pt: 1, pb: 2, borderBottom: '1px solid rgba(0, 0, 0, 0.10)' }}
-            >
-              <Link to={'/register'}>Sign up</Link> 
-            </MenuItem>
-            <MenuItem onClick={handleClose} sx={{ fontSize: '14px', pt: 3, pb: 2 }}>
-              <Link to={'/'}>List your property</Link> 
-            </MenuItem>
-            <MenuItem onClick={handleClose} sx={{ fontSize: '14px', pt: 1, pb: 2 }}>
-              <Link to={'#'}>Help center</Link> 
-            </MenuItem>
+            {menuItems.map((item, index) => (
+              <Link to={item.link} key={index}>
+                <MenuItem
+                  onClick={handleClose}
+                  sx={{
+                    fontSize: '14px',
+                    pt: index === 2 ? 2 : 1,
+                    pb: 2,
+                    ...(item.borderBottom && { borderBottom: item.borderBottom })
+                  }}
+                >
+                  {item.text}
+                </MenuItem>
+             </Link>
+           ))}
           </Menu>            
         </div>
       </div> 
@@ -135,4 +141,4 @@ const LoginHeader = () => {
   )
 }
 
-export default LoginHeader
+export default UserLoginHeader

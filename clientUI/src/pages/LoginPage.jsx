@@ -6,7 +6,7 @@ import { loginValidation } from '../formValidate';
 import Footer from '../components/Footer';
 import usePasswordToggle from '../hooks/usePasswordToggle';
 import axios from "../services/axios";
-import LoginHeader from '../components/LoginHeader';
+import UserLoginHeader from '../components/UserLoginHeader';
 
 const LoginPage = () => {  
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <LoginHeader/>
+      <UserLoginHeader/>
       <main className=" pt-3 flex justify-center h-auto sm:h-[678px]">
         <div className="relative top-6 bottom-0 my-8 border border-neutral-500 rounded-xl w-auto sm:w-[566px] h-[560px]">
           <div className="flex items-center justify-center px-6 border-b h-16">
@@ -60,7 +60,7 @@ const LoginPage = () => {
                   <label className='font-normal'>Email</label>
                   <input type="email" name='email'
                     placeholder='your@email.com'
-                    className='border border-neutral-400 rounded-lg w-full p-3'
+                    className='border border-neutral-400 rounded-lg w-full p-3 mt-2'
                     value={values.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -75,12 +75,12 @@ const LoginPage = () => {
                   <label className='font-normal'>Password</label>
                   <input type={passwordInputType} name='password'
                     placeholder='************'
-                    className='border border-neutral-400 rounded-lg w-full p-3'
+                    className='border border-neutral-400 rounded-lg w-full p-3 mt-2'
                     value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />                  
-                  <span className="absolute top-8 right-2.5 cursor-pointer">{toggleIcon}</span>
+                  <span className="absolute top-9 right-2.5 cursor-pointer">{toggleIcon}</span>
                   {errors.password && touched.password ? (
                     <div className="text-red-500 rounded-lg text-sm">
                       {errors.password}

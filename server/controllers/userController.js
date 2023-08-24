@@ -43,23 +43,28 @@ const sendResetPasswordMail = async (id, name, email, token) => {
 };
 
 const userRegister = async (req, res, next) => {
-  const { name, mobile, email, password, role } = req.body; 
-  const securePassword = await passwordHashing(password);
+  const { userInfo, otpResponsePhone } = req.body;
   try {
-      const isUserEmail = await User.findOne({ email: email }); 
-      const isUserMobile = await User.findOne({ mobile: mobile });
+      const phoneNumber = '+91' + userInfo.mobile; 
+      const securePassword = await passwordHashing(userInfo.password);
+      const isUserEmail = await User.findOne({ email: userInfo.email }); 
+      const isUserMobile = await User.findOne({ mobile: userInfo.mobile });
       if (isUserEmail || isUserMobile) {        
         return next(createError(409, "User is Already Exist"));
       } else {
         const userData = new User({
-          name,
-          mobile,
-          email,
+          name:userInfo.name,
+          mobile:userInfo.mobile,
+          email:userInfo.email,
           password: securePassword,
-          role
+          role:userInfo.role
         });
-        const user = await userData.save();
-        res.status(201).json({ message: "Registered Successfully", user });
+        if (phoneNumber === otpResponsePhone) {
+          const user = await userData.save();
+          res.status(201).json({ message: "Registered Successfully", user });
+        } else {
+          return next(createError(400, "Can not register the User"));
+        }
       }    
   } catch (error) {
     next(error);

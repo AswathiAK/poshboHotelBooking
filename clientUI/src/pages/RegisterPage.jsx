@@ -1,23 +1,45 @@
-import React from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from 'react'
+import { toast, Flip } from "react-toastify";
+import { Link, } from "react-router-dom";
 import { useFormik } from "formik";
 import { registerValidation } from '../formValidate';
-import LoginHeader from '../components/LoginHeader';
-import Footer from '../components/Footer';
+import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
+import { auth } from "../services/firebase";
 import usePasswordToggle from '../hooks/usePasswordToggle';
+import UserLoginHeader from '../components/UserLoginHeader';
+import Footer from '../components/Footer';
+import OTPContent from "../components/OTPContent";
 
 const RegisterPage = () => {
   const [passwordInputType, toggleIcon] = usePasswordToggle();
-  const navigate = useNavigate();
+  const [confirmOtp, setConfirmOtp] = useState('');
+  const [showOtpPage, setShowOtpPage] = useState(false);
   const initialValues = {
     name: "",
     mobile:"",
     email: "",
-    password: ""
+    password: "",
+    role:"guest"
   };
-  const userRegister = async (values, action) => {
-    
-  }
+  const setUpRecaptcha = (number) => {
+    const mobile = '+91' + number;
+    const recaptcha = new RecaptchaVerifier(auth, 'recaptcha-container', {});
+    recaptcha.render();
+    return signInWithPhoneNumber(auth, mobile, recaptcha);
+  };
+  const userRegister = async (values) => {
+    try {
+      const otpResult = await setUpRecaptcha(values.mobile);
+      setConfirmOtp(otpResult);
+      setShowOtpPage(true);
+    } catch (error) {
+      toast.error(error.message, {
+        position: toast.POSITION.TOP_CENTER,
+        transition: Flip,
+        autoClose: 2000
+      });
+    };
+  };
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({    
     initialValues: initialValues,
     validationSchema:registerValidation,    
@@ -25,8 +47,9 @@ const RegisterPage = () => {
   });
   return (
     <div>
-      <LoginHeader/>
-      <main className=" pt-3 flex justify-center  ">
+      <UserLoginHeader />
+      {!showOtpPage&& 
+      <main className=" pt-3 flex justify-center" >
         <div className="relative top-6 bottom-0 mt-8 mb-20 border border-neutral-500 rounded-xl w-auto sm:w-[566px] h-auto">
           <div className="flex items-center justify-center px-6 border-b h-16">
             <h2 className='text-lg font-semibold'>Sign up</h2>
@@ -43,7 +66,7 @@ const RegisterPage = () => {
                   <label className='font-normal'>Name</label>
                   <input type="text" name='name'
                     placeholder='John Doe'
-                    className='border border-neutral-400 rounded-lg w-full p-3'
+                    className='border border-neutral-400 rounded-lg w-full p-3 mt-2'
                     value={values.name}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -58,7 +81,7 @@ const RegisterPage = () => {
                   <label className='font-normal'>Mobile No.</label>
                   <input type="number" name='mobile'
                     placeholder='987654321'
-                    className='border border-neutral-400 rounded-lg w-full p-3'
+                    className='border border-neutral-400 rounded-lg w-full p-3 mt-2'
                     value={values.mobile}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -73,7 +96,7 @@ const RegisterPage = () => {
                   <label className='font-normal'>Email</label>
                   <input type="email" name='email'
                     placeholder='your@email.com'
-                    className='border border-neutral-400 rounded-lg w-full p-3'
+                    className='border border-neutral-400 rounded-lg w-full p-3 mt-2'
                     value={values.email}
                     onChange={handleChange}
                     onBlur={handleBlur}
@@ -88,12 +111,12 @@ const RegisterPage = () => {
                   <label className='font-normal'>Password</label>
                   <input type={passwordInputType} name='password'
                     placeholder='************'
-                    className='border border-neutral-400 rounded-lg w-full p-3'
+                    className='border border-neutral-400 rounded-lg w-full p-3 mt-2'
                     value={values.password}
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />                  
-                  <span className="absolute top-8 right-2.5 cursor-pointer">{toggleIcon}</span>
+                  <span className="absolute top-9 right-2.5 cursor-pointer">{toggleIcon}</span>
                   {errors.password && touched.password ? (
                     <div className="text-red-500 rounded-lg text-sm">
                       {errors.password}
@@ -110,11 +133,13 @@ const RegisterPage = () => {
                   Already have an account? 
                   <Link to={'/login'} className='underline text-black'> Click here to login</Link>
                 </div>
+                <div className='flex justify-center mt-3' id="recaptcha-container"></div>  
               </form>
             </div>
           </div>
         </div>
-      </main>
+      </main>}
+      {showOtpPage && <OTPContent confirmOtp={confirmOtp} userInfo={values} />}      
       <Footer/>
     </div>
   )
