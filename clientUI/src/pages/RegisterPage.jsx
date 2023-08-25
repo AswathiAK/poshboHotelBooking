@@ -6,7 +6,7 @@ import { registerValidation } from '../formValidate';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { auth } from "../services/firebase";
 import usePasswordToggle from '../hooks/usePasswordToggle';
-import UserLoginHeader from '../components/UserLoginHeader';
+import UserHeader from '../components/UserHeader';
 import Footer from '../components/Footer';
 import OTPContent from "../components/OTPContent";
 
@@ -47,7 +47,7 @@ const RegisterPage = () => {
   });
   return (
     <div>
-      <UserLoginHeader />
+      <UserHeader />
       {!showOtpPage&& 
       <main className=" pt-3 flex justify-center" >
         <div className="relative top-6 bottom-0 mt-8 mb-20 border border-neutral-500 rounded-xl w-auto sm:w-[566px] h-auto">
@@ -116,7 +116,7 @@ const RegisterPage = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />                  
-                  <span className="absolute top-9 right-2.5 cursor-pointer">{toggleIcon}</span>
+                  <span className="absolute top-10 right-2.5 cursor-pointer">{toggleIcon}</span>
                   {errors.password && touched.password ? (
                     <div className="text-red-500 rounded-lg text-sm">
                       {errors.password}

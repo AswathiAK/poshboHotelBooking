@@ -83,14 +83,14 @@ const OTPContent = ({ confirmOtp, userInfo }) => {
   return (
     <div>
       <main className=" pt-3 flex justify-center h-auto sm:h-[678px]">
-        <div className="relative top-6 bottom-0 my-8 border border-neutral-500 rounded-xl w-auto sm:w-[566px] h-fit">
+        <div className="relative top-6  my-8 border border-neutral-500 rounded-xl w-auto sm:w-[566px] h-fit">
           <div className="flex items-center justify-center px-6 border-b h-16">
             <h2 className='text-lg font-semibold'>OTP</h2>
           </div>
           <div className="p-4 sm:p-8">
             <div className="flex flex-col">              
               <form onSubmit={handleSubmit}>
-                <div className="mt-2 mb-5">
+                <div className="mt-2 mb-5 relative">
                   <label className='font-normal'>Enter the OTP</label>
                   <input type={passwordInputType} name='otp'
                     placeholder='********'
@@ -99,7 +99,7 @@ const OTPContent = ({ confirmOtp, userInfo }) => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />
-                  <span className="absolute pt-2.5 right-10 cursor-pointer">{toggleIcon}</span>
+                  <span className="absolute top-10 right-2.5 cursor-pointer">{toggleIcon}</span>
                   {errors.otp && touched.otp ? (
                     <div className="text-red-500 rounded-lg text-sm">
                       {errors.otp}

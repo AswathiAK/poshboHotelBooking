@@ -6,7 +6,7 @@ import { loginValidation } from '../formValidate';
 import Footer from '../components/Footer';
 import usePasswordToggle from '../hooks/usePasswordToggle';
 import axios from "../services/axios";
-import UserLoginHeader from '../components/UserLoginHeader';
+import UserHeader from '../components/UserHeader';
 
 const LoginPage = () => {  
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <UserLoginHeader/>
+      <UserHeader/>
       <main className=" pt-3 flex justify-center h-auto sm:h-[678px]">
         <div className="relative top-6 bottom-0 my-8 border border-neutral-500 rounded-xl w-auto sm:w-[566px] h-[560px]">
           <div className="flex items-center justify-center px-6 border-b h-16">
@@ -80,7 +80,7 @@ const LoginPage = () => {
                     onChange={handleChange}
                     onBlur={handleBlur}
                   />                  
-                  <span className="absolute top-9 right-2.5 cursor-pointer">{toggleIcon}</span>
+                  <span className="absolute top-10 right-2.5 cursor-pointer">{toggleIcon}</span>
                   {errors.password && touched.password ? (
                     <div className="text-red-500 rounded-lg text-sm">
                       {errors.password}
