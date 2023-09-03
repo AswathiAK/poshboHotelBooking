@@ -1,5 +1,5 @@
-import React from 'react'
-import { Link, useNavigate } from "react-router-dom";
+import React, { useContext } from 'react'
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { toast, Flip } from "react-toastify";
 import { useFormik } from "formik";
 import { loginValidation } from '../formValidate';
@@ -7,24 +7,40 @@ import Footer from '../components/Footer';
 import usePasswordToggle from '../hooks/usePasswordToggle';
 import axios from "../services/axios";
 import UserHeader from '../components/UserHeader';
+import { AuthContext } from '../context/AuthContext';
 
 const LoginPage = () => {  
+  const { user, dispatch } = useContext(AuthContext);
+  if (user) {
+    if (user.role === 'guest') {
+      return <Navigate to={'/'} />
+    } 
+    else if (user.role === 'host') {
+      return <Navigate to={'/host/home'} />
+    } 
+  }    
   const navigate = useNavigate();
+  const [passwordInputType, toggleIcon] = usePasswordToggle();
   const initialValues = {
     email: "",
     password: ""
   };
-  const [passwordInputType, toggleIcon] = usePasswordToggle();
   const userLogin = async (values, action) => {
+    dispatch({ type: "LOGIN_START" });
     try {
-      const { data } = await axios.post('/users/login', values);
+      const { data } = await axios.post('/users/login', values); 
+      dispatch({ type: "LOGIN_SUCCESS", payload: data });
       toast.success(data.message, {
         position: toast.POSITION.TOP_CENTER,
         transition: Flip,
         autoClose: 2000
       });
-      action.resetForm();
-      navigate('/');
+      action.resetForm(); 
+      if (data.role === 'guest') {
+        navigate('/');
+      } else if (data.role === 'host') {
+        navigate('/host/home');
+      }
     } catch (error) {
       const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
       toast.error(errorMessage, {
@@ -33,13 +49,13 @@ const LoginPage = () => {
         autoClose: 2000
       });
     };
-  };
+  }; 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({    
     initialValues: initialValues,
     validationSchema:loginValidation,    
     onSubmit:userLogin
   });
-
+  
   return (
     <>
       <UserHeader/>

@@ -11,7 +11,7 @@ const UserHeader = () => {
   const hamburgerMenuItems = [
     { text: 'Log in', link: '/login' },
     { text: 'Sign up', link: '/register' },
-    { text: 'List your property', link: '/' },
+    { text: 'List your property', link: '/host/home' },
     { text: 'Help center', link: '#' }
   ];  
   return (
@@ -25,7 +25,7 @@ const UserHeader = () => {
       </div>    
       <div className="hidden sm:flex items-center w-[570px] justify-end">
         <div className="text-sm font-medium hover:rounded-full hover:bg-neutral-100 p-3">
-          <Link to={'/'}>List your property</Link> 
+          <Link to={'/host/home'}>List your property</Link> 
         </div>
         <div className="mr-2 hover:rounded-full hover:bg-neutral-100 p-3 cursor-pointer">
           <LanguageRoundedIcon sx={{fontSize:'20px'}}/>

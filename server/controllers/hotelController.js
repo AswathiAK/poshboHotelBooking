@@ -1,26 +1,29 @@
 const Hotel = require("../models/hotelModel.js");
+const cloudinary = require("../middlewares/cloudinary.js");
 
 //CREATION
 const createHotel = async (req, res, next) => {   
   const { name, type, title,
-    city, address, photos, description,
-    perks, extraInfo,
+    city, address, description,
+    extraInfo,
     checkInTime, checkOutTime,
-    rooms, cheapestPrice, documentProof,
+    cheapestPrice, documentProof,
+    perks, photos, rooms,
     isVerified, isBlock } = req.body;
-  try {
-    //const newHotel = new Hotel(req.body);  
+  try {    
     const newHotel = new Hotel({
       owner: req.user.id,
       name, type, title,
-      city, address, photos, description,
-      perks, extraInfo,
+      city, address, description,
+      extraInfo,
       checkInTime, checkOutTime,
-      rooms, cheapestPrice,documentProof,
-      isVerified,isBlock
+      cheapestPrice,
+      documentProof,
+      perks, photos, rooms,
+      isVerified, isBlock
     });
     const savedHotel = await newHotel.save();
-    res.status(200).json(savedHotel);
+    res.status(200).json({ message: 'Successfully created the property', savedHotel });
   } catch (error) {
     next(error); 
   }
@@ -35,7 +38,7 @@ const updateHotel = async (req, res, next) => {
         { $set: req.body },
         { new: true }
       );
-      res.status(200).json(updatedHotel);
+      res.status(200).json({message:'Updated successfully',updatedHotel});
   } catch (error) {
     next(error);
   }

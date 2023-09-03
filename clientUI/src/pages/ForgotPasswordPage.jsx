@@ -1,13 +1,24 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { toast, Flip } from "react-toastify";
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useFormik } from "formik";
 import { forgotPasswordValidation } from '../formValidate';
 import UserHeader from '../components/UserHeader';
 import Footer from '../components/Footer';
 import axios from "../services/axios";
+import { AuthContext } from '../context/AuthContext';
 
 const ForgotPasswordPage = () => {
+  const { user } = useContext(AuthContext);
+  if (user) {
+    if (user.role === 'guest') {
+      return <Navigate to={'/'} />
+    } 
+    else if (user.role === 'host') {
+      return <Navigate to={'/host/home'} />
+    } 
+  } 
+  
   const navigate = useNavigate();
   const initialValues = {
     email: "",    

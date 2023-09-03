@@ -180,7 +180,7 @@ const resetPassword = async (req, res, next) => {
 
 const userLogout = async (req, res, next) => {
   try {
-    res.status(200).cookie('userToken', '').json({message:"Logout successfully"});
+    res.status(200).cookie('userToken', '').json({message:"Logout successfully"}); 
   } catch (error) {
     next(error);
   }

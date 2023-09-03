@@ -1,5 +1,5 @@
-import React from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import React, { useContext } from 'react'
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { toast, Flip } from "react-toastify";
 import { useFormik } from "formik";
 import { resetPasswordValidation } from '../formValidate';
@@ -7,8 +7,19 @@ import UserHeader from '../components/UserHeader';
 import Footer from '../components/Footer';
 import usePasswordToggle from '../hooks/usePasswordToggle';
 import axios from "../services/axios";
+import { AuthContext } from '../context/AuthContext';
 
 const ResetPasswordPage = () => {
+  const { user } = useContext(AuthContext);
+  if (user) {
+    if (user.role === 'guest') {
+      return <Navigate to={'/'} />
+    } 
+    else if (user.role === 'host') {
+      return <Navigate to={'/host/home'} />
+    } 
+  } 
+
   const navigate = useNavigate();
   const { token, id } = useParams();
   const [passwordInputType, toggleIcon] = usePasswordToggle();

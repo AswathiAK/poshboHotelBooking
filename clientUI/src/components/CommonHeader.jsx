@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { toast, Flip } from "react-toastify";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import BedIcon from '@mui/icons-material/Bed';
 import SearchIcon from '@mui/icons-material/Search';
@@ -12,20 +13,46 @@ import AccountMenu from './AccountMenu';
 import ProfileMenu from './ProfileMenu';
 import DateComponent from './DateComponent';
 import AddGuestsComponent from './AddGuestsComponent';
+import { AuthContext } from '../context/AuthContext';
+import axios from "../services/axios";
 
 const CommonHeader = () => {
+  const { user, dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
+  const userLogout = async () => {
+    try {
+      const { data } = await axios.post('/users/logout'); 
+      toast.success(data.message, {
+        position: toast.POSITION.TOP_CENTER,
+        transition: Flip,
+        autoClose: 2000
+      });
+      dispatch({ type: "LOGOUT" });
+      navigate('/');
+    } catch (error) {
+      const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
+      toast.error(errorMessage, {
+        position: toast.POSITION.TOP_CENTER,
+        transition: Flip,
+        autoClose: 2000
+      });
+    };
+  };
   const [openHamburger, setOpenHamburger] = useState(false);  
   const hamburgerAccountItems = [
     { text: 'Log in', link: '/login' },
     { text: 'Sign up', link: '/register' },
-    { text: 'List your property', link: '/' },
+    { text: 'List your property', link: '/host/home' },
     { text: 'Help center', link: '#' }
   ]; 
   const hamburgerProfileItems = [
-    { text: 'My Account', link: '/account' },
     { text: 'Messages', link: '/account' },
-    { text: 'Help center', link: '#' }
+    { text: 'My Bookings', link: '/account' },
+    { text: 'My Account', link: '/account' },
+    { text: 'Help center', link: '#' },
+    { text: 'Logout', action:userLogout }
   ];
+
   return (
     <header
       className=" border-b border-gray-300 px-4 md:px-20 flex items-center justify-between h-20 sticky top-0 z-10 bg-white"
@@ -60,13 +87,15 @@ const CommonHeader = () => {
         </button>
       </div>
       <div className="hidden sm:flex items-center ">
-        <div className="text-sm font-medium hover:rounded-full hover:bg-neutral-100 p-3">
-          <Link to={'/'}>List your property</Link> 
-        </div>
+        {!user && (
+          <div className="text-sm font-medium hover:rounded-full hover:bg-neutral-100 p-3">
+            <Link to={'/host/home'}>List your property</Link> 
+          </div>
+        )}
         <div className="mr-2 hover:rounded-full hover:bg-neutral-100 p-3 cursor-pointer">
           <LanguageRoundedIcon sx={{fontSize:'20px'}}/>
         </div>        
-        <AccountMenu />        
+        {user ? <ProfileMenu /> : <AccountMenu />}        
       </div> 
       {/* Hamburgur menu */}
       <div className="flex sm:hidden ">
@@ -78,11 +107,29 @@ const CommonHeader = () => {
         {/* Mobile menu */}
         {openHamburger ? (
           <div className="absolute top-20 rounded-md right-0 p-5 bg-white w-screen">
-            {hamburgerAccountItems.map((item, index) => (
+            {user ?
+              hamburgerProfileItems.map((item, index) => (
+                <Link
+                  to={item.link}
+                  key={index}
+                  className=" hover:bg-gray-100 block px-3 py-3 rounded-md text-md"
+                  onClick={item.action}
+                >
+                  {item.text}
+                </Link>
+              ))
+              :
+              hamburgerAccountItems.map((item, index) => (
+                <Link to={item.link} key={index} className=" hover:bg-gray-100 block px-3 py-3 rounded-md text-md">
+                  {item.text}
+                </Link>
+              ))
+            }
+            {/* {hamburgerAccountItems.map((item, index) => (
               <Link to={item.link} key={index} className=" hover:bg-gray-100 block px-3 py-3 rounded-md text-md">
                 {item.text}
               </Link>
-            ))}
+            ))} */}
           </div>
         ) : null}
       </div>

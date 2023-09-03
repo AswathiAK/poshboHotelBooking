@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { toast, Flip } from "react-toastify";
-import { Link, } from "react-router-dom";
+import { Link, Navigate, } from "react-router-dom";
 import { useFormik } from "formik";
 import { registerValidation } from '../formValidate';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
@@ -9,8 +9,18 @@ import usePasswordToggle from '../hooks/usePasswordToggle';
 import UserHeader from '../components/UserHeader';
 import Footer from '../components/Footer';
 import OTPContent from "../components/OTPContent";
+import { AuthContext } from '../context/AuthContext';
 
 const RegisterPage = () => {
+  const { user } = useContext(AuthContext);
+  if (user) {
+    if (user.role === 'guest') {
+      return <Navigate to={'/'} />
+    } 
+    else if (user.role === 'host') {
+      return <Navigate to={'/host/home'} />
+    } 
+  } 
   const [passwordInputType, toggleIcon] = usePasswordToggle();
   const [confirmOtp, setConfirmOtp] = useState('');
   const [showOtpPage, setShowOtpPage] = useState(false);
@@ -19,8 +29,8 @@ const RegisterPage = () => {
     mobile:"",
     email: "",
     password: "",
-    role:"guest"
-  };
+    role:""
+  }; 
   const setUpRecaptcha = (number) => {
     const mobile = '+91' + number;
     const recaptcha = new RecaptchaVerifier(auth, 'recaptcha-container', {});
@@ -44,7 +54,8 @@ const RegisterPage = () => {
     initialValues: initialValues,
     validationSchema:registerValidation,    
     onSubmit:userRegister
-  });
+  }); 
+
   return (
     <div>
       <UserHeader />
@@ -120,6 +131,24 @@ const RegisterPage = () => {
                   {errors.password && touched.password ? (
                     <div className="text-red-500 rounded-lg text-sm">
                       {errors.password}
+                    </div>
+                  ): null}
+                </div>
+                <div className="mt-2 mb-5">
+                  <label className='font-normal'>What do you want to do?</label>
+                  <select name='role'
+                    className='border border-neutral-400 rounded-lg w-full p-3 mt-2'
+                    value={values.role}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                  >
+                    <option value="" disabled>Choose an action</option>
+                    <option value="guest">Book a property</option>
+                    <option value="host">List a property</option>
+                  </select>
+                  {errors.role && touched.role ? (
+                    <div className="text-red-500 rounded-lg text-sm pt-2">
+                      {errors.role}
                     </div>
                   ): null}
                 </div>

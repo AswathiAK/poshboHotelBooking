@@ -10,7 +10,7 @@ const AccountMenu = () => {
   const menuItems = [
     { text: 'Log in', link: '/login' },
     { text: 'Sign up', link: '/register', borderBottom: '1px solid rgba(0,0,0,0.10)' },
-    { text: 'List your property', link: '/' },
+    { text: 'List your property', link: '/host/home' },
     { text: 'Help center', link: '#' }
   ];
   const [anchorEl, setAnchorEl] = useState(null);

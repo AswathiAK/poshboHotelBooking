@@ -8,7 +8,7 @@ import { addDays } from 'date-fns';
 const DateComponent = () => {
   const refOne = useRef(null);
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState([
+  const [dates, setDates] = useState([
     {
       startDate: new Date(),
       endDate: addDays(new Date(),3),
@@ -26,15 +26,15 @@ const DateComponent = () => {
   return (
     <div>
       <div className="text-gray-400 hidden lg:flex" onClick={() => setOpen(open => !open)}>
-        {`${format(date[0].startDate, "dd/MM/yyyy")} - ${format(date[0].endDate, "dd/MM/yyyy")}`}                  
+        {`${format(dates[0].startDate, "dd/MM/yyyy")} - ${format(dates[0].endDate, "dd/MM/yyyy")}`}                  
       </div>
       <div ref={refOne} className='absolute top-9 -right-56'>
         {open &&
         <DateRange
           editableDateInputs={true}
-          onChange={item => setDate([item.selection])}
+          onChange={item => setDates([item.selection])}
           moveRangeOnFirstSelection={false}
-          ranges={date}
+          ranges={dates}
           minDate={new Date()}
           months={2}
           direction='horizontal'

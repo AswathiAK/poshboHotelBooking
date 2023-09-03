@@ -1,20 +1,27 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import React, { useContext, useState } from 'react'
+import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { toast, Flip } from "react-toastify";
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import PersonIcon from '@mui/icons-material/Person';
 import MailIcon from '@mui/icons-material/Mail';
+import BookOnlineIcon from '@mui/icons-material/BookOnline';
+import PersonIcon from '@mui/icons-material/Person';
 import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import { Avatar, Stack } from '@mui/material';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import LogoutIcon from '@mui/icons-material/Person';
+import { AuthContext } from '../context/AuthContext';
+import axios from "../services/axios";
 
 const ProfileMenu = () => {
+  const { user, dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
   const profileMenuItems = [
-    { text: 'My Account', icon: <PersonIcon fontSize="small" />, link:'/account' },
-    { text: 'Messages', icon: <MailIcon fontSize="small" />, link: '/account', borderBottom: '1px solid rgba(0,0,0,0.10)' },
+    { text: 'Messages', icon: <MailIcon fontSize="small" />, link: '/account' },
+    { text: 'My Bookings', icon: <BookOnlineIcon fontSize="small" />, link: '/account' },
+    { text: 'My Account', icon: <PersonIcon fontSize="small" />, link:'/account', borderBottom: '1px solid rgba(0,0,0,0.10)' },
     { text: 'Help center', icon: <HelpCenterIcon fontSize="small" />, link: '#' }
   ];
   const [anchorEl, setAnchorEl] = useState(null);
@@ -25,9 +32,26 @@ const ProfileMenu = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const userLogout = () => {
-    console.log('user is loged out');
-  }
+  const userLogout = async () => {
+    try {
+      const { data } = await axios.post('/users/logout'); 
+      toast.success(data.message, {
+        position: toast.POSITION.TOP_CENTER,
+        transition: Flip,
+        autoClose: 2000
+      });
+      dispatch({ type: "LOGOUT" });
+      navigate('/');
+    } catch (error) {
+      const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
+      toast.error(errorMessage, {
+        position: toast.POSITION.TOP_CENTER,
+        transition: Flip,
+        autoClose: 2000
+      });
+    };
+  };
+
   return (
     <div className="border border-gray-300 rounded-full pl-3 pr-1 py-1 hover:shadow-md">
       <IconButton
@@ -46,8 +70,9 @@ const ProfileMenu = () => {
       >
         <MenuIcon sx={{fontSize:'20px', color:'#444',marginRight:'8px'}}/>
         <Stack direction="row" spacing={2}>
-          <Avatar sx={{ width: 30, height: 30, fontSize: 14, bgcolor: "black" }}>A</Avatar>
-          {/* {user.name.split('')[0]} */}
+          <Avatar sx={{ width: 30, height: 30, fontSize: 14, bgcolor: "black" }}>
+            {user.name.split('')[0]}
+          </Avatar>
         </Stack>
       </IconButton>
       <Menu
@@ -91,7 +116,7 @@ const ProfileMenu = () => {
               onClick={handleClose}
               sx={{
                 fontSize: '14px',
-                pt: index === 2 ? 2 : 1,
+                pt: index === 3 ? 2 : 1,
                 pb: 2,
                 ...(item.borderBottom && { borderBottom: item.borderBottom })
               }}
