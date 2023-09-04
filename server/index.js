@@ -32,14 +32,14 @@ app.get('/', (req, res) => {
 });
 
 //Middlewares
-app.use(express.json());
-app.use(cookieParser());
-app.use(express.static('public'));
 app.use(cors({
   origin: ['http://localhost:3000', 'http://localhost:3001'],
   credentials: true,
 }));
-app.use(express.urlencoded({ extended: true,limit:"500mb" }));
+app.use(express.json({limit:"500mb"}));
+app.use(cookieParser());
+app.use(express.static('public'));  
+app.use(express.urlencoded({ extended: true, limit:"500mb" }));
 
 //Routes
 app.use('/users', userRoute);

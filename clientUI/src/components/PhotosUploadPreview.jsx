@@ -2,43 +2,6 @@ import React, { useState, useEffect } from 'react';
 import DeleteIcon from '@mui/icons-material/Delete';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
-// const PhotosUploadPreview = ({ photos }) => {
-//   const [previews, setPreviews] = useState([]);
-//   useEffect(() => {
-//     const generatePreviews = async () => {
-//       const previewList = [];
-//       for (let i = 0; i < photos.length; i++) {
-//         const file = photos[i];
-//         const reader = new FileReader();
-//         const readPromise = new Promise((resolve) => {
-//           reader.readAsDataURL(file);
-//           reader.onload = () => {
-//             resolve(reader.result);
-//           };
-//         });
-//         const preview = await readPromise;
-//         previewList.push(preview);
-//       }
-//       setPreviews(previewList);
-//     };
-//     if (photos && photos.length > 0) {
-//       generatePreviews();
-//     } else {
-//       setPreviews([]);
-//     }
-//   }, [photos]);
-
-//   return (
-//     <div className="mt-2 mb-5">
-//       {previews.map((preview, index) => (
-//         <div key={index}>
-//           <img src={preview} alt={`Preview ${index}`} className="max-w-xs max-h-xs m-2" />
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
 
 // const PhotosUploadPreview = ({ photos, onChange, onBlur }) => {
   

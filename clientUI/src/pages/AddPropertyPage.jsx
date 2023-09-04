@@ -16,7 +16,6 @@ const AddPropertyPage = () => {
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-
   const initialValues = {
     name: "",
     type: "",
@@ -32,7 +31,6 @@ const AddPropertyPage = () => {
     perks: [],
     photos: [],
   };
-
   const availablePerks = [
     { name: 'wifi', label: 'Wifi' },
     { name: 'parking', label: 'Free Parking spot' },
@@ -45,26 +43,41 @@ const AddPropertyPage = () => {
     { name: 'fitness center', label: 'Fitness center' },    
   ];
   
+  //the original existing one directly sending to cloudinary from here.
   // const handleAddProperty = async (values, action) => {
-  //   const { documentProof } = values;
-  //   const formData = new FormData();
-  //   formData.append("file", documentProof);
-  //   formData.append("upload_preset", "upload");
-  //   setLoading(true);
+  //   const { documentProof } = values; 
+  //   const { photos } = values; 
   //   try {
+  //     setLoading(true);   
+  //     const formData = new FormData();
+  //     formData.append("file", documentProof);
+  //     formData.append("upload_preset", "upload");
   //     const uploadResponse = await axiosToUrl.post('https://api.cloudinary.com/v1_1/dr2r9xviv/image/upload', formData);
   //     const docProofUrl = uploadResponse.data.url;
+  //     // setLoading(true);  
+  //     const photosList = await Promise.all(
+  //       photos.map(async (file) => {
+  //         const formPhoto = new FormData();
+  //         formPhoto.append("file", file);
+  //         formPhoto.append("upload_preset", "upload");
+  //         const uploadPhotos = await axiosToUrl.post('https://api.cloudinary.com/v1_1/dr2r9xviv/image/upload', formPhoto);
+  //         const photosUrl = uploadPhotos.data.url;
+  //         return photosUrl;
+  //       })
+  //     );      
   //     const propertyData = { ...values };
   //     delete propertyData.documentProof;
+  //     delete propertyData.photos;
   //     propertyData.documentProof = docProofUrl;
-  //     const { data } = await axios.post('/hotels', propertyData); console.log('data from backend', data);
+  //     propertyData.photos = photosList;      
+  //     const { data } = await axios.post('/hotels', propertyData); 
   //     toast.success(data.message, {
   //       position: toast.POSITION.TOP_CENTER,
   //       transition: Flip,
   //       autoClose: 2000
   //     });
   //     action.resetForm(); 
-  //     navigate('/host/home');
+  //     navigate('/host/view_properties');
   //   } catch (error) {
   //     toast.error(error.message, {
   //       position: toast.POSITION.TOP_CENTER,
@@ -74,34 +87,37 @@ const AddPropertyPage = () => {
   //   } finally {
   //     setLoading(false);
   //   }
-  // };
+  // }; 
   
+  //base64conversion..  
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };  
   const handleAddProperty = async (values, action) => {
-    const { documentProof } = values;
+    const { documentProof } = values; 
     const { photos } = values; 
     try {
       setLoading(true);   
-      const formData = new FormData();
-      formData.append("file", documentProof);
-      formData.append("upload_preset", "upload");
-      const uploadResponse = await axiosToUrl.post('https://api.cloudinary.com/v1_1/dr2r9xviv/image/upload', formData);
-      const docProofUrl = uploadResponse.data.url;
-      // setLoading(true);  
-      const photosList = await Promise.all(
-        photos.map(async (file) => {
-          const formPhoto = new FormData();
-          formPhoto.append("file", file);
-          formPhoto.append("upload_preset", "upload");
-          const uploadPhotos = await axiosToUrl.post('https://api.cloudinary.com/v1_1/dr2r9xviv/image/upload', formPhoto);
-          const photosUrl = uploadPhotos.data.url;
-          return photosUrl;
+      const documentProofBase64 = await convertToBase64(documentProof); 
+      const photosBase64 = await Promise.all(
+        photos.map(async (photo) => {
+          return await convertToBase64(photo);
         })
-      );      
+      );  
       const propertyData = { ...values };
       delete propertyData.documentProof;
       delete propertyData.photos;
-      propertyData.documentProof = docProofUrl;
-      propertyData.photos = photosList;      
+      propertyData.documentProof = documentProofBase64;
+      propertyData.photos = photosBase64;       
       const { data } = await axios.post('/hotels', propertyData); 
       toast.success(data.message, {
         position: toast.POSITION.TOP_CENTER,
@@ -111,7 +127,8 @@ const AddPropertyPage = () => {
       action.resetForm(); 
       navigate('/host/view_properties');
     } catch (error) {
-      toast.error(error.message, {
+      const errorMessage =  error.response?.data?.message??error.response?.statusText??error.message ; 
+      toast.error(errorMessage, {
         position: toast.POSITION.TOP_CENTER,
         transition: Flip,
         autoClose: 2000
@@ -120,7 +137,6 @@ const AddPropertyPage = () => {
       setLoading(false);
     }
   }; 
-  
   const { values, errors, touched, handleBlur, handleChange, handleSubmit ,setFieldValue } = useFormik({    
     initialValues: initialValues,
     validationSchema:propertyFormValidation,    
@@ -317,24 +333,7 @@ const AddPropertyPage = () => {
                       {errors.documentProof}
                     </div>
                   ) : null}
-                </div>               
-                
-                {/* <div className="mt-2 mb-5">
-                  <label className='font-semibold text-lg'>Upload Photos</label>
-                  <input type="file" name='photos'
-                    className='border border-neutral-400 rounded-lg w-full p-3 mt-2'
-                    onChange={(e) => setFieldValue("photos", Array.from(e.target.files))}
-                    onBlur={handleBlur}
-                    multiple
-                  />                  
-                  <PhotosUploadPreview photos={values.photos} />                  
-                  {errors.photos && touched.photos ? (
-                    <div className="text-red-500 rounded-lg text-sm pt-2">
-                      {errors.photos}
-                    </div>
-                  ): null}
-                </div> */}
-
+                </div>   
                 <div className="mt-2 mb-5">
                   <label className='font-semibold text-lg'>Upload Photos</label>                  
                   <PhotosUploadPreview photos={values.photos}

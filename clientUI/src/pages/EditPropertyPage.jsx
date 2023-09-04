@@ -88,7 +88,8 @@ const EditPropertyPage = () => {
       action.resetForm(); 
       navigate('/host/view_properties');
     } catch (error) {
-      toast.error(error.message, {
+      const errorMessage =  error.response?.data?.message??error.response?.statusText??error.message ; 
+      toast.error(errorMessage, {
         position: toast.POSITION.TOP_CENTER,
         transition: Flip,
         autoClose: 2000

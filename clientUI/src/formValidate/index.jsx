@@ -3,7 +3,7 @@ import * as Yup from "yup";
 const mobileNo = /^(\+\d{1,3}[- ]?)?\d{10}$/;
 const letters = /^[A-Za-z\s]*$/;
 const timeFormat = /^(0?[1-9]|1[0-2]):[0-5][0-9]\s(?:[AaPp][Mm])?$/;
-const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png"];
+const SUPPORTED_FORMATS = ["image/jpg", "image/jpeg", "image/png", "image/webp"];
 
 export const registerValidation = Yup.object({
   name: Yup.string().matches(letters, "Name can only contain letters and spaces").min(2).max(25).required("Please Enter a Name"),

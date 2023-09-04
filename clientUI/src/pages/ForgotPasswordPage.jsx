@@ -17,8 +17,7 @@ const ForgotPasswordPage = () => {
     else if (user.role === 'host') {
       return <Navigate to={'/host/home'} />
     } 
-  } 
-  
+  }   
   const navigate = useNavigate();
   const initialValues = {
     email: "",    

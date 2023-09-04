@@ -30,7 +30,8 @@ const OTPContent = ({ confirmOtp, userInfo }) => {
       const resendOtpResult = await resendRecaptcha(userInfo.mobile);
       setConfirmResend(resendOtpResult);
     } catch (error) {
-      toast.error(error.message, {
+      const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
+      toast.error(errorMessage, {
         position: toast.POSITION.TOP_CENTER,
         transition: Flip,
         autoClose: 2000
@@ -67,7 +68,8 @@ const OTPContent = ({ confirmOtp, userInfo }) => {
         });
       };      
     } catch (error) {
-      toast.error(error.message, {
+      const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
+      toast.error(errorMessage, {
         position: toast.POSITION.TOP_CENTER,
         transition: Flip,
         autoClose: 2000

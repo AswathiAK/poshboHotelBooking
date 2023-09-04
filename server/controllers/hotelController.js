@@ -7,19 +7,35 @@ const createHotel = async (req, res, next) => {
     city, address, description,
     extraInfo,
     checkInTime, checkOutTime,
-    cheapestPrice, documentProof,
-    perks, photos, rooms,
-    isVerified, isBlock } = req.body;
+    cheapestPrice,perks,
+    documentProof, photos,
+    rooms,
+    isVerified, isBlock } = req.body;   
   try {    
+    const documentProofUrl = await cloudinary.uploader.upload(documentProof, {
+      upload_preset: 'poshbo_uploads',
+      allowed_formats:['jpg','jpeg','png']
+    });    
+    const photosPromise = photos.map((photo) => {
+      return cloudinary.uploader.upload(photo, {
+        upload_preset: 'poshbo_uploads',
+        allowed_formats: ['jpg', 'jpeg', 'png','webp']
+      });
+    });
+    const photosUrl = await Promise.all(photosPromise);   
+    const photosList = photosUrl.map((photo) => {
+      return photo.url;
+    });    
     const newHotel = new Hotel({
       owner: req.user.id,
       name, type, title,
-      city, address, description,
+      city, address, description,   
       extraInfo,
       checkInTime, checkOutTime,
-      cheapestPrice,
-      documentProof,
-      perks, photos, rooms,
+      cheapestPrice,perks,
+      documentProof:documentProofUrl.url,
+      photos:photosList,
+      rooms,
       isVerified, isBlock
     });
     const savedHotel = await newHotel.save();
@@ -67,7 +83,7 @@ const hotelsOfHost = async (req, res, next) => {
 };
 //GET SINGLE for Hosts
 const singleHotelOfHost = async (req, res, next) => {
-  const { id } = req.params;
+  const { id } = req.params; 
   try {
     const singleHotel = await Hotel.findById(id); 
     res.status(200).json(singleHotel);
