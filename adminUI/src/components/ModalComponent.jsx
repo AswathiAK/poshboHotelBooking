@@ -12,7 +12,9 @@ const ModalComponent = ({image}) => {
         <PanoramaIcon/>
       </button>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <img src={image} alt="document" className='absolute w-1/2 top-24 left-1/4 rounded-md object-cover '/>        
+        <div className="absolute rounded-md w-fit flex justify-center m-auto left-0 right-0 top-0 bottom-0">
+          <img src={image} alt="document" className='object-cover'/> 
+        </div>
       </Modal>
     </div>
   )

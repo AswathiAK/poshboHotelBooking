@@ -7,13 +7,12 @@ import PropertyHeader from '../components/PropertyHeader';
 import Footer from '../components/Footer';
 import DocPreview from '../components/DocPreview';
 import axios from "../services/axios";
-import axiosToUrl from 'axios';
 import Loader from "../components/Loader";
 import PerksItems from '../components/PerksItems';
 import PhotosUploadPreview from '../components/PhotosUploadPreview';
+import { availablePerks } from './PerksContents';
   
 const AddPropertyPage = () => {
-
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const initialValues = {
@@ -27,68 +26,10 @@ const AddPropertyPage = () => {
     checkInTime: "",
     checkOutTime: "",
     cheapestPrice: "",
-    documentProof: null,    
     perks: [],
+    documentProof: null,    
     photos: [],
   };
-  const availablePerks = [
-    { name: 'wifi', label: 'Wifi' },
-    { name: 'parking', label: 'Free Parking spot' },
-    { name: 'swimming pool', label: 'Swimming pool' },
-    { name: 'AC', label: 'Air conditioning' },
-    { name: 'tv', label: 'TV' },
-    { name: 'radio', label: 'Radio' },
-    { name: 'pets', label: 'Pets' },
-    { name: 'airport shuttle', label: 'Airport shuttle' },
-    { name: 'fitness center', label: 'Fitness center' },    
-  ];
-  
-  //the original existing one directly sending to cloudinary from here.
-  // const handleAddProperty = async (values, action) => {
-  //   const { documentProof } = values; 
-  //   const { photos } = values; 
-  //   try {
-  //     setLoading(true);   
-  //     const formData = new FormData();
-  //     formData.append("file", documentProof);
-  //     formData.append("upload_preset", "upload");
-  //     const uploadResponse = await axiosToUrl.post('https://api.cloudinary.com/v1_1/dr2r9xviv/image/upload', formData);
-  //     const docProofUrl = uploadResponse.data.url;
-  //     // setLoading(true);  
-  //     const photosList = await Promise.all(
-  //       photos.map(async (file) => {
-  //         const formPhoto = new FormData();
-  //         formPhoto.append("file", file);
-  //         formPhoto.append("upload_preset", "upload");
-  //         const uploadPhotos = await axiosToUrl.post('https://api.cloudinary.com/v1_1/dr2r9xviv/image/upload', formPhoto);
-  //         const photosUrl = uploadPhotos.data.url;
-  //         return photosUrl;
-  //       })
-  //     );      
-  //     const propertyData = { ...values };
-  //     delete propertyData.documentProof;
-  //     delete propertyData.photos;
-  //     propertyData.documentProof = docProofUrl;
-  //     propertyData.photos = photosList;      
-  //     const { data } = await axios.post('/hotels', propertyData); 
-  //     toast.success(data.message, {
-  //       position: toast.POSITION.TOP_CENTER,
-  //       transition: Flip,
-  //       autoClose: 2000
-  //     });
-  //     action.resetForm(); 
-  //     navigate('/host/view_properties');
-  //   } catch (error) {
-  //     toast.error(error.message, {
-  //       position: toast.POSITION.TOP_CENTER,
-  //       transition: Flip,
-  //       autoClose: 2000
-  //     });
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // }; 
-  
   //base64conversion..  
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {

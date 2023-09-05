@@ -159,7 +159,7 @@ const HotelDetailsPage = () => {
                 </div>
                 
                 {/* Bottom right */}
-                <div className="h-1/2  p-4">
+                <div className="h-auto  p-4">
                   <h1 className="text-lg font-bold pb-5">Document Proof</h1>
                   <div className="flex mb-8 justify-center relative" >
                     <img

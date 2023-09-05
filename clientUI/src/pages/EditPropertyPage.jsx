@@ -2,83 +2,72 @@ import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom';
 import { toast, Flip } from "react-toastify";
 import { useFormik } from "formik";
-import { propertyFormValidation } from '../formValidate';
+import { editPropertyFormValidation } from '../formValidate';
 import PropertyHeader from '../components/PropertyHeader';
 import Footer from '../components/Footer';
 import DocPreview from '../components/DocPreview';
 import axios from "../services/axios";
-import axiosToUrl from 'axios';
 import Loader from "../components/Loader";
 import PerksItems from '../components/PerksItems';
 import PhotosUploadPreview from '../components/PhotosUploadPreview';
 import { AuthContext } from '../context/AuthContext';
 import useFetch from '../hooks/useFetch';
+import { availablePerks } from './PerksContents';
   
 const EditPropertyPage = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
-  const { data: existingData } = useFetch(`/hotels/${user._id}/${id}`);
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
+  const { data: existingData, loading, error } = useFetch(`/hotels/${user._id}/${id}`);
+  const navigate = useNavigate(); 
  
   const [initialValues, setInitialValues] = useState({});
   useEffect(() => {
     if (existingData) {
       setInitialValues({
-        name: existingData.name ,
-        type: existingData.type ,
-        title: existingData.title ,
-        city: existingData.city ,
-        address: existingData.address ,
-        description: existingData.description ,
-        extraInfo: existingData.extraInfo ,
-        checkInTime: existingData.checkInTime ,
-        checkOutTime: existingData.checkOutTime ,
-        cheapestPrice: existingData.cheapestPrice ,
+        name: existingData.name||'' ,
+        type: existingData.type||'' ,
+        title: existingData.title||'' ,
+        city: existingData.city||'' ,
+        address: existingData.address||'' ,
+        description: existingData.description||'' ,
+        extraInfo: existingData.extraInfo||'' ,
+        checkInTime: existingData.checkInTime||'' ,
+        checkOutTime: existingData.checkOutTime||'' ,
+        cheapestPrice: existingData.cheapestPrice||'' ,
+        perks: existingData.perks||[] ,
         documentProof: existingData.documentProof ,
-        perks: existingData.perks ,
-        photos: existingData.photos ,
+        photos: existingData.photos||[] ,
       });
     }
-  }, [existingData]);  
-  
-  const availablePerks = [
-    { name: 'wifi', label: 'Wifi' },
-    { name: 'parking', label: 'Free Parking spot' },
-    { name: 'swimming pool', label: 'Swimming pool' },
-    { name: 'AC', label: 'Air conditioning' },
-    { name: 'tv', label: 'TV' },
-    { name: 'radio', label: 'Radio' },
-    { name: 'pets', label: 'Pets' },
-    { name: 'airport shuttle', label: 'Airport shuttle' },
-    { name: 'fitness center', label: 'Fitness center' },    
-  ];
- 
+  }, [existingData]);   
+  //base64conversion..  
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        resolve(reader.result);
+      };
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };  
   const handleEditProperty = async (values, action) => {
-    const { documentProof } = values;
-    const { photos } = values; 
-    try {
-      setLoading(true);   
-      const formData = new FormData();
-      formData.append("file", documentProof);
-      formData.append("upload_preset", "upload");
-      const uploadResponse = await axiosToUrl.post('https://api.cloudinary.com/v1_1/dr2r9xviv/image/upload', formData);
-      const docProofUrl = uploadResponse.data.url;
-      const photosList = await Promise.all(
-        photos.map(async (file) => {
-          const formPhoto = new FormData();
-          formPhoto.append("file", file);
-          formPhoto.append("upload_preset", "upload");
-          const uploadPhotos = await axiosToUrl.post('https://api.cloudinary.com/v1_1/dr2r9xviv/image/upload', formPhoto);
-          const photosUrl = uploadPhotos.data.url;
-          return photosUrl;
+    const { documentProof } = values; 
+    const { photos } = values;     
+    try {        
+      const documentProofBase64 = typeof (documentProof) !== 'string' ? await convertToBase64(documentProof) : documentProof; 
+      const photosBase64 = await Promise.all(
+        photos.map(async (photo) => {
+          return typeof (photo) !== 'string' ? await convertToBase64(photo): photo;
         })
       );      
-      const propertyData = { ...values };
+      const propertyData = { ...values }; 
       delete propertyData.documentProof;
       delete propertyData.photos;
-      propertyData.documentProof = docProofUrl;
-      propertyData.photos = photosList;      
+      propertyData.documentProof = documentProofBase64;
+      propertyData.photos = photosBase64;       
       const { data } = await axios.put(`/hotels/${id}`, propertyData); 
       toast.success(data.message, {
         position: toast.POSITION.TOP_CENTER,
@@ -94,24 +83,28 @@ const EditPropertyPage = () => {
         transition: Flip,
         autoClose: 2000
       });
-    } finally {
-      setLoading(false);
-    }
-  };   
+    } 
+  }; 
   const { values, errors, touched, handleBlur, handleChange, handleSubmit, setFieldValue } = useFormik({ 
     enableReinitialize:true,
     initialValues: initialValues,
-    validationSchema:propertyFormValidation,    
+    validationSchema:editPropertyFormValidation,    
     onSubmit:handleEditProperty
   });  
   return (
     <div>
       <PropertyHeader/>
       <main className='min-h-screen px-4 md:px-20'>
-        {loading ?
-          <Loader />
-          : (            
-            <div className="my-8 p-4 border border-neutral-500 rounded-xl">
+        {loading ? (
+          <div className="flex items-center justify-center h-full">
+            <Loader />
+          </div>
+        ) : error ? (
+            <div className="flex items-center justify-center h-full">
+              {error}
+            </div>
+          ) : (
+              <div className="my-8 p-4 border border-neutral-500 rounded-xl">
               <form onSubmit={handleSubmit}>
                 <div className="mt-2 mb-5">
                   <label className='font-semibold text-lg'>Name of the property</label>
@@ -315,7 +308,7 @@ const EditPropertyPage = () => {
                 </button>
               </form>              
             </div>
-          )}        
+        )}
       </main>
       <Footer/>
     </div>

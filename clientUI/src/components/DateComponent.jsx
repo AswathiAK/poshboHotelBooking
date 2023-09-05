@@ -11,7 +11,7 @@ const DateComponent = () => {
   const [dates, setDates] = useState([
     {
       startDate: new Date(),
-      endDate: addDays(new Date(),3),
+      endDate: addDays(new Date(),1),
       key: 'selection'
     }
   ]);

@@ -14,7 +14,7 @@ const createHotel = async (req, res, next) => {
   try {    
     const documentProofUrl = await cloudinary.uploader.upload(documentProof, {
       upload_preset: 'poshbo_uploads',
-      allowed_formats:['jpg','jpeg','png']
+      allowed_formats:['jpg','jpeg','png','webp']
     });    
     const photosPromise = photos.map((photo) => {
       return cloudinary.uploader.upload(photo, {
@@ -47,14 +47,53 @@ const createHotel = async (req, res, next) => {
 
 //UPDATION
 const updateHotel = async (req, res, next) => {
-  const { id } = req.params; 
+  const { id } = req.params;
+  const { name, type, title,
+    city, address, description,
+    extraInfo,
+    checkInTime, checkOutTime,
+    cheapestPrice,perks,
+    documentProof, photos,
+  } = req.body;      
   try {
-      const updatedHotel = await Hotel.findByIdAndUpdate(
-        { _id: id },
-        { $set: req.body },
-        { new: true }
-      );
-      res.status(200).json({message:'Updated successfully',updatedHotel});
+    let documentProofUrl;
+    if (typeof (documentProof) === 'string' && documentProof.startsWith('http://res.cloudinary.com')) { 
+      documentProofUrl = documentProof;      
+    } else {console.log('baset4tsgasanalloo');
+      const {url} = await cloudinary.uploader.upload(documentProof, {
+        upload_preset: 'poshbo_uploads',
+        allowed_formats:['jpg','jpeg','png','webp']
+      });
+      documentProofUrl = url;
+    }
+    const photosPromise = photos.map(async (photo) => {
+      if (typeof photo === 'string' && photo.startsWith('http://res.cloudinary.com')) {
+        return photo;
+      } else {
+        const {url}=await cloudinary.uploader.upload(photo, {
+          upload_preset: 'poshbo_uploads',
+          allowed_formats: ['jpg', 'jpeg', 'png','webp']
+        });
+        return url;
+      }
+    });
+    const photosUrl = await Promise.all(photosPromise);      
+    const updatedHotel = await Hotel.findByIdAndUpdate(
+      { _id: id },
+      {
+        $set: {          
+          name, type, title,
+          city, address, description,   
+          extraInfo,
+          checkInTime, checkOutTime,
+          cheapestPrice,perks,
+          documentProof:documentProofUrl,
+          photos:photosUrl,          
+        }
+      },
+      { new: true }
+    );
+    res.status(200).json({message:'Updated successfully',updatedHotel});
   } catch (error) {
     next(error);
   }
