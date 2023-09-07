@@ -3,10 +3,9 @@ import { toast, Flip } from "react-toastify";
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useFormik } from "formik";
 import { forgotPasswordValidation } from '../formValidate';
-import UserHeader from '../components/UserHeader';
-import Footer from '../components/Footer';
 import axios from "../services/axios";
 import { AuthContext } from '../context/AuthContext';
+import { Footer, UserHeader } from '../components';
 
 const ForgotPasswordPage = () => {
   const { user } = useContext(AuthContext);

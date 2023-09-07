@@ -1,9 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
-import CommonHeader from '../components/CommonHeader';
-import Footer from '../components/Footer';
 import useFetch from '../hooks/useFetch';
-import Loader from '../components/Loader';
+import { CommonHeader, Footer, Loader } from '../components';
 
 const HomePage = () => {
   const { data, loading, error } = useFetch(`/hotels`);

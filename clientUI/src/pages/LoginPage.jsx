@@ -3,11 +3,10 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import { toast, Flip } from "react-toastify";
 import { useFormik } from "formik";
 import { loginValidation } from '../formValidate';
-import Footer from '../components/Footer';
-import usePasswordToggle from '../hooks/usePasswordToggle';
 import axios from "../services/axios";
-import UserHeader from '../components/UserHeader';
+import usePasswordToggle from '../hooks/usePasswordToggle';
 import { AuthContext } from '../context/AuthContext';
+import { Footer, UserHeader } from '../components';
 
 const LoginPage = () => {  
   const { user, dispatch } = useContext(AuthContext);

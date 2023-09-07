@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast, Flip } from "react-toastify";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import BedIcon from '@mui/icons-material/Bed';
@@ -8,13 +8,13 @@ import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaceIcon from '@mui/icons-material/Place';
+import { AuthContext } from '../context/AuthContext';
+import axios from "../services/axios";
 import logo from "../assets/poshbo.svg";
 import AccountMenu from './AccountMenu';
 import ProfileMenu from './ProfileMenu';
 import DateComponent from './DateComponent';
 import AddGuestsComponent from './AddGuestsComponent';
-import { AuthContext } from '../context/AuthContext';
-import axios from "../services/axios";
 
 const CommonHeader = () => {
   const { user, dispatch } = useContext(AuthContext);

@@ -1,0 +1,18 @@
+export { default as Loader } from "./Loader";
+export { default as CommonHeader } from "./CommonHeader";
+export { default as PropertyHeader } from "./PropertyHeader";
+export { default as UserHeader } from "./UserHeader";
+export { default as Footer } from "./Footer";
+export { default as DateComponent } from "./DateComponent";
+export { default as AddGuestsComponent } from "./AddGuestsComponent";
+export { default as OTPContent } from "./OTPContent";
+export { default as ProfileMenu } from "./ProfileMenu";
+export { default as AccountMenu } from "./AccountMenu";
+export { default as HostAccountMenu } from "./HostAccountMenu";
+export { default as PerksItems } from "./PerksItems";
+export { default as DocPreview } from "./DocPreview";
+export { default as PhotosUploadPreview } from "./PhotosUploadPreview";
+export { default as ImageSlider } from "./ImageSlider";
+export { default as RoomFormModal } from "./RoomFormModal";
+
+

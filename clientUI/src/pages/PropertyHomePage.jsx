@@ -1,14 +1,13 @@
 import React, { useContext } from 'react'
+import { useNavigate } from 'react-router-dom';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import StarsIcon from '@mui/icons-material/Stars';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import ApartmentIcon from '@mui/icons-material/Apartment';
 import HeadsetMicIcon from '@mui/icons-material/HeadsetMic';
-import PropertyHeader from '../components/PropertyHeader';
-import Footer from '../components/Footer';
-import hotelBackground from "../assets/HotelBackground.jpg";
 import { AuthContext } from '../context/AuthContext';
-import { Navigate, useNavigate } from 'react-router-dom';
+import hotelBackground from "../assets/HotelBackground.jpg";
+import { Footer, PropertyHeader } from '../components';
 
 const PropertyHomePage = () => {
   const { user } = useContext(AuthContext);
@@ -18,8 +17,8 @@ const PropertyHomePage = () => {
       navigate('/host/add_property');
     } else {
       navigate('/login');
-   }
-  }
+    }
+  };
 
   return (
     <div>

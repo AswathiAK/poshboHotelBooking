@@ -10,4 +10,6 @@ export { default as AddPropertyPage } from "./AddPropertyPage";
 export { default as ViewPropertiesPage } from "./ViewPropertiesPage";
 export { default as ViewSinglePropertyPage } from "./ViewSinglePropertyPage";
 export { default as EditPropertyPage } from "./EditPropertyPage";
-export { default as HostProfilePage } from "./HostProfilePage";
+export { default as HostProfilePage } from "./HostProfilePage"; 
+export { default as HostMessagePage } from "./HostMessagePage"; 
+export { default as RoomFormPage } from "./RoomFormPage"; 

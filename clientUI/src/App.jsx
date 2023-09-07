@@ -3,14 +3,11 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import {
-  LoginPage, RegisterPage,
-  ForgotPasswordPage,ResetPasswordPage,
+  LoginPage, RegisterPage, ForgotPasswordPage, ResetPasswordPage,
   HomePage, UserProfilePage, ErrorPage,
-  PropertyHomePage, AddPropertyPage,
-  ViewPropertiesPage,
-  HostProfilePage,
-  ViewSinglePropertyPage,
-  EditPropertyPage
+  PropertyHomePage, AddPropertyPage, ViewPropertiesPage, ViewSinglePropertyPage,
+  EditPropertyPage,
+  HostProfilePage, HostMessagePage
 } from "./pages";
 
 function App() {
@@ -31,7 +28,8 @@ function App() {
         <Route path='/host/view_properties' element={<ViewPropertiesPage />} />
         <Route path='/host/view_property/:id' element={<ViewSinglePropertyPage />} />
         <Route path='/host/edit_property/:id' element={<EditPropertyPage />} />        
-        <Route path='/host/account' element={<HostProfilePage />} />
+        <Route path='/host/account/:active' element={<HostProfilePage />} />
+        <Route path='/host/messages' element={<HostMessagePage />} />
         
       </Routes>
     </>

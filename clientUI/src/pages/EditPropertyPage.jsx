@@ -3,16 +3,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { toast, Flip } from "react-toastify";
 import { useFormik } from "formik";
 import { editPropertyFormValidation } from '../formValidate';
-import PropertyHeader from '../components/PropertyHeader';
-import Footer from '../components/Footer';
-import DocPreview from '../components/DocPreview';
 import axios from "../services/axios";
-import Loader from "../components/Loader";
-import PerksItems from '../components/PerksItems';
-import PhotosUploadPreview from '../components/PhotosUploadPreview';
 import { AuthContext } from '../context/AuthContext';
 import useFetch from '../hooks/useFetch';
 import { availablePerks } from './PerksContents';
+import { DocPreview, Footer, Loader, PerksItems, PhotosUploadPreview, PropertyHeader } from '../components';
   
 const EditPropertyPage = () => {
   const { id } = useParams();

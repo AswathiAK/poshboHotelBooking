@@ -15,7 +15,8 @@ const HostAccountMenu = () => {
   const menuItems = [
     { text: 'View my properties', link: '/host/view_properties' },
     { text: 'Add new property', link: '/host/add_property' },
-    { text: 'My Account', link: '/host/account' }
+    { text: 'Messages', link: '/host/messages' },
+    { text: 'My Account', link: '/host/account/personal' }
   ];
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);

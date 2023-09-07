@@ -3,14 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast, Flip } from "react-toastify";
 import { useFormik } from "formik";
 import { propertyFormValidation } from '../formValidate';
-import PropertyHeader from '../components/PropertyHeader';
-import Footer from '../components/Footer';
-import DocPreview from '../components/DocPreview';
 import axios from "../services/axios";
-import Loader from "../components/Loader";
-import PerksItems from '../components/PerksItems';
-import PhotosUploadPreview from '../components/PhotosUploadPreview';
 import { availablePerks } from './PerksContents';
+import { DocPreview, Footer, Loader, PerksItems, PhotosUploadPreview, PropertyHeader } from '../components';
   
 const AddPropertyPage = () => {
   const navigate = useNavigate();

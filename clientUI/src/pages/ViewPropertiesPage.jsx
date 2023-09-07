@@ -3,13 +3,11 @@ import { toast, Flip } from "react-toastify";
 import { Link, useNavigate } from 'react-router-dom';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import PropertyHeader from '../components/PropertyHeader';
-import Footer from '../components/Footer';
+import Swal from 'sweetalert2'
 import useFetch from '../hooks/useFetch';
 import { AuthContext } from '../context/AuthContext';
-import Loader from '../components/Loader';
 import axios from "../services/axios";
-import Swal from 'sweetalert2'
+import { Footer, Loader, PropertyHeader } from '../components';
 
 const ViewPropertiesPage = () => {
   const navigate = useNavigate();
@@ -56,6 +54,7 @@ const ViewPropertiesPage = () => {
     <div>
       <PropertyHeader />
       <main className='min-h-screen px-4 md:px-20'>
+        <h1 className="my-8 text-center text-3xl font-semibold">My Properties</h1>
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <Loader />
@@ -101,7 +100,7 @@ const ViewPropertiesPage = () => {
         }
 
       </main>
-      <Footer/>
+      <Footer />
     </div>
   )
 }

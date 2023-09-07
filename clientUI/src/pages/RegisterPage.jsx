@@ -6,10 +6,8 @@ import { registerValidation } from '../formValidate';
 import { RecaptchaVerifier, signInWithPhoneNumber } from 'firebase/auth';
 import { auth } from "../services/firebase";
 import usePasswordToggle from '../hooks/usePasswordToggle';
-import UserHeader from '../components/UserHeader';
-import Footer from '../components/Footer';
-import OTPContent from "../components/OTPContent";
 import { AuthContext } from '../context/AuthContext';
+import { Footer, OTPContent, UserHeader } from "../components";
 
 const RegisterPage = () => {
   const { user } = useContext(AuthContext);

@@ -3,11 +3,10 @@ import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { toast, Flip } from "react-toastify";
 import { useFormik } from "formik";
 import { resetPasswordValidation } from '../formValidate';
-import UserHeader from '../components/UserHeader';
-import Footer from '../components/Footer';
-import usePasswordToggle from '../hooks/usePasswordToggle';
 import axios from "../services/axios";
 import { AuthContext } from '../context/AuthContext';
+import usePasswordToggle from '../hooks/usePasswordToggle';
+import { Footer, UserHeader } from '../components';
 
 const ResetPasswordPage = () => {
   const { user } = useContext(AuthContext);
@@ -111,7 +110,7 @@ const ResetPasswordPage = () => {
           </div>
         </div>
       </main>
-      <Footer/>
+      <Footer />
     </div>
   )
 }

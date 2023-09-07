@@ -1,6 +1,5 @@
 import React from 'react'
-import CommonHeader from '../components/CommonHeader';
-import Footer from '../components/Footer';
+import { CommonHeader, Footer } from '../components'
 
 const UserProfilePage = () => {
   return (
