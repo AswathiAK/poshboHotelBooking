@@ -1,8 +1,12 @@
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
+import { toast, Flip } from "react-toastify";
 import { useFormik } from "formik";
 import { roomFormValidation } from '../formValidate';
+import axios from "../services/axios";
 
-const RoomFormPage = ({propertyId}) => {
+const RoomFormPage = ({ propertyId }) => {
+  const navigate = useNavigate();
   const initialValues = {
     title: "",
     price:"",
@@ -10,8 +14,27 @@ const RoomFormPage = ({propertyId}) => {
     description: "",
     roomNumbers:[]
   }; 
-  const handleAddRoom = () => {
-    console.log(propertyId);
+  const handleAddRoom = async (values, action) => {
+    const roomNumbersArray = values.roomNumbers.split(',').map(room => ({ number: room }));
+    const roomData = { ...values };
+    roomData.roomNumbers = roomNumbersArray;
+    try {
+      const { data } = await axios.post(`/rooms/${propertyId}`, roomData); 
+      toast.success(data.message, {
+        position: toast.POSITION.TOP_CENTER,
+        transition: Flip,
+        autoClose: 2000
+      });
+      action.resetForm(); 
+      navigate('/host/view_properties');
+    } catch (error) {
+      const errorMessage =  error.response?.data?.message??error.response?.statusText??error.message ; 
+      toast.error(errorMessage, {
+        position: toast.POSITION.TOP_CENTER,
+        transition: Flip,
+        autoClose: 2000
+      });
+    }    
   }
   const { values, errors, touched, handleBlur, handleChange, handleSubmit } = useFormik({    
     initialValues: initialValues,

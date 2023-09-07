@@ -9,5 +9,5 @@ room_route.delete('/:id/:roomId', verifyUserToken, verifyHotel, roomController.d
 
 room_route.get('/', roomController.getAllRooms);
 room_route.get('/:id', roomController.getSingleRoom);
-
+ 
 module.exports = room_route;

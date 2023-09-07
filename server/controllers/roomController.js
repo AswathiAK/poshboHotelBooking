@@ -15,7 +15,7 @@ const createRoom = async (req, res, next) => {
     } catch (error) {
       next(error);
     }
-    res.status(200).json(savedRoom);
+    res.status(200).json({message:"Room created successfully",savedRoom});
   } catch (error) {
     next(error); 
   }
@@ -30,7 +30,7 @@ const updateRoom = async (req, res, next) => {
         { $set: req.body },
         { new: true }
       );
-      res.status(200).json(updatedRoom);
+      res.status(200).json({message:"Room updated successfully",updatedRoom});
   } catch (error) {
     next(error);
   }

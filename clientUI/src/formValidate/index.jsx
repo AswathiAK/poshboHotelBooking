@@ -115,5 +115,12 @@ export const roomFormValidation = Yup.object({
   price: Yup.string().matches(/^\d+(\.\d+)?$/, "must be a positive number").required("Price is required"),
   maxGuests: Yup.string().matches(/^\d+(\.\d+)?$/, "must be a positive number").required("No of guests is required"),
   description: Yup.string().min(10).required("Add description"),
-  // roomNumbers: Yup.array().of(Yup.string()).required('must be a positive number') 
+  // roomNumbers: Yup.array().min(1, "You can't leave this blank.")
 });
+export const editRoomFormValidation = Yup.object({
+  title: Yup.string().min(2).required("Name is required"),
+  price: Yup.string().matches(/^\d+(\.\d+)?$/, "must be a positive number").required("Price is required"),
+  maxGuests: Yup.string().matches(/^\d+(\.\d+)?$/, "must be a positive number").required("No of guests is required"),
+  description: Yup.string().min(10).required("Add description"),
+  // roomNumbers: Yup.array().min(1, "You can't leave this blank.")
+})
