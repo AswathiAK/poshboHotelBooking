@@ -7,7 +7,7 @@ import useFetch from '../hooks/useFetch';
 import { Loader } from '../components';
 import axios from "../services/axios";
 
-const RoomEditFormPage = ({ roomId,propertyId }) => {
+const EditRoomPage = ({ roomId,propertyId }) => {
   const navigate = useNavigate();
   const { data:existingData, loading, error } = useFetch(`/rooms/${roomId}`);
   const [initialValues, setInitialValues] = useState({});
@@ -151,4 +151,4 @@ const RoomEditFormPage = ({ roomId,propertyId }) => {
   )
 }
 
-export default RoomEditFormPage
+export default EditRoomPage

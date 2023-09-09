@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 
 const ImageSlider = ({ property }) => {
-
   const [currentIndex, setCurrentIndex] = useState(0);
   const goToPrevious = () => {
     const isFirst = currentIndex === 0;
@@ -12,7 +11,7 @@ const ImageSlider = ({ property }) => {
     const isLast = currentIndex === property.photos?.length-1;
     const newIndex = isLast ? 0 : currentIndex + 1;
     setCurrentIndex(newIndex);
-  }
+  } 
   return (
     <div className='h-full relative'>   
       <div className="absolute top-1/2 left-8 -translate-y-1/2 cursor-pointer text-5xl text-red-800"

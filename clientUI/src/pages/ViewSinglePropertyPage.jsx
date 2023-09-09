@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import VerifiedIcon from '@mui/icons-material/Verified';
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
 import EditIcon from '@mui/icons-material/Edit';
@@ -11,19 +11,17 @@ import axios from "../services/axios";
 import { AuthContext } from '../context/AuthContext';
 import useFetch from '../hooks/useFetch';
 import { Footer, ImageSlider, Loader, PropertyHeader, RoomFormModal } from '../components';
-import RoomFormPage from './RoomFormPage';
-import RoomEditFormPage from './RoomEditFormPage';
+import AddRoomPage from './AddRoomPage';
+import EditRoomPage from './EditRoomPage';
 
 const ViewSinglePropertyPage = () => {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [editRoomId, setEditRoomId] = useState(null);
-
   const { id } = useParams();
-  const navigate = useNavigate();
   const [property, setProperty] = useState();
   const { user } = useContext(AuthContext);
-  const { data, loading, error } = useFetch(`/hotels/${user._id}/${id}`); 
+  const { data, loading, error } = useFetch(`/hotels/host/${user._id}/${id}`); 
   useEffect(() => {
     setProperty(data);
   }, [data]);
@@ -66,8 +64,6 @@ const ViewSinglePropertyPage = () => {
       });
     }
   };
-
-  
 
   return (
     <div>
@@ -184,7 +180,7 @@ const ViewSinglePropertyPage = () => {
                       </button>  
                       {openAddModal &&
                         <RoomFormModal title="Add Room" open={openAddModal} setOpen={setOpenAddModal} >
-                          <RoomFormPage propertyId={property._id} />
+                          <AddRoomPage propertyId={property._id} />
                         </RoomFormModal>
                       }
                       {/* <RoomFormModal title="Add Room" >
@@ -213,7 +209,7 @@ const ViewSinglePropertyPage = () => {
                           </button>
                           {openEditModal &&
                             <RoomFormModal title="Edit Room" open={openEditModal} setOpen={setOpenEditModal} >
-                              <RoomEditFormPage roomId={editRoomId} propertyId={property._id} />
+                              <EditRoomPage roomId={editRoomId} propertyId={property._id} />
                             </RoomFormModal>
                           }
                         </div>                        

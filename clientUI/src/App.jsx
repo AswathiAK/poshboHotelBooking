@@ -7,7 +7,7 @@ import {
   HomePage, UserProfilePage, ErrorPage,
   PropertyHomePage, AddPropertyPage, ViewPropertiesPage, ViewSinglePropertyPage,
   EditPropertyPage,
-  HostProfilePage, HostMessagePage
+  HostProfilePage, HostMessagePage, SingleHotelPage
 } from "./pages";
 
 function App() {
@@ -20,6 +20,7 @@ function App() {
         <Route path='/forgot_password' element={<ForgotPasswordPage />} />
         <Route path='/reset_password/:token/:id' element={<ResetPasswordPage />} />
         <Route path='/' element={<HomePage />} />  
+        <Route path='/:id' element={<SingleHotelPage />} />
         <Route path='/account' element={<UserProfilePage />} />
         <Route path='*' element={<ErrorPage />} />        
 

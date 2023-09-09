@@ -149,9 +149,9 @@ const getAllHotels = async (req, res, next) => {
 };
 //GET SINGLE for user
 const getSingleHotel = async (req, res, next) => {
-  const { id } = req.params;
+  const { id } = req.params; 
   try {
-    const singleHotel = await Hotel.findById(id); 
+    const singleHotel = await Hotel.findById(id).populate('owner').populate('rooms'); 
     res.status(200).json(singleHotel);
   } catch (error) {
     next(error);

@@ -13,7 +13,7 @@ const ViewPropertiesPage = () => {
   const navigate = useNavigate();
   const [list, setList] = useState();
   const { user } = useContext(AuthContext); 
-  const { data, loading, error } = useFetch(`/hotels/${user._id}`);
+  const { data, loading, error } = useFetch(`/hotels/host/${user._id}`);
   useEffect(() => {
     setList(data);
   }, [data]);

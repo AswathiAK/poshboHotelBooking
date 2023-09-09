@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import { roomFormValidation } from '../formValidate';
 import axios from "../services/axios";
 
-const RoomFormPage = ({ propertyId }) => {
+const AddRoomPage = ({ propertyId }) => {
   const navigate = useNavigate();
   const initialValues = {
     title: "",
@@ -131,4 +131,4 @@ const RoomFormPage = ({ propertyId }) => {
   )
 }
 
-export default RoomFormPage
+export default AddRoomPage

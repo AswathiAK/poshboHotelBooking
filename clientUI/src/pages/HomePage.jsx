@@ -5,7 +5,7 @@ import { CommonHeader, Footer, Loader } from '../components';
 
 const HomePage = () => {
   const { data, loading, error } = useFetch(`/hotels`);
-  console.log(data);
+  
   return (
     <div>
       <CommonHeader/>
@@ -21,7 +21,7 @@ const HomePage = () => {
           ) : data ? (
               <div className="my-8 gap-x-6 gap-y-8 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 px-8">
                 {data.length > 0 && data.map(item => (
-                  <Link to={'/'} className="" key={item._id}>
+                  <Link to={`/${item._id}`} className="" key={item._id}>
                     <div className="bg-gray-500 mb-2 rounded-2xl flex">
                       {item.photos?.[0] && (
                         <img src={item.photos?.[0]} alt="property photo" className="rounded-2xl object-cover aspect-square" />

@@ -12,7 +12,7 @@ import { DocPreview, Footer, Loader, PerksItems, PhotosUploadPreview, PropertyHe
 const EditPropertyPage = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
-  const { data: existingData, loading, error } = useFetch(`/hotels/${user._id}/${id}`);
+  const { data: existingData, loading, error } = useFetch(`/hotels/host/${user._id}/${id}`);
   const navigate = useNavigate(); 
  
   const [initialValues, setInitialValues] = useState({});

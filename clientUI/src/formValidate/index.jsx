@@ -47,8 +47,8 @@ export const propertyFormValidation = Yup.object({
       (value) => !value || (value && SUPPORTED_FORMATS.includes(value?.type))
     ),
   photos: Yup.array()    
-    .test("FILE_LENGTH", "Upload at least one photo", (value) => {
-      if (value.length < 1) return false;
+    .test("FILE_LENGTH", "Upload minimum of five photos", (value) => {
+      if (value.length < 6) return false;
       return true;
     })
     .test("FILE_SIZE", 'File size is too large', (value) => {

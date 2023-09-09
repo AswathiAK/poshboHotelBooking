@@ -14,5 +14,10 @@ export { default as DocPreview } from "./DocPreview";
 export { default as PhotosUploadPreview } from "./PhotosUploadPreview";
 export { default as ImageSlider } from "./ImageSlider";
 export { default as RoomFormModal } from "./RoomFormModal";
+export { default as ImageGallery } from "./ImageGallery";
+export { default as ImageModal } from "./ImageModal";
+export { default as Map } from "./Map";
+export { default as GeoCodeMarker } from "./GeoCodeMarker";
+
 
 
