@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import StarIcon from '@mui/icons-material/Star';
 import useFetch from '../hooks/useFetch';
 import { CommonHeader, Footer, Loader } from '../components';
 
@@ -27,8 +28,14 @@ const HomePage = () => {
                         <img src={item.photos?.[0]} alt="property photo" className="rounded-2xl object-cover aspect-square" />
                       )}
                     </div>
-                    <h2 className="font-bold">{item.city}</h2>
-                    <h3 className="text-sm text-gray-500">{item.title}</h3>
+                    <div className="flex justify-between">
+                      <h2 className="font-bold">{item.city}</h2>
+                      <div className="flex items-center">
+                        <span><StarIcon sx={{fontSize:'18px'}} /></span>
+                        <p className="text-sm font-medium">4.79 </p>
+                      </div>
+                    </div>                    
+                    <h3 className="pt-1 text-sm text-gray-500">{item.title}</h3>
                     <div className="mt-1">
                       <span className="font-medium">Rs. {item.cheapestPrice}/- onwards</span>
                     </div>

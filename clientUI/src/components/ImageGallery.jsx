@@ -5,7 +5,7 @@ import ImageModal from './ImageModal';
 const ImageGallery = ({ property }) => {
   const [open, setOpen] = useState(false);
   return (
-    <div className="pt-5 h-full flex relative">
+    <div className="pt-5 h-full flex relative" >
       <div className="w-1/2 rounded-s-xl">
         <img src={property.photos?.[0]} alt="1st photo" className='w-full h-full object-cover rounded-s-xl' />
       </div>
@@ -24,16 +24,16 @@ const ImageGallery = ({ property }) => {
         <div className="h-1/2 pt-2 rounded-br-lg">
           <img src={property.photos?.[4]} alt="5th photo" className='w-full h-full object-cover rounded-br-lg' />
         </div>
-      </div>
+      </div>    
       <div className="absolute bottom-5 right-5">
         <button onClick={()=>setOpen(true)}
           className='bg-white border border-black px-4 py-2 text-sm font-semibold text-center rounded-lg'
         >
           <BlurOnIcon sx={{fontSize:'22px'}}/> Show all Photos
         </button>
-        {/* {open &&
-          <ImageModal open={open} setOpen={setOpen} property={property} />           
-        } */}
+        {open &&
+          <ImageModal setOpen={setOpen} property={property} />           
+        }
       </div>
     </div>
   )
