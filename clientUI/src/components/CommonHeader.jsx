@@ -217,7 +217,7 @@ const CommonHeader = () => {
   const { searchDispatch } = useContext(SearchContext);
   const handleSearch = () => {
     searchDispatch({ type: "NEW_SEARCH", payload: { destination, dates, options } });
-    // console.log(destination,dates,options);
+    navigate('/search_results',{ state: { destination, dates, options } });
   }
   
   return (
@@ -235,7 +235,7 @@ const CommonHeader = () => {
           <span className="text-gray-400 pr-2"><PlaceIcon/></span>
           <input
             type="text" name='search'
-            className="focus:outline-none w-[100px] bg-transparent hidden lg:flex" 
+            className="text-gray-400 focus:outline-none w-[100px] bg-transparent hidden lg:flex" 
             placeholder='Search Place'
             value={destination}
             onChange={(e)=>setDestination(e.target.value)}

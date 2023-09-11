@@ -49,7 +49,7 @@ import {
   HomePage, UserProfilePage, ErrorPage,
   PropertyHomePage, AddPropertyPage, ViewPropertiesPage, ViewSinglePropertyPage,
   EditPropertyPage,
-  HostProfilePage, HostMessagePage, SingleHotelPage
+  HostProfilePage, HostMessagePage, SingleHotelPage, SearchResultsHotelsPage
 } from "./pages";
 import { Layout } from './components';
 
@@ -64,7 +64,8 @@ function App() {
         <Route path='/reset_password/:token/:id' element={<ResetPasswordPage />} />
 
         <Route path='/' element={<Layout />} >
-          <Route index element={<HomePage />} />  
+          <Route index element={<HomePage />} />
+          <Route path='/search_results' element={<SearchResultsHotelsPage />} />
           <Route path='/:id' element={<SingleHotelPage />} />
           <Route path='/account' element={<UserProfilePage />} />
         </Route>

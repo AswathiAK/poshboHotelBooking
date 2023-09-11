@@ -15,4 +15,4 @@ export { default as HostMessagePage } from "./HostMessagePage";
 export { default as AddRoomPage } from "./AddRoomPage"; 
 export { default as EditRoomPage } from "./EditRoomPage";
 export { default as SingleHotelPage } from "./SingleHotelPage";
-
+export { default as SearchResultsHotelsPage } from "./SearchResultsHotelsPage";

@@ -1,5 +1,6 @@
 const Hotel = require("../models/hotelModel.js");
 const cloudinary = require("../middlewares/cloudinary.js");
+// const Room = require("../models/roomModel.js");
 
 //CREATION
 const createHotel = async (req, res, next) => {   
@@ -158,10 +159,46 @@ const getSingleHotel = async (req, res, next) => {
   }
 };
 
+// const getHotelRooms = async (req, res, next) => {
+//   const { id } = req.params;
+//   try {
+//     const hotel = await Hotel.findById(id);
+//     const roomsList = await Promise.all(hotel.rooms.map(room => {
+//       return Room.findById(room);
+//     }));
+//     res.status(200).json(roomsList);
+//   } catch (error) {
+//     next(error);
+//   }
+// }
+
+const searchHotelsResults = async (req, res, next) => {
+  const city = req.query.city || '';
+  try {
+    const searchHotels = await Hotel.find({
+      $and: [
+        { isVerified: true },
+        { isBlock: false }
+      ],
+      $or: [
+        { city: { $regex: city, $options: "i" } },
+        { address: { $regex: city, $options: "i" } },
+      ]
+    });
+    if (searchHotels.length === 0) {
+      return res.status(404).json({ message: "Oops!, No hotels found" });
+    }
+    res.status(200).json(searchHotels);
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createHotel, updateHotel,
   deleteHotel,
   hotelsOfHost,singleHotelOfHost,
-  getAllHotels,getSingleHotel
+  getAllHotels, getSingleHotel,
+  searchHotelsResults
+  // getHotelRooms
 }

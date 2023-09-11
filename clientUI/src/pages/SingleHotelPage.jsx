@@ -17,7 +17,7 @@ const SingleHotelPage = () => {
   return (
     <div>
       {/* <CommonHeader /> */}
-      <main className="min-h-screen px-4 md:px-20">
+      <main className="min-h-screen px-4 md:px-20 ">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <Loader/>
@@ -58,7 +58,7 @@ const SingleHotelPage = () => {
                         <div className="w-full border rounded-md p-5 mb-2" key={index}>
                           <h1 className="font-semibold text-lg py-1">{room.title} : Rs. {room.price}/-</h1> 
                           <p className="font-light text-sm py-1">{room.description}</p>
-                          <p className="text-md py-1">Max. No. of Guests : {room.maxGuests}</p>
+                          <p className="text-md py-1">Max. No. of Guests : {room.maxGuests}</p> 
                           {/* <p className="text-md py-1">No. of {room.title}s available : {room.roomNumbers.length}</p> */}
                         </div> 
                       ))}
