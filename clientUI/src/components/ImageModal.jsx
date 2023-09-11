@@ -17,15 +17,17 @@ const ImageModal = ({ setOpen, property }) => {
   };  
 
   return (     
-    <div className='fixed top-0 bottom-0 left-0 right-0 bg-gray-900 flex items-center justify-center w-full h-full z-30'>
+    <div className='fixed top-0 bottom-0 left-0 right-0 backdrop-blur-sm bg-black/75 flex items-center justify-center 
+      w-full h-full z-30'
+    >
       <div className="fixed cursor-pointer top-5 right-10" onClick={() => setOpen(false)}>
-        <CancelIcon sx={{ color: 'white', '&:hover': { color: 'lightgray' } }} />
+        <CancelIcon sx={{ fontSize:'25px', color: 'white', '&:hover': { color: 'gray' } }} />
       </div>
       <div className="fixed cursor-pointer top-1/2 left-20 -translate-y-1/2" onClick={prevSlide}>
-        <ArrowCircleLeftIcon sx={{ color: 'white', '&:hover': { color: 'lightgray' } }} />
+        <ArrowCircleLeftIcon sx={{ fontSize:'36px', color: 'white', '&:hover': { color: 'gray' } }} />
       </div>
       <div className="fixed cursor-pointer top-1/2 right-20 -translate-y-1/2 " onClick={nextSlide}>
-        <ArrowCircleRightIcon sx={{ color: 'white', '&:hover': { color: 'lightgray' } }} />
+        <ArrowCircleRightIcon sx={{ fontSize:'36px', color: 'white', '&:hover': { color: 'gray' } }} />
       </div>
       <div className="w-[calc(100%-400px)] h-[calc(100%-100px)]">
         <img src={property.photos?.[slideNumber]} alt="photos" className="w-full h-full object-cover" />

@@ -18,6 +18,8 @@ export { default as ImageGallery } from "./ImageGallery";
 export { default as ImageModal } from "./ImageModal";
 export { default as Map } from "./Map";
 export { default as GeoCodeMarker } from "./GeoCodeMarker";
+export { default as BookingWidget } from "./BookingWidget";
+export { default as Layout } from "./Layout";
 
 
 

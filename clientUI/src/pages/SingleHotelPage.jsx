@@ -2,7 +2,7 @@ import React, { useRef } from 'react'
 import { useParams } from 'react-router-dom';
 import PlaceIcon from '@mui/icons-material/Place';
 import StarIcon from '@mui/icons-material/Star';
-import { CommonHeader, Footer, ImageGallery, Loader, Map } from '../components';
+import { BookingWidget, CommonHeader, Footer, ImageGallery, Loader, Map } from '../components';
 import useFetch from '../hooks/useFetch';
 
 const SingleHotelPage = () => {
@@ -16,7 +16,7 @@ const SingleHotelPage = () => {
   };
   return (
     <div>
-      <CommonHeader />
+      {/* <CommonHeader /> */}
       <main className="min-h-screen px-4 md:px-20">
         {loading ? (
           <div className="flex items-center justify-center h-full">
@@ -52,14 +52,16 @@ const SingleHotelPage = () => {
                       <button className="py-3 px-4 bg-gray-900 text-white rounded-lg hover:bg-black">
                         Message Host
                       </button>
-                    </div>
-                    <div className="flex gap-5 pb-6 border-b">
+                    </div>                    
+                    <div className="pb-6 border-b">
                       {data.rooms?.map((room, index) => (
-                        <div className="rounded-lg border px-8 py-4 text-center mb-5" key={index}> 
-                          <h3 className="font-medium">{room.title}</h3>
-                          <p className="pt-1">Rs.{room.price}/-</p>
-                        </div>
-                      ))}                      
+                        <div className="w-full border rounded-md p-5 mb-2" key={index}>
+                          <h1 className="font-semibold text-lg py-1">{room.title} : Rs. {room.price}/-</h1> 
+                          <p className="font-light text-sm py-1">{room.description}</p>
+                          <p className="text-md py-1">Max. No. of Guests : {room.maxGuests}</p>
+                          {/* <p className="text-md py-1">No. of {room.title}s available : {room.roomNumbers.length}</p> */}
+                        </div> 
+                      ))}
                     </div>
                     <div className="py-12 border-b">
                       <div className="pb-4">
@@ -80,8 +82,10 @@ const SingleHotelPage = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="mt-12 bg-blue-500 ml-24 w-1/3">
-                    <div className="border rounded-lg">Booking widget</div>
+                  <div className="mt-12 ml-24 w-1/3">
+                    <div className="border rounded-xl relative shadow-[0_6px_16px_rgba(0,0,0,0.12)] px-5 py-6">
+                      <BookingWidget />
+                    </div>
                   </div>
                 </div>
                 <div className="py-12 border-b">
@@ -169,7 +173,7 @@ const SingleHotelPage = () => {
                 </div>
         )}
       </main>
-      <Footer />      
+      {/* <Footer />       */}
     </div>
   )
 }

@@ -9,7 +9,7 @@ const HomePage = () => {
   
   return (
     <div>
-      <CommonHeader/>
+      {/* <CommonHeader/> */}
       <main className="h-auto sm:h-screen px-4 md:px-20">
         {loading ? (
           <div className="flex items-center justify-center h-full">
@@ -48,7 +48,7 @@ const HomePage = () => {
                 </div>
         )}
       </main>
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   )
 }

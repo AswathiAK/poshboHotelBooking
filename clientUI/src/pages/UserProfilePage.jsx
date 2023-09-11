@@ -4,11 +4,11 @@ import { CommonHeader, Footer } from '../components'
 const UserProfilePage = () => {
   return (
     <div>
-      <CommonHeader />
+      {/* <CommonHeader /> */}
       <main className="h-auto sm:h-screen px-4 md:px-20">
         userprofile page
       </main>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }
