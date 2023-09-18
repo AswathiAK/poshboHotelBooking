@@ -103,24 +103,71 @@ const userLogin = async (req, res, next) => {
 };
 
 const userProfile = async (req, res, next) => {
-  const { id } = req.params; 
+  const { id } = req.params;
   try {
     const user = await User.findById(id);
     res.status(200).json(user);
   } catch (error) {
     next(error);
   }
-}
+};
 
 const updateProfile = async (req, res, next) => {
   const { id } = req.params;
+  const { name, mobile: enteredMobile, email: enteredEmail } = req.body;
+  let existUserByMobile, existUserByEmail;
   try {
-    const updatedUser = await User.findByIdAndUpdate(
-      { _id: id },
-      { $set: req.body },
-      { new: true }
-    );
-    res.status(200).json(updatedUser);
+    const isUser = await User.findById(id);
+    if (isUser) {
+      if (enteredMobile !== isUser.mobile) {
+        existUserByMobile = await User.findOne({ mobile: enteredMobile });        
+      }
+      if (enteredEmail !== isUser.email) {
+        existUserByEmail = await User.findOne({ email: enteredEmail });        
+      }
+      if (existUserByMobile || existUserByEmail) {
+        return next(createError(400, 'Entered mobile or email is already exist'));
+      } else {
+        const updatedUser = await User.findByIdAndUpdate(
+          { _id: id },
+          {
+            $set: {
+              name: name,
+              mobile: enteredMobile,
+              email: enteredEmail
+            }
+          },
+          { new: true }
+        ); 
+        res.status(200).json({ message: 'Updated successfully', updatedUser });
+      }
+    } else {
+      return next(createError(400, "User not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+const changePassword = async (req, res, next) => {
+  const { id } = req.params;
+  const { password, confirmPassword } = req.body;
+  try {
+    if (password === confirmPassword) {
+      const isUser = await User.findById(id);
+      if (isUser) {
+        const securePassword = await passwordHashing(password);
+        const updatedUser = await User.findByIdAndUpdate(
+          { _id: isUser._id },
+          { $set: { password: securePassword } },
+          { new: true }
+        );
+        res.status(200).json({ message: "Password has been changed successfully", updatedUser });
+      } else {
+        return next(createError(400, "User not found"));
+      }
+    } else {
+      return next(createError(400, "Passwords do not match"));
+    }
   } catch (error) {
     next(error);
   }
@@ -186,10 +233,21 @@ const userLogout = async (req, res, next) => {
   }
 };
 
+const getUser = async (req, res, next) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   userRegister, userLogin,
   userProfile, updateProfile,
-  deleteProfile,
+  changePassword, deleteProfile,
   forgotPassword,resetPassword,
-  userLogout 
+  userLogout,
+  getUser
 } 

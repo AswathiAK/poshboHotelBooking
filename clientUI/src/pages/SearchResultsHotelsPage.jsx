@@ -7,8 +7,7 @@ import { Loader } from '../components';
 const SearchResultsHotelsPage = () => {
   const location = useLocation();
   const destination = location.state.destination;
-  const { data, loading, error } = useFetch(`/hotels/find/results/available/search?city=${destination}`);
-
+  const { data, loading, error } = useFetch(`/hotels/find/search?city=${destination}`);
   return (
     <div>
       <main className="h-auto sm:h-screen px-4 md:px-20">

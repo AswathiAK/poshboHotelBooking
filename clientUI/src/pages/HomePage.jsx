@@ -2,15 +2,13 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import StarIcon from '@mui/icons-material/Star';
 import useFetch from '../hooks/useFetch';
-import { CommonHeader, Footer, Loader } from '../components';
+import { Loader } from '../components';
 
 const HomePage = () => {
-  const { data, loading, error } = useFetch(`/hotels`);
-  
+  const { data, loading, error } = useFetch(`/hotels`);  
   return (
     <div>
-      {/* <CommonHeader/> */}
-      <main className="h-auto sm:h-screen px-4 md:px-20">
+      <main className="h-auto sm:min-h-screen px-4 md:px-20">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <Loader/>
@@ -48,7 +46,6 @@ const HomePage = () => {
                 </div>
         )}
       </main>
-      {/* <Footer/> */}
     </div>
   )
 }

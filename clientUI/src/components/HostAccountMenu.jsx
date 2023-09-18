@@ -66,6 +66,7 @@ const HostAccountMenu = () => {
         <Stack direction="row" spacing={2}>
           <Avatar sx={{ width: 30, height: 30, fontSize: 14, bgcolor: "black" }}>
             {user.name.split('')[0]}
+            {/* {user.role==='host' && user.name.split('')[0]} */}
           </Avatar>
         </Stack>
       </IconButton>

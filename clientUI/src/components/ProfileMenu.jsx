@@ -19,9 +19,9 @@ const ProfileMenu = () => {
   const { user, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
   const profileMenuItems = [
-    { text: 'Messages', icon: <MailIcon fontSize="small" />, link: '/account' },
-    { text: 'My Bookings', icon: <BookOnlineIcon fontSize="small" />, link: '/account' },
-    { text: 'My Account', icon: <PersonIcon fontSize="small" />, link:'/account', borderBottom: '1px solid rgba(0,0,0,0.10)' },
+    { text: 'Messages', icon: <MailIcon fontSize="small" />, link: `/account/inbox/messages` },
+    { text: 'My Bookings', icon: <BookOnlineIcon fontSize="small" />, link: '/account/bookings' },
+    { text: 'My Account', icon: <PersonIcon fontSize="small" />, link:'/account/personal', borderBottom: '1px solid rgba(0,0,0,0.10)' },
     { text: 'Help center', icon: <HelpCenterIcon fontSize="small" />, link: '#' }
   ];
   const [anchorEl, setAnchorEl] = useState(null);
@@ -71,7 +71,8 @@ const ProfileMenu = () => {
         <MenuIcon sx={{fontSize:'20px', color:'#444',marginRight:'8px'}}/>
         <Stack direction="row" spacing={2}>
           <Avatar sx={{ width: 30, height: 30, fontSize: 14, bgcolor: "black" }}>
-            {user.name.split('')[0]}
+            {user.name[0]}
+            {/* {user.role==='guest' && user.name[0]} */}
           </Avatar>
         </Stack>
       </IconButton>

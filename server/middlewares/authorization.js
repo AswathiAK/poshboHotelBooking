@@ -60,16 +60,6 @@ const isUserHost = (req, res, next) => {
   });
 };
 
-// const isUserLoggedIn = (req, res, next) => {
-//   verifyUserToken(req, res, (err) => {
-//     if (err) return next(err);
-//     if (req.user) {
-//       next();
-//     } else {
-//       return next(createError(403, "you are not authorized"));
-//     }
-//   });
-// };
 
 const verifyHotel = async (req, res, next) => {
   try {
@@ -93,5 +83,4 @@ module.exports = {
   verifyAdmin,
   isUserHost,
   verifyHotel,verifyUserToken,
-  // isUserLoggedIn
 };

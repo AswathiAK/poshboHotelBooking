@@ -159,19 +159,6 @@ const getSingleHotel = async (req, res, next) => {
   }
 };
 
-// const getHotelRooms = async (req, res, next) => {
-//   const { id } = req.params;
-//   try {
-//     const hotel = await Hotel.findById(id);
-//     const roomsList = await Promise.all(hotel.rooms.map(room => {
-//       return Room.findById(room);
-//     }));
-//     res.status(200).json(roomsList);
-//   } catch (error) {
-//     next(error);
-//   }
-// }
-
 const searchHotelsResults = async (req, res, next) => {
   const city = req.query.city || '';
   try {
@@ -200,5 +187,4 @@ module.exports = {
   hotelsOfHost,singleHotelOfHost,
   getAllHotels, getSingleHotel,
   searchHotelsResults
-  // getHotelRooms
 }

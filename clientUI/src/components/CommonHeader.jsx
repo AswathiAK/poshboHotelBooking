@@ -147,7 +147,6 @@ import { toast, Flip } from "react-toastify";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import BedIcon from '@mui/icons-material/Bed';
 import SearchIcon from '@mui/icons-material/Search';
-import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import PlaceIcon from '@mui/icons-material/Place';
@@ -163,7 +162,7 @@ import { format } from "date-fns";
 import { addDays } from 'date-fns';
 
 const CommonHeader = () => {
-  const { user, dispatch } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext); 
   const navigate = useNavigate();
   const userLogout = async () => {
     try {
@@ -276,13 +275,10 @@ const CommonHeader = () => {
       </div>
       <div className="hidden sm:flex items-center ">
         {!user && (
-          <div className="text-sm font-medium hover:rounded-full hover:bg-neutral-100 p-3">
+          <div className="text-sm font-medium hover:rounded-full hover:bg-neutral-100 p-3 mr-3">
             <Link to={'/host/home'}>List your property</Link> 
           </div>
         )}
-        <div className="mr-2 hover:rounded-full hover:bg-neutral-100 p-3 cursor-pointer">
-          <LanguageRoundedIcon sx={{fontSize:'20px'}}/>
-        </div>        
         {user ? <ProfileMenu /> : <AccountMenu />}        
       </div> 
       {/* Hamburgur menu */}
@@ -313,11 +309,6 @@ const CommonHeader = () => {
                 </Link>
               ))
             }
-            {/* {hamburgerAccountItems.map((item, index) => (
-              <Link to={item.link} key={index} className=" hover:bg-gray-100 block px-3 py-3 rounded-md text-md">
-                {item.text}
-              </Link>
-            ))} */}
           </div>
         ) : null}
       </div>

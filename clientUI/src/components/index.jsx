@@ -21,6 +21,8 @@ export { default as GeoCodeMarker } from "./GeoCodeMarker";
 export { default as BookingWidget } from "./BookingWidget";
 export { default as Layout } from "./Layout";
 export { default as ChooseRoomModal } from "./ChooseRoomModal";
+export { default as Conversations } from "./Conversations";
+export { default as Message } from "./Message";
 
 
 

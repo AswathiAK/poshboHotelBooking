@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
-import LanguageRoundedIcon from '@mui/icons-material/LanguageRounded';
 import MenuIcon from '@mui/icons-material/Menu';
 import CloseIcon from '@mui/icons-material/Close';
 import logo from "../assets/poshbo.svg";
@@ -24,11 +23,8 @@ const UserHeader = () => {
         </Link>
       </div>    
       <div className="hidden sm:flex items-center w-[570px] justify-end">
-        <div className="text-sm font-medium hover:rounded-full hover:bg-neutral-100 p-3">
+        <div className="text-sm font-medium hover:rounded-full hover:bg-neutral-100 p-3 mr-3">
           <Link to={'/host/home'}>List your property</Link> 
-        </div>
-        <div className="mr-2 hover:rounded-full hover:bg-neutral-100 p-3 cursor-pointer">
-          <LanguageRoundedIcon sx={{fontSize:'20px'}}/>
         </div>        
         <AccountMenu />        
       </div> 

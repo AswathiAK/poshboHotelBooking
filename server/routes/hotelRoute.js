@@ -12,7 +12,6 @@ hotel_route.get('/host/:hostId/:id', verifyUserToken, verifyHotel, hotelControll
 hotel_route.get('/', hotelController.getAllHotels);
 hotel_route.get('/:id', hotelController.getSingleHotel);
 
-// hotel_route.get('/find/rooms/available/:id', hotelController.getHotelRooms);
-hotel_route.get('/find/results/available/search', hotelController.searchHotelsResults);
+hotel_route.get('/find/search', hotelController.searchHotelsResults);
 
 module.exports = hotel_route; 
