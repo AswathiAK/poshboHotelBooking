@@ -62,8 +62,18 @@ const createBooking = async (req, res, next) => {
     next(error);
   }  
 };
+const bookingDetails = async (req, res, next) => {
+  const { id: userId } = req.params;
+  try {
+    const bookingData = await Booking.find({ user: userId }).populate('hotel');
+    res.status(200).json(bookingData);
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createStripeCheckout, 
-  createBooking
+  createBooking,
+  bookingDetails
 }

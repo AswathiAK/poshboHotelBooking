@@ -104,13 +104,11 @@ const BookingWidget = () => {
             hotel: hotel._id,
             checkInDate: dates[0].startDate,
             checkOutDate: dates[0].endDate,
-            noOfGuests: options.guests,
-            // customerName: user.name,
-            // customerMobile: user.mobile,
+            noOfGuests: options.guests,            
             selectedRooms,
             totalAmount: totalPriceIncludeTax,
           };
-          const { data } = await axios.post(`/bookings/${user._id}/book-property`, bookingData); console.log(data);
+          const { data } = await axios.post(`/bookings/${user._id}/book-property`, bookingData); 
           await Promise.all(selectedRooms.map(roomId => {
             const { data } = axios.patch(`/rooms/${user._id}/${roomId}`, { dates: allDates });
             return data;
@@ -166,6 +164,7 @@ const BookingWidget = () => {
       {openChooseRoom &&
         <ChooseRoomModal setOpen={setOpenChooseRoom} hotelId={id} selectedRooms={selectedRooms}
           setSelectedRooms={setSelectedRooms} isAvailable={isAvailable} setTotalPrice={setTotalPrice}
+          maxRooms={options.room}
         />
       }
       {totalPrice>0 && (      
