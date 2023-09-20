@@ -21,15 +21,7 @@ const bookingSchema = new mongoose.Schema({
   noOfGuests: {
     type: Number,
     required: true
-  },
-  // customerName: {
-  //   type: String,
-  //   required: true
-  // },
-  // customerMobile: {
-  //   type: Number,
-  //   required: true
-  // },
+  },  
   selectedRooms: [
     {
       title: {
@@ -43,7 +35,15 @@ const bookingSchema = new mongoose.Schema({
   totalAmount: {
     type: Number,
     required: true
-  },  
+  }, 
+  paymentId: {
+    type: String,
+    required:true
+  },
+  paymentStatus: {
+    type: String,
+    required:true
+  }
 },
   { timestamps: true }
 );

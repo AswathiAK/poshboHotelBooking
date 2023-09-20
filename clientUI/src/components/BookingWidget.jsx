@@ -84,36 +84,76 @@ const BookingWidget = () => {
   const taxAmount = totalPriceWithNights * 18 / 100;
   const totalPriceIncludeTax = totalPriceWithNights + taxAmount;
 
+  // const handleBooking = async() => {
+  //   if (user) {
+  //     try {
+  //       const stripe = await loadStripe('pk_test_51NpFlsSBKhqPZUqdQwvAlZNY3ulJj3Aph8XN9CfZRHbGyCzMOAWkHOhrMnrltGOEhCc7xbShQHXq0FgbBQgxKYR100H8uVUmof');
+  //       const stripeData = {
+  //         user,
+  //         hotelId:hotel._id,          
+  //         price: totalPriceIncludeTax
+  //       };
+  //       const response = await axios.post(`/bookings/${user._id}/create-checkout-session`,stripeData); 
+  //       const session = response.data.id; 
+  //       const result = stripe.redirectToCheckout({
+  //         sessionId: session
+  //       }); 
+  //       const bookingData = {
+  //         user: user._id,
+  //         hotel: hotel._id,
+  //         checkInDate: dates[0].startDate,
+  //         checkOutDate: dates[0].endDate,
+  //         noOfGuests: options.guests,            
+  //         selectedRooms,
+  //         totalAmount: totalPriceIncludeTax,
+  //       };
+  //       const { data } = await axios.post(`/bookings/${user._id}/book-property`, bookingData); 
+  //       await Promise.all(selectedRooms.map(roomId => {
+  //         const { data } = axios.patch(`/rooms/${user._id}/${roomId}`, { dates: allDates });
+  //         return data;
+  //       })); 
+  //     } catch (error) {
+  //       const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
+  //       toast.error(errorMessage, {
+  //         position: toast.POSITION.TOP_CENTER,
+  //         transition: Flip,
+  //         autoClose: 2000
+  //       });
+  //     }
+  //   } else {
+  //     toast.warn("Please login to book", {
+  //       position: toast.POSITION.TOP_CENTER,
+  //       transition: Flip,
+  //       autoClose: 2000
+  //     });
+  //     navigate('/login');
+  //   }
+  // };
+  
   const handleBooking = async() => {
     if (user) {
       try {
-        // const stripe = await loadStripe('pk_test_51NpFlsSBKhqPZUqdQwvAlZNY3ulJj3Aph8XN9CfZRHbGyCzMOAWkHOhrMnrltGOEhCc7xbShQHXq0FgbBQgxKYR100H8uVUmof');
-        // const stripeData = {
-        //   hotelId:hotel._id,
-        //   name: user.name,
-        //   price: totalPriceIncludeTax
-        // };
-        // const response = await axios.post(`/bookings/${user._id}/create-checkout-session`,stripeData); 
-        // const session = response.data.id; 
-        // const result = stripe.redirectToCheckout({
-        //   sessionId: session
-        // }); 
-        // if (!result.error) {
-          const bookingData = {
-            user: user._id,
-            hotel: hotel._id,
-            checkInDate: dates[0].startDate,
-            checkOutDate: dates[0].endDate,
-            noOfGuests: options.guests,            
-            selectedRooms,
-            totalAmount: totalPriceIncludeTax,
-          };
-          const { data } = await axios.post(`/bookings/${user._id}/book-property`, bookingData); 
-          await Promise.all(selectedRooms.map(roomId => {
-            const { data } = axios.patch(`/rooms/${user._id}/${roomId}`, { dates: allDates });
-            return data;
-          }));          
-        // }        
+        const stripe = await loadStripe('pk_test_51NpFlsSBKhqPZUqdQwvAlZNY3ulJj3Aph8XN9CfZRHbGyCzMOAWkHOhrMnrltGOEhCc7xbShQHXq0FgbBQgxKYR100H8uVUmof');
+        const bookingData = {
+          hotel: hotel._id,
+          checkInDate: dates[0].startDate,
+          checkOutDate: dates[0].endDate,
+          noOfGuests: options.guests,            
+          selectedRooms,
+          totalAmount: totalPriceIncludeTax,
+          dates:allDates
+        };
+        const stripeData = {
+          user,
+          hotelId:hotel._id,          
+          price: totalPriceIncludeTax,
+          bookingData
+        };
+        const response = await axios.post(`/bookings/${user._id}/create-checkout-session`,stripeData); 
+        const session = response.data.id; 
+        const result = stripe.redirectToCheckout({
+          sessionId: session
+        }); 
       } catch (error) {
         const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
         toast.error(errorMessage, {
@@ -206,7 +246,7 @@ const BookingWidget = () => {
         <button onClick={handleBooking} type='button' disabled={!totalPrice}
           // className="bg-fuchsia-500 rounded-lg text-white w-full p-3 my-3 hover:bg-indigo-950"
           className={`rounded-lg text-white w-full p-3 my-3  
-          ${!totalPrice ? "bg-gray-200 cursor-not-allowed" : "bg-fuchsia-500 hover:bg-indigo-950"}`}
+          ${!totalPrice ? "bg-slate-200 cursor-not-allowed" : "bg-fuchsia-500 hover:bg-indigo-950"}`}
         >
           Book Now
         </button>
