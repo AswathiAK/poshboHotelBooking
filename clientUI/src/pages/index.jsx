@@ -17,3 +17,6 @@ export { default as EditRoomPage } from "./EditRoomPage";
 export { default as SingleHotelPage } from "./SingleHotelPage";
 export { default as SearchResultsHotelsPage } from "./SearchResultsHotelsPage";
 export { default as GuestMessagePage } from "./GuestMessagePage";
+export { default as BookingDetailsPage } from "./BookingDetailsPage";
+export { default as PaymentSuccessPage } from "./PaymentSuccessPage";
+

@@ -7,7 +7,7 @@ import {
   HomePage, UserProfilePage, ErrorPage,
   PropertyHomePage, AddPropertyPage, ViewPropertiesPage, ViewSinglePropertyPage,
   EditPropertyPage,
-  HostProfilePage, HostMessagePage, SingleHotelPage, SearchResultsHotelsPage, GuestMessagePage
+  HostProfilePage, HostMessagePage, SingleHotelPage, SearchResultsHotelsPage, GuestMessagePage, BookingDetailsPage, PaymentSuccessPage
 } from "./pages";
 import { Layout } from './components';
 import { GuestPrivateRoute, GuestProtectedRoute, HostPrivateRoute, HostProtectedRoute } from './services/ProtectedRoute';
@@ -37,6 +37,8 @@ function App() {
           <Route element={<GuestProtectedRoute />}>
             <Route path='/account/:active' element={<UserProfilePage />} />  
             <Route path='/account/inbox/messages/:hotelId' element={<GuestMessagePage />} />
+            <Route path='/account/bookings' element={<BookingDetailsPage />} />
+            <Route path='/account/success' element={<PaymentSuccessPage />} />
           </Route>
         </Route>
         

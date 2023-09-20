@@ -114,7 +114,8 @@ const GuestMessagePage = () => {
   //     behaviour:"smooth"
   //   })
   // }, [messages]);
-
+  const [activeConversation, setActiveConversation] = useState(null);
+  
   return (
     <main className="min-h-screen flex flex-col">
       <div className="flex ">
@@ -123,10 +124,19 @@ const GuestMessagePage = () => {
           <div className="h-20 flex items-center px-5 border-b bg-white sticky top-20 z-10">
             <h3 className="font-bold text-lg ">Messages</h3>
           </div>
-          <div className="py-6 px-5 h-screen overflow-y-scroll">
+          {/* <div className="py-6 px-5 h-screen overflow-y-scroll">
             {conversations.map((chat, index) => (
               <div key={index} onClick={()=>setCurrentChat(chat)}>
                 <Conversations conversation={chat} currentUser={user} />
+              </div>
+            ))}            
+          </div> */}
+          <div className="py-6 px-5 h-screen overflow-y-scroll">
+            {conversations.map((chat, index) => (
+              <div key={index} onClick={() => { setCurrentChat(chat); setActiveConversation(chat)}}>
+                <Conversations conversation={chat} currentUser={user} 
+                  setActiveConversation={setActiveConversation} activeConversation={activeConversation}
+                />
               </div>
             ))}            
           </div>
@@ -135,7 +145,7 @@ const GuestMessagePage = () => {
         {/* Middle content panel */}
         <div className="w-1/2 border-r sticky top-0 flex flex-col" >
           <div className="h-20 flex items-center justify-left px-5 border-b bg-white sticky top-20 z-10">
-            <h3 className="font-bold text-lg">data.owner?.name</h3>
+            {/* <h3 className="font-bold text-lg">data.owner?.name</h3> */}
           </div>
           <div className="h-screen overflow-y-scroll relative" >
             {
@@ -157,17 +167,17 @@ const GuestMessagePage = () => {
                 </span>
             }            
           </div>
-          <div className="sticky flex items-center bottom-0 z-10 p-5 bg-white">
+          <div className="sticky flex items-center bottom-0 z-10 p-5 bg-white gap-3">
             <input onChange={(e)=>setNewMessage(e.target.value)}
               type="text"
               placeholder='Type a message'
-              className='border rounded-3xl w-full p-3'
+              className='border rounded-3xl w-[580px] py-2.5 px-3'
               value={newMessage}
             />
             <button onClick={handleSubmitMessage}
-              className='absolute right-7 text-gray-400 hover:bg-gray-200 hover:rounded-full p-2'
+              className=' bg-fuchsia-400 rounded-full hover:bg-blue-950 hover:rounded-full p-2'
             >
-              <SendIcon/>
+              <SendIcon sx={{color:'white'}} />
             </button>
           </div>
         </div>

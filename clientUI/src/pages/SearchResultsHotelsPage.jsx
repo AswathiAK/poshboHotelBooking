@@ -10,7 +10,7 @@ const SearchResultsHotelsPage = () => {
   const { data, loading, error } = useFetch(`/hotels/find/search?city=${destination}`);
   return (
     <div>
-      <main className="h-auto sm:h-screen px-4 md:px-20">
+      <main className="h-auto sm:min-h-screen px-4 md:px-20">
         {loading ? (
           <div className="flex items-center justify-center h-full">
             <Loader/>

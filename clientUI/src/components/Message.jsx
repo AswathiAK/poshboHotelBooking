@@ -9,12 +9,14 @@ const Message = ({ message, own }) => {
   const messageClass = own ? `${messageCommonClass} bg-gray-100` : `${messageCommonClass} bg-blue-100`;
   const avatarStyles = own ? { width: 40, height: 40, bgcolor: 'gray' } : { width: 40, height: 40, bgcolor: 'lightskyblue' };
   
+
+
   return (
     <div className={containerClasses}>
       <div className="flex gap-2.5 ">
-        <Avatar sx={avatarStyles}>
+        {/* <Avatar sx={avatarStyles}>
           Ab
-        </Avatar>
+        </Avatar> */}
         <p className={messageClass}>
           {message.text}
         </p>

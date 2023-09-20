@@ -22,21 +22,29 @@ const bookingSchema = new mongoose.Schema({
     type: Number,
     required: true
   },
-  customerName: {
-    type: String,
-    required: true
-  },
-  customerMobile: {
-    type: Number,
-    required: true
-  },
+  // customerName: {
+  //   type: String,
+  //   required: true
+  // },
+  // customerMobile: {
+  //   type: Number,
+  //   required: true
+  // },
+  selectedRooms: [
+    {
+      title: {
+        type: String,
+      },
+      count: {
+        type:Number
+      }
+    }
+  ],
   totalAmount: {
     type: Number,
     required: true
-  },
-  createdAt: {
-    type: Date,
-    required:true
-  }
-});
+  },  
+},
+  { timestamps: true }
+);
 module.exports = mongoose.model('Booking', bookingSchema);
