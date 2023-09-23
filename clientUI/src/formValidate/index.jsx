@@ -123,4 +123,10 @@ export const editRoomFormValidation = Yup.object({
   maxGuests: Yup.string().matches(/^\d+(\.\d+)?$/, "must be a positive number").required("No of guests is required"),
   description: Yup.string().min(10).required("Add description"),
   // roomNumbers: Yup.array().min(1, "You can't leave this blank.")
-})
+});
+
+export const editUserValidation = Yup.object({
+  name: Yup.string().matches(letters, "Name can only contain letters and spaces").min(2).max(25).required("Please Enter a Name"),
+  mobile: Yup.string().matches(mobileNo, "Must be 10 digits").required("Please Enter a Valid Mobile no"),
+  email: Yup.string().email().required("Please Enter a Email"),
+});

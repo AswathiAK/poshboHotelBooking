@@ -121,9 +121,7 @@ const Hotel = require("../models/hotelModel.js");
 // }
 
 
-
-
-//backup trial
+//stripe trial
 let tempBookingData = null;
 const createStripeCheckout = async (req, res, next) => {
   const { user, hotelId, price, bookingData } = req.body; 
@@ -164,7 +162,7 @@ const createStripeCheckout = async (req, res, next) => {
   }
 };
 
-const createBooking = async (customer, data, tempBookingData) => {
+const createBooking = async (customer, data, tempBookingData, next) => {
   const { hotel, checkInDate, checkOutDate,
     noOfGuests, selectedRooms, totalAmount, dates } = tempBookingData; 
   const roomCounts = {};
@@ -202,9 +200,9 @@ const createBooking = async (customer, data, tempBookingData) => {
       );
       return unAvailableRooms;
     })); 
-    // res.status(200).json({ message: 'Booked successfully', saveBooking });
   } catch (error) {
     console.log(error.message);
+    next(error);
   }  
 };
 
@@ -234,15 +232,13 @@ const createWebhook = (req, res, next) => {
       .then(customer => {
         console.log('customer', customer);
         console.log('data', data);
-        createBooking(customer, data, tempBookingData);
+        createBooking(customer, data, tempBookingData, next);
       })
       .catch(err => next(err));
   }
   // Return a 200 res to acknowledge receipt of the event
   res.send().end();
 };
-
-//CREATION
 
 const bookingDetails = async (req, res, next) => {
   const { id: userId } = req.params;

@@ -59,14 +59,12 @@ const Conversations = ({ conversation, currentUser, setActiveConversation, activ
     };
     getUser();
   }, [currentUser, conversation]);
-
   const containerClasses = `rounded-lg bg-gray-50 hover:bg-gray-100 my-3 p-3 flex items-center gap-4 cursor-pointer ${
     conversation === activeConversation ? 'bg-gray-400' : ''
   }`;
   const handleClick = () => {
     setActiveConversation(conversation); 
   };
-
   return (
     <div className={containerClasses} onClick={handleClick}>
       <Avatar sx={{ width: 40, height: 40,  bgcolor: "black" }}>

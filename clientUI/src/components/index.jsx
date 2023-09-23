@@ -23,6 +23,10 @@ export { default as Layout } from "./Layout";
 export { default as ChooseRoomModal } from "./ChooseRoomModal";
 export { default as Conversations } from "./Conversations";
 export { default as Message } from "./Message";
+export { default as SidebarUserAccount } from "./SidebarUserAccount";
+export { default as SidebarHostAccount } from "./SidebarHostAccount";
+export { default as PersonalInfo } from "./PersonalInfo";
+export { default as UserSecurity } from "./UserSecurity";
 
 
 

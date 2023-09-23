@@ -37,7 +37,6 @@ function App() {
           <Route element={<GuestProtectedRoute />}>
             <Route path='/account/:active' element={<UserProfilePage />} />  
             <Route path='/account/inbox/messages/:hotelId' element={<GuestMessagePage />} />
-            <Route path='/account/bookings' element={<BookingDetailsPage />} />
             <Route path='/account/success' element={<PaymentSuccessPage />} />
           </Route>
         </Route>

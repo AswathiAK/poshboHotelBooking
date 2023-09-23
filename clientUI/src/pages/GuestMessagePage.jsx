@@ -56,8 +56,14 @@ const GuestMessagePage = () => {
       try {
         const res = await axios.get(`/chats/${user._id}`);
         setConversations(res.data);
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.log(error);
+        const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
+        toast.error(errorMessage, {
+          position: toast.POSITION.TOP_CENTER,
+          transition: Flip,
+          autoClose: 2000,
+        });
       }
     };
     getConversations();
@@ -68,8 +74,14 @@ const GuestMessagePage = () => {
       try {
         const res = await axios.get(`/messages/${currentChat?._id}`);
         setMessages(res.data);
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        console.log(error);
+        const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
+        toast.error(errorMessage, {
+          position: toast.POSITION.TOP_CENTER,
+          transition: Flip,
+          autoClose: 2000,
+        });
       }
     };
     getMessages();

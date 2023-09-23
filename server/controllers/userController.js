@@ -5,7 +5,6 @@ const nodemailer = require('nodemailer');
 const User = require('../models/userModel.js');
 const createError = require('../middlewares/errorHandling.js');
 
-
 const passwordHashing = async (password) => {
   try {
     const bcryptSalt = await bcrypt.genSalt(10);
@@ -113,8 +112,8 @@ const userProfile = async (req, res, next) => {
 };
 
 const updateProfile = async (req, res, next) => {
-  const { id } = req.params;
-  const { name, mobile: enteredMobile, email: enteredEmail } = req.body;
+  const { id } = req.params; 
+  const { name, mobile: enteredMobile, email: enteredEmail } = req.body; 
   let existUserByMobile, existUserByEmail;
   try {
     const isUser = await User.findById(id);
@@ -144,10 +143,11 @@ const updateProfile = async (req, res, next) => {
     } else {
       return next(createError(400, "User not found"));
     }
-  } catch (error) {
+  } catch (error) { console.log(error.message);
     next(error);
   }
 };
+
 const changePassword = async (req, res, next) => {
   const { id } = req.params;
   const { password, confirmPassword } = req.body;

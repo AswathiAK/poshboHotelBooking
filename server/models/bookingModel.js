@@ -43,6 +43,10 @@ const bookingSchema = new mongoose.Schema({
   paymentStatus: {
     type: String,
     required:true
+  },
+  bookingStatus: {
+    type: String,
+    default:'booked'
   }
 },
   { timestamps: true }
