@@ -22,16 +22,24 @@ const bookingSchema = new mongoose.Schema({
     type: Number,
     required: true
   },  
+  // selectedRooms: [
+  //   {
+  //     title: {
+  //       type: String,
+  //     },
+  //     count: {
+  //       type:Number
+  //     }
+  //   }
+  // ],
   selectedRooms: [
     {
-      title: {
-        type: String,
-      },
-      count: {
-        type:Number
-      }
-    }
+      type: mongoose.Schema.Types.ObjectId, 
+      ref: 'Room', 
+      required: true,
+    },
   ],
+   
   totalAmount: {
     type: Number,
     required: true

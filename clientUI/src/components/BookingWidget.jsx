@@ -82,7 +82,7 @@ const BookingWidget = () => {
 
   const totalPriceWithNights = totalPrice * totalNights;
   const taxAmount = totalPriceWithNights * 18 / 100;
-  const totalPriceIncludeTax = totalPriceWithNights + taxAmount;
+  const totalPriceIncludeTax = (totalPriceWithNights + taxAmount).toFixed(2);
 
   // const handleBooking = async() => {
   //   if (user) {

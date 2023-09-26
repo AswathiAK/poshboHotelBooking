@@ -263,7 +263,9 @@ const SingleHotelPage = () => {
         };
         const res = await axios.post('/chats', requestData);
         console.log('data', res.data);
-        navigate(`/account/inbox/messages/${data._id}`);
+        // navigate(`/account/inbox/messages/${data._id}`);
+        navigate(`/account/inbox/messages`);
+
       } else {
         navigate(`/login`);
       }

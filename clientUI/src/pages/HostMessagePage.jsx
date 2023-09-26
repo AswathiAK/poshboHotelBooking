@@ -60,11 +60,11 @@ const HostMessagePage = () => {
 
   useEffect(() => {
     const getMessages = async () => {
-      try {
+      try { 
         const res = await axios.get(`/messages/${currentChat?._id}`);
         setMessages(res.data);
       } catch (err) {
-        console.log(err);
+        console.log(err.message);
       }
     };
     getMessages();

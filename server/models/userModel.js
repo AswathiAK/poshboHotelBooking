@@ -24,6 +24,10 @@ const userSchema = new mongoose.Schema({
   isBlock: {
     type: Boolean,
     default:false
+  },
+  wallet: {
+    type: Number,
+    default:0
   }
 });
 

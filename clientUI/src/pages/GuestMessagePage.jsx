@@ -12,8 +12,8 @@ import { io } from "socket.io-client";
 
 const GuestMessagePage = () => {
   const navigate = useNavigate();
-  const { hotelId } = useParams();
-  const { data, loading, error } = useFetch(`/hotels/${hotelId}`); 
+  // const { hotelId } = useParams();
+  // const { data, loading, error } = useFetch(`/hotels/${hotelId}`); 
   const scrollRef = useRef();
 
   const { user } = useContext(AuthContext);
@@ -57,7 +57,6 @@ const GuestMessagePage = () => {
         const res = await axios.get(`/chats/${user._id}`);
         setConversations(res.data);
       } catch (error) {
-        console.log(error);
         const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
         toast.error(errorMessage, {
           position: toast.POSITION.TOP_CENTER,
@@ -71,17 +70,17 @@ const GuestMessagePage = () => {
 
   useEffect(() => {
     const getMessages = async () => {
-      try {
+      try { 
         const res = await axios.get(`/messages/${currentChat?._id}`);
         setMessages(res.data);
       } catch (error) {
-        console.log(error);
-        const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
-        toast.error(errorMessage, {
-          position: toast.POSITION.TOP_CENTER,
-          transition: Flip,
-          autoClose: 2000,
-        });
+        console.log(error.message);
+        // const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
+        // toast.error(errorMessage, {
+        //   position: toast.POSITION.TOP_CENTER,
+        //   transition: Flip,
+        //   autoClose: 2000,
+        // });
       }
     };
     getMessages();
@@ -126,6 +125,7 @@ const GuestMessagePage = () => {
   //     behaviour:"smooth"
   //   })
   // }, [messages]);
+
   const [activeConversation, setActiveConversation] = useState(null);
   
   return (

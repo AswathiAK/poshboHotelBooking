@@ -181,6 +181,7 @@ const searchHotelsResults = async (req, res, next) => {
   }
 };
 
+
 module.exports = {
   createHotel, updateHotel,
   deleteHotel,

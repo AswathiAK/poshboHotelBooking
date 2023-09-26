@@ -81,7 +81,7 @@ const UserSecurity = () => {
             <div className="flex justify-between items-center ">
               <label className='text-lg font-medium'>Password</label>
               <input type={passwordInputType} name='password'
-                placeholder='************'
+                // placeholder='************'
                 className='border border-neutral-400 rounded-lg p-3 mt-2'
                 value={values.password}
                 onChange={handleChange}
@@ -99,7 +99,7 @@ const UserSecurity = () => {
             <div className="flex justify-between items-center">
               <label className='text-lg font-medium'>Confirm Password</label>
               <input type={confirmPasswordInput} name='confirmPassword'
-                placeholder='************'
+                // placeholder='************'
                 className='border border-neutral-400 rounded-lg p-3 mt-2'
                 value={values.confirmPassword}
                 onChange={handleChange}

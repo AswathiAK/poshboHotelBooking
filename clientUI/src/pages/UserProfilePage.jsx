@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
-import { PersonalInfo, SidebarUserAccount, UserSecurity } from '../components';
+import { BookedDetails, PersonalInfo, SidebarUserAccount, UserSecurity, UserWallet } from '../components';
 
 const UserProfilePage = () => {
   const { active } = useParams();
@@ -14,8 +14,8 @@ const UserProfilePage = () => {
           </div>
           <div className="w-full border border-gray-300 rounded-md p-2">
             {active === 'personal' && <PersonalInfo />}
-            {active === 'bookings' && 'bookings'}            
-            {active==='wallet' && 'wallet'}
+            {active === 'bookings' && <BookedDetails />}
+            {active === 'wallet' && <UserWallet />}
             {active === 'security' && <UserSecurity />}
           </div>
         </div>

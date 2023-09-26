@@ -3,6 +3,10 @@ const Booking = require("../models/bookingModel.js");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Room = require("../models/roomModel.js");
 const Hotel = require("../models/hotelModel.js");
+const createError = require('../middlewares/errorHandling.js');
+const { ObjectId } = require("mongodb");
+const User = require('../models/userModel.js');
+
 
 //Stripe checkout
 // const createStripeCheckout = async (req, res, next) => {
@@ -162,49 +166,83 @@ const createStripeCheckout = async (req, res, next) => {
   }
 };
 
+// const createBooking = async (customer, data, tempBookingData, next) => {
+//   const { hotel, checkInDate, checkOutDate,
+//     noOfGuests, selectedRooms, totalAmount, dates } = tempBookingData;
+//   const roomCounts = {};
+//   try {
+//     const rooms = await Room.find({ "roomNumbers._id": { $in: selectedRooms } });
+//     const roomDetails = rooms.map((room) => ({ title: room.title }));
+//     selectedRooms.forEach((roomId) => {
+//       const room = rooms.find((room) => room.roomNumbers.some((number) => number._id.toString() === roomId));
+//       if (room) {
+//         const { title } = room;
+//         roomCounts[title] = (roomCounts[title] || 0) + 1;
+//       }
+//     });
+//     const roomData = roomDetails.map((room) => ({
+//       title: room.title,
+//       count: roomCounts[room.title] || 0,
+//     }));
+//     const bookHotel = new Booking({
+//       user:customer.metadata.userId,
+//       hotel, checkInDate, checkOutDate, noOfGuests,
+//       selectedRooms: roomData,
+//       totalAmount,
+//       paymentId:data.payment_intent,
+//       paymentStatus:data.payment_status
+//     });
+//     const saveBooking = await bookHotel.save();
+//     await Promise.all(selectedRooms.map(roomId => {
+//       const unAvailableRooms = Room.updateOne(
+//         { "roomNumbers._id": roomId },
+//         {
+//           $push: {
+//             "roomNumbers.$.unAvailableDates": dates
+//           }
+//         }
+//       );
+//       return unAvailableRooms;
+//     }));
+//   } catch (error) {
+//     console.log(error.message);
+//     next(error);
+//   }
+// };
+
+//for geting corect roomref
 const createBooking = async (customer, data, tempBookingData, next) => {
-  const { hotel, checkInDate, checkOutDate,
-    noOfGuests, selectedRooms, totalAmount, dates } = tempBookingData; 
-  const roomCounts = {};
+  const { hotel, checkInDate, checkOutDate, noOfGuests, selectedRooms, totalAmount, dates } = tempBookingData;  
   try {
-    const rooms = await Room.find({ "roomNumbers._id": { $in: selectedRooms } }); 
-    const roomDetails = rooms.map((room) => ({ title: room.title }));
-    selectedRooms.forEach((roomId) => {
-      const room = rooms.find((room) => room.roomNumbers.some((number) => number._id.toString() === roomId));
-      if (room) {
-        const { title } = room;
-        roomCounts[title] = (roomCounts[title] || 0) + 1;
-      }
-    });
-    const roomData = roomDetails.map((room) => ({
-      title: room.title,
-      count: roomCounts[room.title] || 0,
-    }));
     const bookHotel = new Booking({
-      user:customer.metadata.userId,
-      hotel, checkInDate, checkOutDate, noOfGuests,
-      selectedRooms: roomData,
+      user: customer.metadata.userId,
+      hotel,
+      checkInDate,
+      checkOutDate,
+      noOfGuests,
+      selectedRooms,
       totalAmount,
-      paymentId:data.payment_intent,
-      paymentStatus:data.payment_status
+      paymentId: data.payment_intent,
+      paymentStatus: data.payment_status,
     });
-    const saveBooking = await bookHotel.save(); console.log(saveBooking);
-    await Promise.all(selectedRooms.map(roomId => {
-      const unAvailableRooms = Room.updateOne(
+    const saveBooking = await bookHotel.save();
+    await Promise.all(selectedRooms.map(async (roomId) => {
+      const unAvailableRooms = await Room.updateOne(
         { "roomNumbers._id": roomId },
         {
           $push: {
-            "roomNumbers.$.unAvailableDates": dates
-          }
+            "roomNumbers.$.unAvailableDates": dates,
+          },
         }
       );
       return unAvailableRooms;
-    })); 
+    }));
   } catch (error) {
     console.log(error.message);
     next(error);
-  }  
+  }
 };
+
 
 let endpointSecret;
 // const endpointSecret = process.env.WEBHOOK_SECRET;
@@ -240,18 +278,88 @@ const createWebhook = (req, res, next) => {
   res.send().end();
 };
 
+// const bookingDetails = async (req, res, next) => {
+//   const { id: userId } = req.params;
+//   try {
+//     const bookingData = await Booking.find({ user: userId }).populate('hotel'); console.log(bookingData);
+//     res.status(200).json(bookingData);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 const bookingDetails = async (req, res, next) => {
-  const { id: userId } = req.params;
+  const { id: userId } = req.params; 
   try {
-    const bookingData = await Booking.find({ user: userId }).populate('hotel');
-    res.status(200).json(bookingData);
+    const bookingData = await Booking.find({ user: userId }).populate('hotel'); 
+    const pipeline = [
+      { $match: { user: new ObjectId(userId) } },
+      {
+        $lookup: {
+          from: "rooms",
+          localField: "selectedRooms",
+          foreignField: "roomNumbers._id",
+          as: "roomDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: 'hotels',
+          localField: 'hotel',
+          foreignField: '_id',
+          as:'hotelDetails'
+        }
+      }
+    ];
+    const bookingDetails = await Booking.aggregate(pipeline); 
+    res.status(200).json(bookingDetails); 
   } catch (error) {
+    console.log(error.message);
     next(error);
   }
 };
 
+
+const cancelBooking = async (req, res, next) => {
+  const { bookingId } = req.params; 
+  try {
+    const bookingData = await Booking.findById(bookingId); console.log(bookingData);
+    if (!bookingData) {
+      return next(createError(404, "Booking not found"));
+    }
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      { _id: bookingId },
+      { $set: { bookingStatus: 'cancelled' } },
+      { new: true }
+    ); 
+    const selectedRooms = updatedBooking.selectedRooms;
+    await Promise.all(selectedRooms.map(async (room) => { 
+      const unAvailableRooms = await Room.updateOne(
+        { "roomNumbers._id": room },
+        {
+          $pull: {
+            "roomNumbers.$.unAvailableDates": {
+              $gte: updatedBooking.checkInDate,
+              $lte: updatedBooking.checkOutDate
+            }
+          }
+        }
+      ); 
+      return unAvailableRooms;
+    })); 
+    await User.updateOne(
+      { _id: updatedBooking.user },
+      { $inc: { wallet: updatedBooking.totalAmount } }
+    );
+    res.status(200).json({ message: 'Successfully cancelled the booking', updatedBooking });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   createStripeCheckout, 
   createBooking,
-  bookingDetails,createWebhook
+  bookingDetails, createWebhook,
+  cancelBooking
 }

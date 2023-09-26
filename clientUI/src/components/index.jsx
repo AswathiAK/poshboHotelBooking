@@ -27,6 +27,8 @@ export { default as SidebarUserAccount } from "./SidebarUserAccount";
 export { default as SidebarHostAccount } from "./SidebarHostAccount";
 export { default as PersonalInfo } from "./PersonalInfo";
 export { default as UserSecurity } from "./UserSecurity";
+export { default as BookedDetails } from "./BookedDetails";
+export { default as UserWallet } from "./UserWallet";
 
 
 
