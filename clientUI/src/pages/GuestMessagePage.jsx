@@ -75,12 +75,12 @@ const GuestMessagePage = () => {
         setMessages(res.data);
       } catch (error) {
         console.log(error.message);
-        // const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
-        // toast.error(errorMessage, {
-        //   position: toast.POSITION.TOP_CENTER,
-        //   transition: Flip,
-        //   autoClose: 2000,
-        // });
+        const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
+        toast.error(errorMessage, {
+          position: toast.POSITION.TOP_CENTER,
+          transition: Flip,
+          autoClose: 2000,
+        });
       }
     };
     getMessages();
@@ -120,11 +120,11 @@ const GuestMessagePage = () => {
     }
   }
 
-  // useEffect(() => {
-  //   scrollRef.current?.scrollIntoView({
-  //     behaviour:"smooth"
-  //   })
-  // }, [messages]);
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({
+      behaviour:"smooth"
+    })
+  }, [messages]);
 
   const [activeConversation, setActiveConversation] = useState(null);
   
@@ -133,7 +133,7 @@ const GuestMessagePage = () => {
       <div className="flex ">
         {/* Sticky left panel */}
         <div className="w-1/4 border-r">
-          <div className="h-20 flex items-center px-5 border-b bg-white sticky top-20 z-10">
+          <div className="h-20 flex items-center px-5 border-b bg-white">
             <h3 className="font-bold text-lg ">Messages</h3>
           </div>
           {/* <div className="py-6 px-5 h-screen overflow-y-scroll">
@@ -156,7 +156,7 @@ const GuestMessagePage = () => {
 
         {/* Middle content panel */}
         <div className="w-1/2 border-r sticky top-0 flex flex-col" >
-          <div className="h-20 flex items-center justify-left px-5 border-b bg-white sticky top-20 z-10">
+          <div className="h-20 flex items-center justify-left px-5 border-b bg-white ">
             {/* <h3 className="font-bold text-lg">data.owner?.name</h3> */}
           </div>
           <div className="h-screen overflow-y-scroll relative" >
@@ -166,7 +166,7 @@ const GuestMessagePage = () => {
                   <div className="py-6 px-10" >
                     {messages.map((message, index) => (
                       <div key={index}
-                        // ref={scrollRef}
+                        ref={scrollRef}
                       >
                         <Message message={message} own={message.sender === user._id} />
                       </div>
@@ -196,7 +196,7 @@ const GuestMessagePage = () => {
 
         {/* Sticky right panel */}
         {/* <div className="w-1/4 ">
-          <div className="h-20 flex items-center justify-left px-5 border-b bg-white sticky top-20 z-10">
+          <div className="h-20 flex items-center justify-left px-5 border-b bg-white ">
             <h3 className="font-bold text-lg">Details</h3>
           </div>
           {loading ? (

@@ -29,6 +29,8 @@ export { default as PersonalInfo } from "./PersonalInfo";
 export { default as UserSecurity } from "./UserSecurity";
 export { default as BookedDetails } from "./BookedDetails";
 export { default as UserWallet } from "./UserWallet";
+export { default as BookingsHotelSide } from "./BookingsHotelSide";
+export { default as HotelBookings } from "./HotelBookings";
 
 
 

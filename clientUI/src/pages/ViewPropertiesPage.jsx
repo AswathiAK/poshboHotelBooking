@@ -68,7 +68,7 @@ const ViewPropertiesPage = () => {
                 {list.length > 0 && list.map(item => (
                   <div key={item._id} className="flex flex-col md:flex-row gap-5 relative">                    
                     <Link to={`/host/view_property/${item._id}`}                     
-                      className="flex items-center border rounded-xl p-4 mb-4 gap-8"
+                      className="flex items-center border rounded-xl p-4 mb-4 gap-8 w-full"
                     >
                       <div className="flex items-center justify-center w-40 h-40 md:w-64  border rounded-md shrink-0">
                         <img src={item.photos[0]} alt="" className='p-1 w-full h-full object-cover'/>

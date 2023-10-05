@@ -1,6 +1,8 @@
 const Hotel = require("../models/hotelModel.js");
 const cloudinary = require("../middlewares/cloudinary.js");
-// const Room = require("../models/roomModel.js");
+const Room = require("../models/roomModel.js");
+const Booking = require("../models/bookingModel.js");
+const { ObjectId } = require("mongodb");
 
 //CREATION
 const createHotel = async (req, res, next) => {   
@@ -181,11 +183,77 @@ const searchHotelsResults = async (req, res, next) => {
   }
 };
 
+const hotelBookingsList = async (req, res, next) => {
+  const { id:hotelId } = req.params; 
+  try {
+    const pipeline = [
+      { $match: { hotel: new ObjectId(hotelId) } },
+      {
+        $lookup: {
+          from: "rooms",
+          localField: "selectedRooms",
+          foreignField: "roomNumbers._id",
+          as: "roomDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as:'userDetails'
+        }
+      }
+    ];
+    const bookingDetails = await Booking.aggregate(pipeline); 
+    res.status(200).json(bookingDetails); 
+  } catch (error) {
+    next(error);
+  }
+};
+
+const updateBookingStatus = async (req, res, next) => {
+  const { bookingId } = req.params;  
+  const { status } = req.body; 
+  try {
+    const bookingData = await Booking.findOne({ _id: bookingId });
+    if (!bookingData) {
+      return next(createError(404, "Booking not found"));
+    }
+    const updatedBooking = await Booking.findByIdAndUpdate(
+      { _id: bookingId },
+      { $set: { bookingStatus: status } },
+      { new: true }
+    );
+    if (updatedBooking.status === 'notCheckedIn') {
+      const selectedRooms = updatedBooking.selectedRooms;
+      await Promise.all(selectedRooms.map(async (room) => {
+        const unAvailableRooms = await Room.updateOne(
+          { "roomNumbers._id": room },
+          { 
+            $pull: {
+              "roomNumbers.$.unAvailableDates": {
+                $gte: updatedBooking.checkInDate,
+                $lte: updatedBooking.checkOutDate
+              }
+            }
+          }
+        );
+        return unAvailableRooms;
+      }));
+    }
+    res.status(200).json(updatedBooking);
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   createHotel, updateHotel,
   deleteHotel,
   hotelsOfHost,singleHotelOfHost,
   getAllHotels, getSingleHotel,
-  searchHotelsResults
+  searchHotelsResults,
+  hotelBookingsList,
+  updateBookingStatus
 }

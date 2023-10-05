@@ -39,6 +39,12 @@ export const sidebarHostItems = [
     text: 'Personal Details'
   },
   {
+    route: 'bookings',
+    link: '/host/account/bookings',
+    icon: <BookOnlineIcon />,
+    text: 'Bookings'
+  },
+  {
     route: 'earnings',
     link: '/host/account/earnings',
     icon: <MonetizationOnIcon />,

@@ -21,25 +21,14 @@ const bookingSchema = new mongoose.Schema({
   noOfGuests: {
     type: Number,
     required: true
-  },  
-  // selectedRooms: [
-  //   {
-  //     title: {
-  //       type: String,
-  //     },
-  //     count: {
-  //       type:Number
-  //     }
-  //   }
-  // ],
+  },    
   selectedRooms: [
     {
       type: mongoose.Schema.Types.ObjectId, 
       ref: 'Room', 
       required: true,
     },
-  ],
-   
+  ],   
   totalAmount: {
     type: Number,
     required: true
@@ -52,8 +41,13 @@ const bookingSchema = new mongoose.Schema({
     type: String,
     required:true
   },
+  // bookingStatus: {
+  //   type: String,
+  //   default:'booked'
+  // }
   bookingStatus: {
     type: String,
+    // enum: ['Booked','Cancelled','Checked-in','Not Checked-in'],
     default:'booked'
   }
 },

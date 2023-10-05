@@ -34,10 +34,6 @@ const hotelSchema = new mongoose.Schema({
   perks: {
     type:[String]
   },
-  // price: {
-  //   type: Number,
-  //   required:true
-  // },
   extraInfo: {
     type: String,
   },
@@ -46,13 +42,7 @@ const hotelSchema = new mongoose.Schema({
   },
   checkOutTime: {
     type:String
-  },
-  // maxGuests: {
-  //   type:Number
-  // },
-  // rooms: {
-  //   type:[String]
-  // },   
+  },   
   rooms:[{
     type: mongoose.Schema.Types.ObjectId,
     ref:'Room'

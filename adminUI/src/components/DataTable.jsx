@@ -71,7 +71,9 @@ const DataTable = ({ columns }) => {
             >
               {params.row.isBlock ?
                 <LockOpenTwoToneIcon sx={{ color: green[700] }} />
-                : <LockIcon sx={{ color: red[500] }} />}
+                :
+                <LockIcon sx={{ color: red[500] }} />
+              }
             </div>
           </div>
         );

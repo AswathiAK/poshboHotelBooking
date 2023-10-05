@@ -192,37 +192,48 @@ const BookedDetails = () => {
     });
     setRoomCount(roomTypeCounts);
   };
-  const handleCancelBooking = async (id) => {
-    try {
-      const result = await Swal.fire({
-        title: 'Are you sure ?',
-        icon: 'warning',
-        iconColor: '#a35',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, delete it!',
-        width: 450,
-        color: '#020274',
-      });
-      if (result.isConfirmed) {
-        const { data } = await axios.put(`/bookings/${user._id}/cancel-booking/${id}`);
-        const updatedList = list.map(item => {
-          if (item._id === id) {
-            return { ...item, bookingStatus: 'cancelled', showCancel: false };
-          }
-          return item;
+
+  const handleCancelBooking = async (id,checkInDate) => {
+    const currentDate = new Date(); console.log('currentdate',currentDate); 
+    if (currentDate <= new Date(checkInDate)) {
+      try {
+        const result = await Swal.fire({
+          title: 'Are you sure ?',
+          icon: 'warning',
+          iconColor: '#a35',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, cancel!',
+          cancelButtonText:"Don't cancel",
+          width: 450,
+          color: '#020274',
         });
-        setList(updatedList);
-        toast.success(data.message, {
+        if (result.isConfirmed) {
+          const { data } = await axios.put(`/bookings/${user._id}/cancel-booking/${id}`);
+          const updatedList = list.map(item => {
+            if (item._id === id) {
+              return { ...item, bookingStatus: 'cancelled', showCancel: false };
+            }
+            return item;
+          });
+          setList(updatedList);
+          toast.success(data.message, {
+            position: toast.POSITION.TOP_CENTER,
+            transition: Flip,
+            autoClose: 2000,
+          });
+        }
+      } catch (error) {
+        const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
+        toast.error(errorMessage, {
           position: toast.POSITION.TOP_CENTER,
           transition: Flip,
           autoClose: 2000,
         });
       }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
-      toast.error(errorMessage, {
+    } else {
+      toast.warning("Can't cancel the Booking now.", {
         position: toast.POSITION.TOP_CENTER,
         transition: Flip,
         autoClose: 2000,
@@ -248,7 +259,7 @@ const BookedDetails = () => {
                 className="flex items-center border rounded-xl p-4 mb-4 gap-8"
               >
                 <div className="flex items-center justify-center w-40 h-40 md:w-64 border rounded-md shrink-0">
-                  <img src={item.hotelDetails[0].photos[0]} alt="" className='p-1 w-full h-full object-cover' />
+                  <img src={item.hotelDetails[0]?.photos[0]} alt="" className='p-1 w-full h-full object-cover' />
                 </div>
                 <div className="md:flex-grow shrink">
                   <h2 className="font-semibold font-serif">
@@ -282,7 +293,7 @@ const BookedDetails = () => {
                       Booking Status: {item.bookingStatus}
                     </p>
                     {item.showCancel && (
-                      <button onClick={() => handleCancelBooking(item._id)}
+                      <button onClick={() => handleCancelBooking(item._id, item.checkInDate)}
                         className='text-white bg-black border p-2 rounded-md hover:bg-slate-800'
                       >
                         Cancel Booking

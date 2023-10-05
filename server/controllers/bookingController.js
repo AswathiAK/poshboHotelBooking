@@ -268,13 +268,10 @@ const createWebhook = (req, res, next) => {
   if (eventType==='checkout.session.completed') {
     stripe.customers.retrieve(data.customer)
       .then(customer => {
-        console.log('customer', customer);
-        console.log('data', data);
         createBooking(customer, data, tempBookingData, next);
       })
       .catch(err => next(err));
   }
-  // Return a 200 res to acknowledge receipt of the event
   res.send().end();
 };
 
@@ -288,10 +285,9 @@ const createWebhook = (req, res, next) => {
 //   }
 // };
 
-const bookingDetails = async (req, res, next) => {
+const userBookingDetails = async (req, res, next) => {
   const { id: userId } = req.params; 
   try {
-    const bookingData = await Booking.find({ user: userId }).populate('hotel'); 
     const pipeline = [
       { $match: { user: new ObjectId(userId) } },
       {
@@ -319,11 +315,10 @@ const bookingDetails = async (req, res, next) => {
   }
 };
 
-
 const cancelBooking = async (req, res, next) => {
-  const { bookingId } = req.params; 
+  const { bookingId } = req.params;
   try {
-    const bookingData = await Booking.findById(bookingId); console.log(bookingData);
+    const bookingData = await Booking.findById(bookingId); 
     if (!bookingData) {
       return next(createError(404, "Booking not found"));
     }
@@ -331,12 +326,12 @@ const cancelBooking = async (req, res, next) => {
       { _id: bookingId },
       { $set: { bookingStatus: 'cancelled' } },
       { new: true }
-    ); 
+    );
     const selectedRooms = updatedBooking.selectedRooms;
-    await Promise.all(selectedRooms.map(async (room) => { 
+    await Promise.all(selectedRooms.map(async (room) => {
       const unAvailableRooms = await Room.updateOne(
         { "roomNumbers._id": room },
-        {
+        { 
           $pull: {
             "roomNumbers.$.unAvailableDates": {
               $gte: updatedBooking.checkInDate,
@@ -344,9 +339,9 @@ const cancelBooking = async (req, res, next) => {
             }
           }
         }
-      ); 
+      );
       return unAvailableRooms;
-    })); 
+    }));
     await User.updateOne(
       { _id: updatedBooking.user },
       { $inc: { wallet: updatedBooking.totalAmount } }
@@ -355,11 +350,11 @@ const cancelBooking = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
-}
+};
 
 module.exports = {
-  createStripeCheckout, 
-  createBooking,
-  bookingDetails, createWebhook,
-  cancelBooking
+  createStripeCheckout, createWebhook,
+  // createBooking,
+  userBookingDetails, 
+  cancelBooking,
 }
