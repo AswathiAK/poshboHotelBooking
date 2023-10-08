@@ -3,6 +3,7 @@ import BookOnlineIcon from '@mui/icons-material/BookOnline';
 import SecurityIcon from '@mui/icons-material/Security';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import ReviewsIcon from '@mui/icons-material/Reviews';
 
 export const sidebarMenuItems = [
   {
@@ -22,6 +23,12 @@ export const sidebarMenuItems = [
     link: '/account/wallet',
     icon: <AccountBalanceWalletIcon />,
     text: 'My Wallet'
+  },
+  {
+    route: 'reviews',
+    link: '/account/reviews',
+    icon: <ReviewsIcon />,
+    text: 'My Reviews'
   },
   {
     route: 'security',

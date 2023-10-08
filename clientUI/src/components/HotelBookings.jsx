@@ -100,7 +100,7 @@ const HotelBookings = () => {
             <select value={params.row.bookingStatus} onChange={handleChange} disabled={params.row.bookingStatus!=='booked'}>
               <option value="booked">Booked</option>
               <option value="checkedIn" disabled={!isCheckInEnabled}>Checked In</option>
-              <option value="notCheckedIn" disabled={!isCheckInEnabled}>Not Checked In</option>
+              <option value="notCheckedIn" >Not Checked In</option>
             </select>
           ) : (
             'Cancelled' 

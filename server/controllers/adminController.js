@@ -70,6 +70,30 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+// const blockUser = async (req, res, next) => {
+//   const { id } = req.params;
+//   try {
+//     const user = await User.findById({ _id: id });
+//     if (user.isBlock) {
+//       const updatedUser = await User.findByIdAndUpdate(
+//         { _id: id },
+//         { $set: { isBlock: false } },
+//         { new: true }
+//       );
+//       res.status(200).json({ message:"unblocked successfully",newData:updatedUser });
+//     } else {
+//       const updatedUser = await User.findByIdAndUpdate(
+//         { _id: id },
+//         { $set: { isBlock: true } },
+//         { new: true }
+//       );
+//       res.status(200).cookie('userToken', '').json({message:"blocked successfully", newData:updatedUser });
+//     }
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 const blockUser = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -80,6 +104,16 @@ const blockUser = async (req, res, next) => {
         { $set: { isBlock: false } },
         { new: true }
       );
+      if (updatedUser.role === 'host') {
+        const hotelsOfHost = await Hotel.find({ owner: updatedUser._id }); 
+        for (const hotel of hotelsOfHost) {
+          await Hotel.findByIdAndUpdate(
+            { _id: hotel._id },
+            { $set: { isBlock: false } },
+            { new: true }
+          );
+        } 
+      }
       res.status(200).json({ message:"unblocked successfully",newData:updatedUser });
     } else {
       const updatedUser = await User.findByIdAndUpdate(
@@ -87,6 +121,16 @@ const blockUser = async (req, res, next) => {
         { $set: { isBlock: true } },
         { new: true }
       );
+      if (updatedUser.role === 'host') {
+        const hotelsOfHost = await Hotel.find({ owner: updatedUser._id }); 
+        for (const hotel of hotelsOfHost) {
+          await Hotel.findByIdAndUpdate(
+            { _id: hotel._id },
+            { $set: { isBlock: true } },
+            { new: true }
+          );
+        } 
+      }
       res.status(200).cookie('userToken', '').json({message:"blocked successfully", newData:updatedUser });
     }
   } catch (error) {

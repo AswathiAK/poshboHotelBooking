@@ -24,6 +24,7 @@ const adminRoute = require('./routes/adminRoute.js');
 const hotelRoute = require('./routes/hotelRoute.js');
 const roomRoute = require('./routes/roomRoute.js');
 const bookingRoute = require('./routes/bookingRoute.js');
+const reviewRoute = require('./routes/reviewRoute.js');
 const chatRoute = require('./routes/chatRoute.js');
 const messageRoute = require('./routes/messageRoute.js');
 
@@ -50,6 +51,7 @@ app.use('/admin', adminRoute);
 app.use('/hotels', hotelRoute);
 app.use('/rooms', roomRoute);
 app.use('/bookings', bookingRoute);
+app.use('/reviews', reviewRoute);
 app.use('/chats', chatRoute);
 app.use('/messages', messageRoute);
 

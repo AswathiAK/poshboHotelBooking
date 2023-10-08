@@ -6,6 +6,13 @@ import { Loader } from '../components';
 
 const HomePage = () => {
   const { data, loading, error } = useFetch(`/hotels`);  
+  const averageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) {
+      return 0;
+    }
+    const totalRating = reviews.reduce((acc, curr) => acc + curr.rating, 0);
+    return (totalRating / reviews.length).toFixed(2);
+  }
   return (
     <div>
       <main className="h-auto sm:min-h-screen px-4 md:px-20">
@@ -28,10 +35,12 @@ const HomePage = () => {
                     </div>
                     <div className="flex justify-between">
                       <h2 className="font-bold">{item.city}</h2>
-                      <div className="flex items-center">
-                        <span><StarIcon sx={{fontSize:'18px'}} /></span>
-                        <p className="text-sm font-medium">4.79 </p>
-                      </div>
+                      {item?.reviews?.length > 0 &&
+                        <div className="flex items-center">
+                          <span><StarIcon sx={{ fontSize: '18px' }} /></span>
+                          <p className="text-sm font-medium">{averageRating(item?.reviews)}</p>
+                        </div>
+                      }
                     </div>                    
                     <h3 className="pt-1 text-sm text-gray-500">{item.title}</h3>
                     <div className="mt-1">

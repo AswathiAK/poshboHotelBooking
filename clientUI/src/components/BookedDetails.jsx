@@ -159,6 +159,8 @@ import Loader from './Loader';
 import Swal from 'sweetalert2';
 import { toast, Flip } from 'react-toastify';
 import axios from '../services/axios';
+import AddReviewPage from '../pages/AddReviewPage';
+import ReviewFormModal from './ReviewFormModal';
 
 const BookedDetails = () => {
   const { user } = useContext(AuthContext);
@@ -168,7 +170,7 @@ const BookedDetails = () => {
   useEffect(() => {
     const updatedList = data.map(item => ({
       ...item,
-      showCancel: item.bookingStatus !== 'cancelled',
+      showCancel: item.bookingStatus === 'booked',
     }));
     setList(updatedList);
     calculateRoomCounts(data);
@@ -194,7 +196,7 @@ const BookedDetails = () => {
   };
 
   const handleCancelBooking = async (id,checkInDate) => {
-    const currentDate = new Date(); console.log('currentdate',currentDate); 
+    const currentDate = new Date(); 
     if (currentDate <= new Date(checkInDate)) {
       try {
         const result = await Swal.fire({
@@ -241,6 +243,13 @@ const BookedDetails = () => {
     }
   };
 
+  const [openReviewModal, setOpenReviewModal] = useState(false);
+  const [selectedPropertyId, setSelectedPropertyId] = useState(null);
+  const handleAddReviewClick = (propertyId) => {
+    setOpenReviewModal(true);
+    setSelectedPropertyId(propertyId);
+  };
+
   return (
     <div>
       {loading ? (
@@ -263,7 +272,7 @@ const BookedDetails = () => {
                 </div>
                 <div className="md:flex-grow shrink">
                   <h2 className="font-semibold font-serif">
-                    {item.hotelDetails[0].name}, {item.hotelDetails[0].address}
+                    {item.hotelDetails[0].name}, {item.hotelDetails[0].address} 
                   </h2>
                   <p className="mt-2 font-medium">
                     Booking Id: {item._id}
@@ -290,8 +299,21 @@ const BookedDetails = () => {
                   </p>
                   <div className="flex items-center justify-between">
                     <p className="mt-2 font-medium">
-                      Booking Status: {item.bookingStatus}
+                      Booking Status:
+                      {item.bookingStatus === 'booked' ? 'Booked' : item.bookingStatus === 'checkedIn' ? 'Checked In' : item.bookingStatus === 'cancelled' ? 'Cancelled' : 'Not Checked In'}
                     </p>
+                    {item.bookingStatus === 'checkedIn' && (
+                      <button onClick={()=>handleAddReviewClick(item.hotelDetails[0]._id)}
+                        className="border p-2 rounded-md bg-green-800 text-white"
+                      >
+                        Add Review
+                      </button>
+                    )}
+                    {openReviewModal && 
+                      <ReviewFormModal title="Add Review" open={openReviewModal} setOpen={setOpenReviewModal}>
+                        <AddReviewPage propertyId={selectedPropertyId} />
+                      </ReviewFormModal>
+                    }
                     {item.showCancel && (
                       <button onClick={() => handleCancelBooking(item._id, item.checkInDate)}
                         className='text-white bg-black border p-2 rounded-md hover:bg-slate-800'
@@ -307,7 +329,7 @@ const BookedDetails = () => {
         </div>
       ) : (
         <div className="flex items-center justify-center h-full">
-          No data available
+          No bookings available
         </div>
       )}
     </div>

@@ -31,6 +31,8 @@ export { default as BookedDetails } from "./BookedDetails";
 export { default as UserWallet } from "./UserWallet";
 export { default as BookingsHotelSide } from "./BookingsHotelSide";
 export { default as HotelBookings } from "./HotelBookings";
+export { default as ReviewFormModal } from "./ReviewFormModal";
+export { default as MyReviews } from "./MyReviews";
 
 
 

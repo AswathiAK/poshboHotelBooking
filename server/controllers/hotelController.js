@@ -3,6 +3,8 @@ const cloudinary = require("../middlewares/cloudinary.js");
 const Room = require("../models/roomModel.js");
 const Booking = require("../models/bookingModel.js");
 const { ObjectId } = require("mongodb");
+const createError = require("../middlewares/errorHandling.js");
+const Review = require("../models/reviewModel.js");
 
 //CREATION
 const createHotel = async (req, res, next) => {   
@@ -144,18 +146,30 @@ const getAllHotels = async (req, res, next) => {
           {isBlock:false}
         ]
       }
-    );
+    ).populate('reviews');
     res.status(200).json(allHotels);
   } catch (error) {
     next(error);
   }
 };
 //GET SINGLE for user
+// const getSingleHotel = async (req, res, next) => {
+//   const { id } = req.params;
+//   try {
+//     const singleHotel = await Hotel.findById(id).populate('owner').populate('rooms').populate('reviews');
+//     res.status(200).json(singleHotel);
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
 const getSingleHotel = async (req, res, next) => {
   const { id } = req.params; 
   try {
     const singleHotel = await Hotel.findById(id).populate('owner').populate('rooms'); 
-    res.status(200).json(singleHotel);
+    const reviews = await Review.find({ hotel: id }).populate('user');
+    singleHotel.reviews = reviews; 
+    res.status(200).json(singleHotel); 
   } catch (error) {
     next(error);
   }
@@ -248,6 +262,16 @@ const updateBookingStatus = async (req, res, next) => {
   }
 };
 
+const getHotelReviews = async (req, res, next) => {
+  const { hotelId } = req.params;
+  try {
+    const reviews = await Review.find({ hotel: hotelId }).populate('user');
+    res.status(200).json(reviews);
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createHotel, updateHotel,
   deleteHotel,
@@ -255,5 +279,6 @@ module.exports = {
   getAllHotels, getSingleHotel,
   searchHotelsResults,
   hotelBookingsList,
-  updateBookingStatus
+  updateBookingStatus,
+  getHotelReviews
 }

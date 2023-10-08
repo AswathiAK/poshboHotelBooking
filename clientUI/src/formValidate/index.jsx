@@ -130,3 +130,18 @@ export const editUserValidation = Yup.object({
   mobile: Yup.string().matches(mobileNo, "Must be 10 digits").required("Please Enter a Valid Mobile no"),
   email: Yup.string().email().required("Please Enter a Email"),
 });
+
+export const reviewFormValidation = Yup.object({
+  rating: Yup.string().matches(/^\d+(\.\d+)?$/, "must be a positive number")
+    .test('is-in-range', 'Rating must be between 1 and 5', (value) => {
+      if (value) {
+        const ratingValue = parseFloat(value);
+        return ratingValue >= 1 && ratingValue <= 5;
+      }
+      return true; 
+    })
+    .required("Rate from 1 to 5"),
+  title: Yup.string().min(2).required("required"),
+  comment: Yup.string().min(10).required("Add your comments"),
+});
+
