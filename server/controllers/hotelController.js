@@ -153,16 +153,6 @@ const getAllHotels = async (req, res, next) => {
   }
 };
 //GET SINGLE for user
-// const getSingleHotel = async (req, res, next) => {
-//   const { id } = req.params;
-//   try {
-//     const singleHotel = await Hotel.findById(id).populate('owner').populate('rooms').populate('reviews');
-//     res.status(200).json(singleHotel);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 const getSingleHotel = async (req, res, next) => {
   const { id } = req.params; 
   try {
@@ -226,8 +216,6 @@ const hotelBookingsList = async (req, res, next) => {
   }
 };
 
-
-
 const updateBookingStatus = async (req, res, next) => {
   const { bookingId } = req.params;  
   const { status } = req.body; 
@@ -274,6 +262,31 @@ const getHotelReviews = async (req, res, next) => {
   }
 };
 
+const hotelEarnings = async (req, res, next) => {
+  const { id: hotelId } = req.params;
+  let commissionPercentage = 5;
+  try {
+    const bookings = await Booking.find({
+      hotel: hotelId,
+      bookingStatus: { $in: ["checkedIn", "notCheckedIn"] }
+    });
+    if (bookings.length > 0) {
+      const earningsDetails = bookings.map(booking => {
+        const { _id, bookingStatus, totalAmount } = booking;
+        const commission = totalAmount * commissionPercentage / 100;
+        const earnings = totalAmount - commission;
+        return { _id, bookingStatus, totalAmount, commission, earnings };
+      });
+      
+      res.status(200).json(earningsDetails);
+    } else {
+      return res.status(404).json({ message: "No bookings found and so the earnings" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createHotel, updateHotel,
   deleteHotel,
@@ -282,5 +295,6 @@ module.exports = {
   searchHotelsResults,
   hotelBookingsList,
   updateBookingStatus,
-  getHotelReviews
+  getHotelReviews,
+  hotelEarnings
 }

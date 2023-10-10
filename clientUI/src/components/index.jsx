@@ -33,6 +33,6 @@ export { default as BookingsHotelSide } from "./BookingsHotelSide";
 export { default as HotelBookings } from "./HotelBookings";
 export { default as ReviewFormModal } from "./ReviewFormModal";
 export { default as MyReviews } from "./MyReviews";
-
-
+export { default as HostEarnings } from "./HostEarnings";
+export { default as EarningsofHotel } from "./EarningsofHotel";
 

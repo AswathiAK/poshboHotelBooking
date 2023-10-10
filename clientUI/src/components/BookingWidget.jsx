@@ -223,7 +223,7 @@ const BookingWidget = ({hotel}) => {
   const { id } = useParams();
   const { user } = useContext(AuthContext); 
   const { selectedDates, selectedOptions, searchDispatch } = useContext(SearchContext);
-  const { data: userData } = useFetch(`/users/${user._id}`); 
+  const { data: userData } = useFetch(`/users/${user?._id}`); 
   // const { data: hotel } = useFetch(`/hotels/${id}`);
   
   const navigate = useNavigate();
@@ -462,7 +462,7 @@ const BookingWidget = ({hotel}) => {
                 </span>
               </div>
               <p className="text-base font-medium">
-                {/* Rs. {(wallet).toFixed(2)} /- */} Rs. {wallet} /-
+                Rs. {(wallet).toFixed(2)} /- 
               </p>
             </div>
           }

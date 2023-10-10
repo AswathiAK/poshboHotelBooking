@@ -9,7 +9,7 @@ import {
   EditPropertyPage,
   HostProfilePage, HostMessagePage, SingleHotelPage, SearchResultsHotelsPage, GuestMessagePage, PaymentSuccessPage
 } from "./pages";
-import { HotelBookings, Layout } from './components';
+import { EarningsofHotel, HotelBookings, Layout } from './components';
 import { GuestPrivateRoute, GuestProtectedRoute, HostPrivateRoute, HostProtectedRoute } from './services/ProtectedRoute';
 
 function App() {
@@ -46,6 +46,7 @@ function App() {
           <Route path='/host/account/:active' element={<HostProfilePage />} />
           <Route path='/host/messages' element={<HostMessagePage />} />
           <Route path='/host/bookings/:id' element={<HotelBookings />} />
+          <Route path='/host/earnings/:id' element={<EarningsofHotel />} />
         </Route>
         
         <Route path='*' element={<ErrorPage />} />   

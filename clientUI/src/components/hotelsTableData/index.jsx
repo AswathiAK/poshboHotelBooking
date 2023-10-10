@@ -37,3 +37,12 @@ export const bookingsColumns = [
   { field: 'totalAmount', headerName: 'Amount', width: 80 },
   { field: 'noOfGuests', headerName: 'No.of Guests', width: 100 },
 ];
+
+export const earningsColumns = [
+  { field: 'serialNumber', headerName: 'SL.No', width: 70 },
+  { field: '_id', headerName: 'Booking Id', width: 250 },
+  { field: 'bookingStatus', headerName: 'Status', width: 150 },
+  { field: 'totalAmount', headerName: 'Amount', width: 150 },
+  { field: 'commission', headerName: 'Poshbo Commission', width: 200 },
+  { field: 'earnings', headerName: 'Earnings', width: 150 },
+];

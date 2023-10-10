@@ -1,6 +1,6 @@
 import React from 'react'
 import { useParams } from 'react-router-dom';
-import { BookingsHotelSide, Footer, PersonalInfo, PropertyHeader, SidebarHostAccount, UserSecurity } from '../components'
+import { BookingsHotelSide, Footer, HostEarnings, PersonalInfo, PropertyHeader, SidebarHostAccount, UserSecurity } from '../components'
 
 const HostProfilePage = () => {
   const { active } = useParams();
@@ -15,8 +15,8 @@ const HostProfilePage = () => {
           </div>
           <div className="w-full border border-gray-300 rounded-md p-2">
             {active === 'personal' && <PersonalInfo />}
-            {active==='bookings' && <BookingsHotelSide/>}
-            {active === 'earnings' && 'earnings'}
+            {active === 'bookings' && <BookingsHotelSide />}
+            {active === 'earnings' && <HostEarnings />}
             {active === 'security' && <UserSecurity />}
           </div>
         </div>

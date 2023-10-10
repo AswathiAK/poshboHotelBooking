@@ -19,4 +19,6 @@ hotel_route.patch('/bookings/:bookingId', hotelController.updateBookingStatus);
 
 hotel_route.get('/reviews/:hotelId', hotelController.getHotelReviews);
 
+hotel_route.get('/find/host/earnings/:id', verifyUserToken, verifyHotel, hotelController.hotelEarnings);
+
 module.exports = hotel_route; 
