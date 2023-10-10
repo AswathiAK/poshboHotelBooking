@@ -23,7 +23,6 @@ const BookingsHotelSide = () => {
   }, [data]);
   
   const showBookings = (row) => {
-    console.log(row._id);
     navigate(`/host/bookings/${row._id}`);
   };
 

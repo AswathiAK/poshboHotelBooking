@@ -23,33 +23,18 @@ function App() {
         <Route path='/reset_password/:token/:id' element={<ResetPasswordPage />} />
 
         <Route path='/' element={<Layout />} >
-          {/* <Route index element={<HomePage />} />
-          <Route path='/search_results' element={<SearchResultsHotelsPage />} />
-          <Route path='/:id' element={<SingleHotelPage />} /> */}
-
           <Route element={<GuestPrivateRoute />}>
             <Route index element={<HomePage />} />
             <Route path='/search_results' element={<SearchResultsHotelsPage />} />
             <Route path='/:id' element={<SingleHotelPage />} />
           </Route>          
-          {/* <Route path='/account/:active' element={<UserProfilePage />} />  
-          <Route path='/account/inbox/messages/:hotelId' element={<GuestMessagePage />} /> */}
           <Route element={<GuestProtectedRoute />}>
             <Route path='/account/:active' element={<UserProfilePage />} />  
-            {/* <Route path='/account/inbox/messages/:hotelId' element={<GuestMessagePage />} /> */}
             <Route path='/account/inbox/messages' element={<GuestMessagePage />} />
             <Route path='/account/success' element={<PaymentSuccessPage />} />
           </Route>
         </Route>
-        
-        {/* <Route path='/host/home' element={<PropertyHomePage />} />       
-        <Route path='/host/add_property' element={<AddPropertyPage />} />
-        <Route path='/host/view_properties' element={<ViewPropertiesPage />} />
-        <Route path='/host/view_property/:id' element={<ViewSinglePropertyPage />} />
-        <Route path='/host/edit_property/:id' element={<EditPropertyPage />} />        
-        <Route path='/host/account/:active' element={<HostProfilePage />} />
-        <Route path='/host/messages' element={<HostMessagePage />} /> */}
-
+       
         <Route element={<HostPrivateRoute />}>
           <Route path='/host/home' element={<PropertyHomePage />} />       
         </Route>

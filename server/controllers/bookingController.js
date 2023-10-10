@@ -7,123 +7,7 @@ const createError = require('../middlewares/errorHandling.js');
 const { ObjectId } = require("mongodb");
 const User = require('../models/userModel.js');
 
-
-//Stripe checkout
-// const createStripeCheckout = async (req, res, next) => {
-//   const { user, hotelId, price } = req.body;
-//   const hotel = await Hotel.findById(hotelId);
-//   const customer = await stripe.customers.create({
-//     metadata: {
-//       user_id: user._id,
-//       name:user.name,
-//       property: hotel.name,
-//       total:price
-//     }
-//   });
-//   const YOUR_DOMAIN = 'http://localhost:3000';
-//   try {
-//     const session = await stripe.checkout.sessions.create({
-//       payment_method_types: ["card"],
-//       line_items: [
-//         {
-//           price_data: {
-//             currency: 'inr',
-//             product_data: {
-//               name: hotel.name
-//             },
-//             unit_amount: price * 100
-//           },
-//           quantity: 1
-//         }
-//       ],
-//       customer:customer.id,
-//       mode: 'payment',
-//       success_url: `${YOUR_DOMAIN}/account/success`,
-//       cancel_url: `${YOUR_DOMAIN}/${hotelId}`,
-//     });
-//     res.json({ id: session.id });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-// let endpointSecret;
-// // const endpointSecret = process.env.WEBHOOK_SECRET;
-// const createWebhook = (req, res) => {
-//   const sig = req.headers['stripe-signature'];
-//   let eventType;
-//   let data;
-//   if (endpointSecret) {
-//     let event;
-//     try {
-//       event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
-//     } catch (err) {
-//       res.status(400).send(`Webhook Error: ${err.message}`);
-//       return;
-//     }
-//     data = event.data.object;
-//     eventType = event.type;
-//   } else {
-//     data = req.body.data.object;
-//     eventType = req.body.type;
-//   }
-//   // Handle the event
-//   if (eventType==='checkout.session.completed') {
-//     stripe.customers.retrieve(data.customer).then(customer => {
-//       console.log('customer', customer);
-//       console.log('data', data);
-//     }).catch(err=>console.log(err.message));
-//   }
-//   // Return a 200 res to acknowledge receipt of the event
-//   res.send().end();
-// };
-
-// //CREATION
-// const createBooking = async (req, res, next) => {
-//   const { user, hotel, checkInDate, checkOutDate,
-//     noOfGuests, selectedRooms, totalAmount } = req.body;
-//   const roomCounts = {};
-//   try {
-//     const rooms = await Room.find({ "roomNumbers._id": { $in: selectedRooms } });
-//     const roomDetails = rooms.map((room) => ({ title: room.title }));
-//     selectedRooms.forEach((roomId) => {
-//       const room = rooms.find((room) => room.roomNumbers.some((number) => number._id.toString() === roomId));
-//       if (room) {
-//         const { title } = room;
-//         roomCounts[title] = (roomCounts[title] || 0) + 1;
-//       }
-//     });
-//     const roomData = roomDetails.map((room) => ({
-//       title: room.title,
-//       count: roomCounts[room.title] || 0,
-//     }));
-//     const bookHotel = new Booking({
-//       user, hotel, checkInDate, checkOutDate, noOfGuests,
-//       selectedRooms: roomData,
-//       totalAmount
-//     });
-//     const saveBooking = await bookHotel.save();
-//     res.status(200).json({ message: 'Booked successfully', saveBooking });
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-// const bookingDetails = async (req, res, next) => {
-//   const { id: userId } = req.params;
-//   try {
-//     const bookingData = await Booking.find({ user: userId }).populate('hotel');
-//     res.status(200).json(bookingData);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
-// module.exports = {
-//   createStripeCheckout,
-//   createBooking,
-//   bookingDetails,createWebhook
-// }
-
+const { v4: uuidv4 } = require('uuid');
 
 //stripe trial
 let tempBookingData = null;
@@ -137,7 +21,7 @@ const createStripeCheckout = async (req, res, next) => {
       name:user.name,
       property: hotel.name,
       total:price
-    }
+    } 
   });
   const YOUR_DOMAIN = 'http://localhost:3000';
   try {
@@ -166,40 +50,29 @@ const createStripeCheckout = async (req, res, next) => {
   }
 };
 
+//for geting corect roomref
 // const createBooking = async (customer, data, tempBookingData, next) => {
-//   const { hotel, checkInDate, checkOutDate,
-//     noOfGuests, selectedRooms, totalAmount, dates } = tempBookingData;
-//   const roomCounts = {};
+//   const { hotel, checkInDate, checkOutDate, noOfGuests, selectedRooms, totalAmount, dates } = tempBookingData;
 //   try {
-//     const rooms = await Room.find({ "roomNumbers._id": { $in: selectedRooms } });
-//     const roomDetails = rooms.map((room) => ({ title: room.title }));
-//     selectedRooms.forEach((roomId) => {
-//       const room = rooms.find((room) => room.roomNumbers.some((number) => number._id.toString() === roomId));
-//       if (room) {
-//         const { title } = room;
-//         roomCounts[title] = (roomCounts[title] || 0) + 1;
-//       }
-//     });
-//     const roomData = roomDetails.map((room) => ({
-//       title: room.title,
-//       count: roomCounts[room.title] || 0,
-//     }));
 //     const bookHotel = new Booking({
-//       user:customer.metadata.userId,
-//       hotel, checkInDate, checkOutDate, noOfGuests,
-//       selectedRooms: roomData,
+//       user: customer.metadata.userId,
+//       hotel,
+//       checkInDate,
+//       checkOutDate,
+//       noOfGuests,
+//       selectedRooms,
 //       totalAmount,
-//       paymentId:data.payment_intent,
-//       paymentStatus:data.payment_status
+//       paymentId: data.payment_intent,
+//       paymentStatus: data.payment_status,
 //     });
 //     const saveBooking = await bookHotel.save();
-//     await Promise.all(selectedRooms.map(roomId => {
-//       const unAvailableRooms = Room.updateOne(
+//     await Promise.all(selectedRooms.map(async (roomId) => {
+//       const unAvailableRooms = await Room.updateOne(
 //         { "roomNumbers._id": roomId },
 //         {
 //           $push: {
-//             "roomNumbers.$.unAvailableDates": dates
-//           }
+//             "roomNumbers.$.unAvailableDates": dates,
+//           },
 //         }
 //       );
 //       return unAvailableRooms;
@@ -210,9 +83,9 @@ const createStripeCheckout = async (req, res, next) => {
 //   }
 // };
 
-//for geting corect roomref
+//wallet vachullacreatebookinginstripe
 const createBooking = async (customer, data, tempBookingData, next) => {
-  const { hotel, checkInDate, checkOutDate, noOfGuests, selectedRooms, totalAmount, dates } = tempBookingData;  
+  const { hotel, checkInDate, checkOutDate, noOfGuests, selectedRooms, totalAmount, isWalletApplied, balanceTotal, dates, wallet } = tempBookingData;  
   try {
     const bookHotel = new Booking({
       user: customer.metadata.userId,
@@ -222,6 +95,8 @@ const createBooking = async (customer, data, tempBookingData, next) => {
       noOfGuests,
       selectedRooms,
       totalAmount,
+      isWalletApplied,
+      balanceTotal,
       paymentId: data.payment_intent,
       paymentStatus: data.payment_status,
     });
@@ -237,11 +112,18 @@ const createBooking = async (customer, data, tempBookingData, next) => {
       );
       return unAvailableRooms;
     }));
+    await User.updateOne(
+      { _id: saveBooking.user },
+      { $set: { wallet: wallet } },
+      {new:true}
+    );
+
   } catch (error) {
     console.log(error.message);
     next(error);
   }
 };
+
 
 
 let endpointSecret;
@@ -275,15 +157,6 @@ const createWebhook = (req, res, next) => {
   res.send().end();
 };
 
-// const bookingDetails = async (req, res, next) => {
-//   const { id: userId } = req.params;
-//   try {
-//     const bookingData = await Booking.find({ user: userId }).populate('hotel'); console.log(bookingData);
-//     res.status(200).json(bookingData);
-//   } catch (error) {
-//     next(error);
-//   }
-// };
 
 const userBookingDetails = async (req, res, next) => {
   const { id: userId } = req.params; 
@@ -352,9 +225,45 @@ const cancelBooking = async (req, res, next) => {
   }
 };
 
+const createBookingWithWallet = async (req, res, next) => {
+  const { user, hotel, checkInDate, checkOutDate,
+    noOfGuests, selectedRooms, totalAmount, balanceTotal, dates, wallet } = req.body;
+  try {
+    const bookHotel = new Booking({
+      user, hotel, checkInDate, checkOutDate, noOfGuests,
+      selectedRooms,
+      totalAmount,
+      isWalletApplied: true,
+      balanceTotal,
+      paymentId: uuidv4(),
+      paymentStatus: 'paid'
+    });
+    const saveBooking = await bookHotel.save();
+    await Promise.all(selectedRooms.map(async (roomId) => {
+      const unAvailableRooms = await Room.updateOne(
+        { "roomNumbers._id": roomId },
+        {
+          $push: {
+            "roomNumbers.$.unAvailableDates": dates,
+          },
+        }
+      );
+      return unAvailableRooms;
+    }));
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: saveBooking.user },
+      { $set: { wallet: wallet } },
+      { new: true }
+    );
+    res.status(200).json({ message: 'Booked successfully', saveBooking ,updatedUser});
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createStripeCheckout, createWebhook,
-  // createBooking,
   userBookingDetails, 
   cancelBooking,
+  createBookingWithWallet,
 }

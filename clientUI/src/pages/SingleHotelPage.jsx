@@ -128,7 +128,7 @@ const SingleHotelPage = () => {
                   </div>
                   <div className="mt-12 md:ml-20 w-full md:w-1/3">
                     <div className="border rounded-xl relative shadow-[0_6px_16px_rgba(0,0,0,0.12)] px-5 py-6">
-                      <BookingWidget />
+                      <BookingWidget hotel={data} />
                     </div>
                   </div>
                 </div>

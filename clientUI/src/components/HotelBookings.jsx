@@ -27,29 +27,55 @@ const HotelBookings = () => {
     }
   }, [data]);
 
-  const calculateRoomCounts = (data) => {
+  // const calculateRoomCounts = (data) => { 
+  //   const roomTypeCounts = {}; 
+  //   data.forEach(item => {
+  //     item.roomDetails.forEach(room => { 
+  //       const roomType = room._id; 
+  //       room.roomNumbers.forEach(roomNumber => { 
+  //         if (roomNumber.unAvailableDates && roomNumber.unAvailableDates.length > 0) {  
+  //           if (roomTypeCounts[roomType]) {
+  //             roomTypeCounts[roomType] += 1;
+  //           } else {
+  //             roomTypeCounts[roomType] = 1;
+  //           }
+  //         }
+  //       });
+  //     });
+  //   });
+  //   setRoomCount(roomTypeCounts); 
+  // };
+  
+  const calculateRoomCounts = (data) => { 
     const roomTypeCounts = {};
-    data.forEach(item => {
-      item.roomDetails.forEach(room => {
-        const roomType = room._id;
-        room.roomNumbers.forEach(roomNumber => {
-          if (roomNumber.unAvailableDates && roomNumber.unAvailableDates.length > 0) {
-            if (roomTypeCounts[roomType]) {
-              roomTypeCounts[roomType] += 1;
-            } else {
-              roomTypeCounts[roomType] = 1;
-            }
+    data.forEach(item => { 
+      const selectedRooms = item.selectedRooms;
+      console.log('selectedroom',selectedRooms);
+      const rooms = item.roomDetails.map(room => { 
+        const roomNumbers = room.roomNumbers.map(roomNumber => {
+          return roomNumber._id;
+        });
+        return roomNumbers;
+      });
+      console.log('rooms', rooms);
+      const counts = {};
+      selectedRooms.forEach(selectedRoom => {
+        rooms.forEach(roomNumbers => {
+          if (roomNumbers.includes(selectedRoom)) {
+            counts[selectedRoom] = (counts[selectedRoom] || 0) + 1;
           }
         });
       });
-    });
+      console.log('counts=', counts);
+      
+    }); 
     setRoomCount(roomTypeCounts);
   };
-  
+
   const isCheckInDate = (checkInDate) => {
     const currentDate = format(new Date(), 'dd/MM/yyyy');
     const checkInDateTime = format(new Date(checkInDate), 'dd/MM/yyyy');
-    return currentDate === checkInDateTime;
+    return currentDate >= checkInDateTime;
   };
 
   const updateBookingStatus = async (id, status) => {
@@ -72,13 +98,13 @@ const HotelBookings = () => {
 
   const actionColumns = [
     {
-      field: 'roomDetails', headerName: 'Bookings', width: 150, renderCell: (params) => {
+      field: 'roomDetails', headerName: 'Selected Rooms', width: 150, renderCell: (params) => {
         return (
           <div>
             {params.row.roomDetails.length > 0 &&
-              params.row.roomDetails.map((room) => (
+              params.row.roomDetails.map((room) => ( 
                 <div key={room._id}>
-                  {room.title} - {roomCount[room._id]}
+                  {room.title} - {roomCount[room._id]} 
                 </div>
               ))}
           </div>
@@ -100,7 +126,7 @@ const HotelBookings = () => {
             <select value={params.row.bookingStatus} onChange={handleChange} disabled={params.row.bookingStatus!=='booked'}>
               <option value="booked">Booked</option>
               <option value="checkedIn" disabled={!isCheckInEnabled}>Checked In</option>
-              <option value="notCheckedIn" >Not Checked In</option>
+              <option value="notCheckedIn" disabled={!isCheckInEnabled}>Not Checked In</option>
             </select>
           ) : (
             'Cancelled' 

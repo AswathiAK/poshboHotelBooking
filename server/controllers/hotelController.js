@@ -198,7 +198,7 @@ const searchHotelsResults = async (req, res, next) => {
 };
 
 const hotelBookingsList = async (req, res, next) => {
-  const { id:hotelId } = req.params; 
+  const { id:hotelId } = req.params;
   try {
     const pipeline = [
       { $match: { hotel: new ObjectId(hotelId) } },
@@ -206,7 +206,7 @@ const hotelBookingsList = async (req, res, next) => {
         $lookup: {
           from: "rooms",
           localField: "selectedRooms",
-          foreignField: "roomNumbers._id",
+          foreignField: "roomNumbers._id", 
           as: "roomDetails",
         },
       },
@@ -219,12 +219,14 @@ const hotelBookingsList = async (req, res, next) => {
         }
       }
     ];
-    const bookingDetails = await Booking.aggregate(pipeline); 
-    res.status(200).json(bookingDetails); 
+    const bookingDetails = await Booking.aggregate(pipeline);
+    res.status(200).json(bookingDetails);
   } catch (error) {
     next(error);
   }
 };
+
+
 
 const updateBookingStatus = async (req, res, next) => {
   const { bookingId } = req.params;  

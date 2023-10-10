@@ -176,17 +176,47 @@ const BookedDetails = () => {
     calculateRoomCounts(data);
   }, [data]);
 
+  // const calculateRoomCounts = (data) => { console.log('data=',data);
+  //   const roomTypeCounts = {};
+  //   data.forEach(item => {
+  //     item.roomDetails.forEach(room => {
+  //       const roomType = room._id; console.log('roomtype=',roomType);
+  //       room.roomNumbers.forEach(roomNumber => { 
+  //         if (roomNumber.unAvailableDates && roomNumber.unAvailableDates.length > 0) { 
+  //           if (roomTypeCounts[roomType]) {
+  //             roomTypeCounts[roomType] += 1; console.log('countiftrue=',roomTypeCounts[roomType]);
+  //           } else {
+  //             roomTypeCounts[roomType] = 1; console.log('countelse=',roomTypeCounts[roomType]);
+  //           }
+  //         }
+  //       });
+  //     });
+  //   }); 
+  //   setRoomCount(roomTypeCounts);
+  // };
+  
   const calculateRoomCounts = (data) => {
     const roomTypeCounts = {};
     data.forEach(item => {
-      item.roomDetails.forEach(room => {
+      item.roomDetails.forEach(room => { 
         const roomType = room._id;
         room.roomNumbers.forEach(roomNumber => {
           if (roomNumber.unAvailableDates && roomNumber.unAvailableDates.length > 0) {
-            if (roomTypeCounts[roomType]) {
-              roomTypeCounts[roomType] += 1;
-            } else {
-              roomTypeCounts[roomType] = 1;
+            const hasOverlap = roomNumber.unAvailableDates.some(unavailableDate => {
+              const checkInDate = new Date(item.checkInDate); 
+              const checkOutDate = new Date(item.checkOutDate);
+              const unavailableDateObj = new Date(unavailableDate);
+              return (
+                checkInDate <= unavailableDateObj &&
+                checkOutDate >= unavailableDateObj
+              );
+            });
+            if (hasOverlap) {
+              if (roomTypeCounts[roomType]) {
+                roomTypeCounts[roomType] += 1;
+              } else {
+                roomTypeCounts[roomType] = 1;
+              }
             }
           }
         });
@@ -195,6 +225,7 @@ const BookedDetails = () => {
     setRoomCount(roomTypeCounts);
   };
 
+  
   const handleCancelBooking = async (id,checkInDate) => {
     const currentDate = new Date(); 
     if (currentDate <= new Date(checkInDate)) {
