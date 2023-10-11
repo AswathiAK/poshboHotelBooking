@@ -20,7 +20,10 @@ admin_route.post('/hotels/block/:id', verifyAdmin, adminController.blockHotel);
 
 admin_route.post('/logout', adminController.adminLogout);
 
+admin_route.get('/bookings', verifyAdmin, adminController.bookingsList);
 
+admin_route.get('/barchart', verifyAdmin, adminController.loadSalesBarChart);
+admin_route.get('/piechart', verifyAdmin, adminController.loadStatusPieChart);
 
-
+admin_route.get('/earnings', verifyAdmin, adminController.totalEarnings);
 module.exports = admin_route; 

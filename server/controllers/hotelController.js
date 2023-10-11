@@ -277,11 +277,10 @@ const hotelEarnings = async (req, res, next) => {
         const earnings = totalAmount - commission;
         return { _id, bookingStatus, totalAmount, commission, earnings };
       });
-      
       res.status(200).json(earningsDetails);
     } else {
       return res.status(404).json({ message: "No bookings found and so the earnings" });
-    }
+    } 
   } catch (error) {
     next(error);
   }

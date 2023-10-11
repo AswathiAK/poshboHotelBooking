@@ -39,7 +39,8 @@ const PropertyHomePage = () => {
               <h1 className="text-center text-2xl font-semibold"> Create new Listing </h1>
               <p className="py-3 text-md leading-loose font-thin">
                 Single unit properties such as a home, apartment, or Multi-unit buildings such as a hotel, bed & 
-                breakfast, serviced apartment, or rentable condominium buildings
+                breakfast, serviced apartment, or rentable condominium buildings. Just pay 5% of your property earnings and
+                top list your property.
               </p>
               <div className="flex justify-center">
                 <button

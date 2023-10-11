@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const createError = require('../middlewares/errorHandling.js');
 const User = require('../models/userModel.js');
 const Hotel = require('../models/hotelModel.js');
+const Booking = require('../models/bookingModel.js');
 
 const adminLogin = async (req, res, next) => {
   const { email, password } = req.body;  
@@ -227,7 +228,93 @@ const adminLogout = async (req, res, next) => {
   }
 };
 
+const bookingsList = async (req, res, next) => {
+  try {
+    const allBookings = await Booking.find().populate('hotel');
+    res.status(200).json(allBookings);
+  } catch (error) {
+    next(error);
+  }
+};
 
+const loadSalesBarChart = async (req, res, next) => {
+  try {
+    const startDate = new Date(new Date().getFullYear(), 0, 1);
+    const endDate = new Date(new Date().getFullYear(), 11, 31, 23, 59, 59, 999);
+    const monthlyBookings = await Booking.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate, $lte: endDate },
+          bookingStatus: { $in: ['checkedIn', 'notCheckedIn'] }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            month: { $month: { $toDate: "$createdAt" } },
+            year: { $year: { $toDate: "$createdAt" } }
+          },
+          totalSales: { $sum: "$totalAmount" },
+          totalBookings: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { '_id.year': 1, '_id.month': 1 }
+      }
+    ]);
+    res.status(200).json(monthlyBookings);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const loadStatusPieChart = async (req, res, next) => {
+  try {
+    const startDate = new Date(new Date().getFullYear(), 0, 1);
+    const endDate = new Date(new Date().getFullYear(), 11, 31, 23, 59, 59, 999);
+    const pipeline = [
+      {
+        $match: {
+          createdAt: {
+            $gte: startDate,
+            $lte: endDate
+          }
+        }
+      },
+      {
+        $group: {
+          _id: '$bookingStatus',
+          count: { $sum: 1 }
+        }
+      }
+    ];
+    const bookingStatus = await Booking.aggregate(pipeline);
+    res.status(200).json(bookingStatus);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const totalEarnings = async (req, res, next) => {
+  let commissionPercentage = 5;
+  try {
+    const bookings = await Booking.find({
+      bookingStatus: { $in: ['checkedIn', 'notCheckedIn'] }
+    });
+    if (bookings.length > 0) {
+      const totalSales = bookings.reduce((total, booking) => {
+        return total + booking.totalAmount;
+      }, 0);
+      const revenue = totalSales * commissionPercentage / 100;
+      const response = { totalSales, revenue };
+      res.status(200).json(response);
+    } else {
+      return res.status(404).json({ message: "No bookings found and so the earnings" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
 
 module.exports = {
   adminLogin,
@@ -238,4 +325,7 @@ module.exports = {
   singleHotel, deleteHotel,
   verifyHotel, blockHotel,
   adminLogout,
+  bookingsList,
+  loadSalesBarChart, loadStatusPieChart,
+  totalEarnings
 };

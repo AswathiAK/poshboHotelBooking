@@ -3,6 +3,7 @@ import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
 import HelpIcon from '@mui/icons-material/Help';
+import BookOnlineIcon from '@mui/icons-material/BookOnline';
 
 export const SidebarLinks = [
   {
@@ -22,6 +23,12 @@ export const SidebarLinks = [
 		label: 'Users',
 		path: '/users',
 		icon: <PeopleAltIcon/> 
+	},
+	{
+		key: 'bookings',
+		label: 'Bookings',
+		path: '/bookings',
+		icon: <BookOnlineIcon/> 
 	}
 ];
 

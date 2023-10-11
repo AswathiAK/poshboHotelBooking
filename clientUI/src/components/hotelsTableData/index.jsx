@@ -43,6 +43,6 @@ export const earningsColumns = [
   { field: '_id', headerName: 'Booking Id', width: 250 },
   { field: 'bookingStatus', headerName: 'Status', width: 150 },
   { field: 'totalAmount', headerName: 'Amount', width: 150 },
-  { field: 'commission', headerName: 'Poshbo Commission', width: 200 },
+  { field: 'commission', headerName: 'Poshbo Commission (5%)', width: 200 },
   { field: 'earnings', headerName: 'Earnings', width: 150 },
 ];

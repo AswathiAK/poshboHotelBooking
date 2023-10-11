@@ -10,19 +10,9 @@ import { earningsColumns } from './hotelsTableData';
 const EarningsofHotel = () => {
   const location = useLocation();
   const hotelId = location.pathname.split('/')[3];
-  const { data, loading, error } = useFetch(`/hotels/find/host/earnings/${hotelId}`); console.log(data);
+  const { data, loading, error } = useFetch(`/hotels/find/host/earnings/${hotelId}`); 
   const [list, setList] = useState([]);
   const [totalEarnings, setTotalEarnings] = useState(0);
-
-  // useEffect(() => {
-  //   if (data) {
-  //     const newList = data.map((item, index) => ({
-  //       ...item,
-  //       'serialNumber': index + 1
-  //     }));
-  //     setList(newList);
-  //   }
-  // }, [data]);
 
   useEffect(() => {
     if (data) {

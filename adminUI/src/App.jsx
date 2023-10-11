@@ -8,7 +8,8 @@ import {
   LoginPage, HomePage,
   HotelsListPage, HotelDetailsPage,
   UsersListPage, UserDetailsPage,
-  ErrorPage
+  ErrorPage,
+  BookingsListPage
 } from "./pages";
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
             <Route path='/hotels/:id' element={<HotelDetailsPage />} />
             <Route path='/users' element={<UsersListPage />} />
             <Route path='/users/:id' element={<UserDetailsPage />} />
+            <Route path='/bookings' element={<BookingsListPage />} />
           </Route>
         </Route>
         <Route path='*' element={<ErrorPage/> } />        

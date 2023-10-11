@@ -5,3 +5,4 @@ export {default as HotelDetailsPage} from "./HotelDetailsPage"
 export { default as UsersListPage } from "./UsersListPage";
 export { default as UserDetailsPage } from "./UserDetailsPage";
 export { default as ErrorPage } from "./ErrorPage";
+export { default as BookingsListPage } from "./BookingsListPage";

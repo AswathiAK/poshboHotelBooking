@@ -29,16 +29,16 @@ const DataTable = ({ columns }) => {
 
   const handleBlock = async (id) => {
     try {
-      const { data } = await axios.post(`/admin/${path}/block/${id}`); 
-      const updatedList = list.map(item => { 
+      const { data } = await axios.post(`/admin/${path}/block/${id}`);
+      const updatedList = list.map(item => {
         return item._id === id ? { ...item, isBlock: data.newData.isBlock } : item;
       });
       setList(updatedList);
     } catch (error) {
-      const errorMessage =  error.response?.data?.message??error.response?.statusText??error.message ; 
+      const errorMessage =  error.response?.data?.message??error.response?.statusText??error.message ;
       console.log(errorMessage);
     }
-  }; 
+  };
 
   const handleVerification = async (id) => {
     try {
@@ -63,7 +63,7 @@ const DataTable = ({ columns }) => {
                 <PreviewIcon />
               </div>
             </Link>
-            <div className="cursor-pointer rounded-md hover:bg-gray-300 p-1 " 
+            <div className="cursor-pointer rounded-md hover:bg-gray-300 p-1 "
               onClick={(e) => {
                 e.stopPropagation();
                 handleBlock(params.row._id);
@@ -78,7 +78,7 @@ const DataTable = ({ columns }) => {
           </div>
         );
       }
-    },    
+    },
   ];
   if (path === 'hotels') {
     actionColumn.push(
@@ -88,7 +88,7 @@ const DataTable = ({ columns }) => {
             <div>
               {!params.row.isVerified ?
                 <button
-                  className='hover:bg-blue-500 text-blue-700 font-medium hover:text-white py-2 px-4 border 
+                  className='hover:bg-blue-500 text-blue-700 font-medium hover:text-white py-2 px-4 border
                   border-blue-500 rounded'
                   onClick={(e) => {
                     e.stopPropagation();
@@ -102,7 +102,8 @@ const DataTable = ({ columns }) => {
         }
       }
     );
-  }  
+  }
+
 
   return (
     <div>
@@ -129,15 +130,18 @@ const DataTable = ({ columns }) => {
               checkboxSelection
               getRowId={row=>row._id}
             />
-          </div>  
+          </div>
         ) : (
           <div className="flex items-center justify-center h-full">
             No  data available.
           </div>
         )
-      } 
-    </div>  
+      }
+    </div>
   )
 }
 
 export default DataTable
+
+
+
