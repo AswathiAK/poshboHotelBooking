@@ -71,30 +71,6 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
-// const blockUser = async (req, res, next) => {
-//   const { id } = req.params;
-//   try {
-//     const user = await User.findById({ _id: id });
-//     if (user.isBlock) {
-//       const updatedUser = await User.findByIdAndUpdate(
-//         { _id: id },
-//         { $set: { isBlock: false } },
-//         { new: true }
-//       );
-//       res.status(200).json({ message:"unblocked successfully",newData:updatedUser });
-//     } else {
-//       const updatedUser = await User.findByIdAndUpdate(
-//         { _id: id },
-//         { $set: { isBlock: true } },
-//         { new: true }
-//       );
-//       res.status(200).cookie('userToken', '').json({message:"blocked successfully", newData:updatedUser });
-//     }
-//   } catch (error) {
-//     next(error);
-//   }
-// };
-
 const blockUser = async (req, res, next) => {
   const { id } = req.params;
   try {
@@ -295,6 +271,28 @@ const loadStatusPieChart = async (req, res, next) => {
   }
 };
 
+const loadSalesReport = async (req, res, next) => {
+  const { startDate, endDate } = req.query;
+  let bookings;
+  try {
+    if (startDate && endDate) {
+      const start = new Date(startDate);
+      const end = new Date(endDate);
+      bookings = await Booking.find({
+        createdAt: { $gte: start, $lte: end },
+        bookingStatus: { $in: ['checkedIn', 'notCheckedIn'] }
+      }).populate('hotel');
+    } else {
+      bookings = await Booking.find({
+        bookingStatus: { $in: ['checkedIn', 'notCheckedIn'] }
+      }).populate('hotel');
+    }
+    res.status(200).json(bookings);
+  } catch (error) {
+    next(error);
+  }
+};
+
 const totalEarnings = async (req, res, next) => {
   let commissionPercentage = 5;
   try {
@@ -327,5 +325,5 @@ module.exports = {
   adminLogout,
   bookingsList,
   loadSalesBarChart, loadStatusPieChart,
-  totalEarnings
+  loadSalesReport,totalEarnings
 };

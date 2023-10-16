@@ -24,6 +24,7 @@ admin_route.get('/bookings', verifyAdmin, adminController.bookingsList);
 
 admin_route.get('/barchart', verifyAdmin, adminController.loadSalesBarChart);
 admin_route.get('/piechart', verifyAdmin, adminController.loadStatusPieChart);
-
+admin_route.get('/report', verifyAdmin, adminController.loadSalesReport);
 admin_route.get('/earnings', verifyAdmin, adminController.totalEarnings);
+
 module.exports = admin_route; 

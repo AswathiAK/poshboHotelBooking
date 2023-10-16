@@ -1,4 +1,5 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import AssessmentIcon from '@mui/icons-material/Assessment';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import SettingsApplicationsIcon from '@mui/icons-material/SettingsApplications';
@@ -11,6 +12,12 @@ export const SidebarLinks = [
 		label: 'Dashboard',
 		path: '/',
 		icon: <DashboardIcon/>
+	},
+	{
+		key: 'report',
+		label: 'Sales Report',
+		path: '/reports',
+		icon: <AssessmentIcon/>
   },
   {
 		key: 'hotels',

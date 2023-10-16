@@ -8,7 +8,7 @@ const UserProfilePage = () => {
   return (
     <div>
       <main className="h-auto sm:min-h-screen px-4 md:px-20">
-        <div className="my-8 flex gap-5">
+        <div className="my-8 flex items-start gap-5">
           <div className="w-1/4 border border-gray-300 rounded-md p-2">
             <SidebarUserAccount activePage={active} />
           </div>

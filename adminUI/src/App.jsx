@@ -9,7 +9,8 @@ import {
   HotelsListPage, HotelDetailsPage,
   UsersListPage, UserDetailsPage,
   ErrorPage,
-  BookingsListPage
+  BookingsListPage,
+  SalesReportPage
 } from "./pages";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path='/' element={<Layout />}>
             <Route index element={<HomePage />} />
+            <Route path='/reports' element={<SalesReportPage/>}/>
             <Route path='/hotels' element={<HotelsListPage />} />
             <Route path='/hotels/:id' element={<HotelDetailsPage />} />
             <Route path='/users' element={<UsersListPage />} />
