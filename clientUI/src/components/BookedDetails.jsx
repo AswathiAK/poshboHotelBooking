@@ -221,7 +221,7 @@ const BookedDetails = () => {
           }
         });
       });
-    });
+    }); console.log('roomtypcounts',roomTypeCounts);
     setRoomCount(roomTypeCounts);
   };
 
@@ -316,6 +316,9 @@ const BookedDetails = () => {
                     Amount Paid : Rs. {item.totalAmount} /-
                     (Payment Id: {item.paymentId})
                   </p>
+                  <p className="mt-2 font-medium">
+                    Method of Payment :  {item.paymentMethod}
+                  </p>
                   <div className=" flex gap-3 mt-2 font-medium">
                     Rooms:
                     {item.roomDetails.length > 0 && item.roomDetails.map(room => (
@@ -324,6 +327,10 @@ const BookedDetails = () => {
                       </p>
                     ))}
                   </div>
+                  <p className="mt-2 font-medium">
+                    No of guests:
+                    {item.noOfGuests}
+                  </p>
                   <p className="mt-2 font-medium">
                     Booked on:
                     {format(new Date(item.createdAt), 'dd/MM/yyyy')}

@@ -6,7 +6,7 @@ const Hotel = require("../models/hotelModel.js");
 const createError = require('../middlewares/errorHandling.js');
 const { ObjectId } = require("mongodb");
 const User = require('../models/userModel.js');
-
+const Wallet = require('../models/walletHistoryModel.js');
 const { v4: uuidv4 } = require('uuid');
 
 //stripe trial
@@ -50,43 +50,13 @@ const createStripeCheckout = async (req, res, next) => {
   }
 };
 
-//for geting corect roomref
-// const createBooking = async (customer, data, tempBookingData, next) => {
-//   const { hotel, checkInDate, checkOutDate, noOfGuests, selectedRooms, totalAmount, dates } = tempBookingData;
-//   try {
-//     const bookHotel = new Booking({
-//       user: customer.metadata.userId,
-//       hotel,
-//       checkInDate,
-//       checkOutDate,
-//       noOfGuests,
-//       selectedRooms,
-//       totalAmount,
-//       paymentId: data.payment_intent,
-//       paymentStatus: data.payment_status,
-//     });
-//     const saveBooking = await bookHotel.save();
-//     await Promise.all(selectedRooms.map(async (roomId) => {
-//       const unAvailableRooms = await Room.updateOne(
-//         { "roomNumbers._id": roomId },
-//         {
-//           $push: {
-//             "roomNumbers.$.unAvailableDates": dates,
-//           },
-//         }
-//       );
-//       return unAvailableRooms;
-//     }));
-//   } catch (error) {
-//     console.log(error.message);
-//     next(error);
-//   }
-// };
-
 //wallet vachullacreatebookinginstripe
 const createBooking = async (customer, data, tempBookingData, next) => {
-  const { hotel, checkInDate, checkOutDate, noOfGuests, selectedRooms, totalAmount, isWalletApplied, balanceTotal, dates, wallet } = tempBookingData;  
-  try {
+  const { hotel, checkInDate, checkOutDate,
+    noOfGuests, selectedRooms, totalAmount,
+    isWalletApplied, balanceTotal,
+    dates, wallet } = tempBookingData;  
+  try { 
     const bookHotel = new Booking({
       user: customer.metadata.userId,
       hotel,
@@ -97,6 +67,7 @@ const createBooking = async (customer, data, tempBookingData, next) => {
       totalAmount,
       isWalletApplied,
       balanceTotal,
+      paymentMethod:'card',
       paymentId: data.payment_intent,
       paymentStatus: data.payment_status,
     });
@@ -117,14 +88,10 @@ const createBooking = async (customer, data, tempBookingData, next) => {
       { $set: { wallet: wallet } },
       {new:true}
     );
-
   } catch (error) {
-    console.log(error.message);
     next(error);
   }
 };
-
-
 
 let endpointSecret;
 // const endpointSecret = process.env.WEBHOOK_SECRET;
@@ -157,6 +124,43 @@ const createWebhook = (req, res, next) => {
   res.send().end();
 };
 
+//booking with wallet only
+const createBookingWithWallet = async (req, res, next) => {
+  const { user, hotel, checkInDate, checkOutDate,
+    noOfGuests, selectedRooms, totalAmount, balanceTotal, dates, wallet } = req.body;
+  try {
+    const bookHotel = new Booking({
+      user, hotel, checkInDate, checkOutDate, noOfGuests,
+      selectedRooms,
+      totalAmount,
+      isWalletApplied: true,
+      balanceTotal,
+      paymentMethod:'wallet',
+      paymentId: uuidv4(),
+      paymentStatus: 'paid'
+    });
+    const saveBooking = await bookHotel.save();
+    await Promise.all(selectedRooms.map(async (roomId) => {
+      const unAvailableRooms = await Room.updateOne(
+        { "roomNumbers._id": roomId },
+        {
+          $push: {
+            "roomNumbers.$.unAvailableDates": dates,
+          },
+        }
+      );
+      return unAvailableRooms;
+    }));
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: saveBooking.user },
+      { $set: { wallet: wallet } },
+      { new: true }
+    );
+    res.status(200).json({ message: 'Booked successfully', saveBooking ,updatedUser});
+  } catch (error) {
+    next(error);
+  }
+};
 
 const userBookingDetails = async (req, res, next) => {
   const { id: userId } = req.params; 
@@ -188,6 +192,44 @@ const userBookingDetails = async (req, res, next) => {
   }
 };
 
+// const cancelBooking = async (req, res, next) => {
+//   const { bookingId } = req.params;
+//   try {
+//     const bookingData = await Booking.findById(bookingId);
+//     if (!bookingData) {
+//       return next(createError(404, "Booking not found"));
+//     }
+//     const updatedBooking = await Booking.findByIdAndUpdate(
+//       { _id: bookingId },
+//       { $set: { bookingStatus: 'cancelled' } },
+//       { new: true }
+//     );
+//     const selectedRooms = updatedBooking.selectedRooms;
+//     await Promise.all(selectedRooms.map(async (room) => {
+//       const unAvailableRooms = await Room.updateOne(
+//         { "roomNumbers._id": room },
+//         {
+//           $pull: {
+//             "roomNumbers.$.unAvailableDates": {
+//               $gte: updatedBooking.checkInDate,
+//               $lte: updatedBooking.checkOutDate
+//             }
+//           }
+//         }
+//       );
+//       return unAvailableRooms;
+//     }));
+//     await User.updateOne(
+//       { _id: updatedBooking.user },
+//       { $inc: { wallet: updatedBooking.totalAmount } }
+//     );
+//     res.status(200).json({ message: 'Successfully cancelled the booking', updatedBooking });
+//   } catch (error) {
+//     next(error);
+//   }
+// };
+
+//with wallet history
 const cancelBooking = async (req, res, next) => {
   const { bookingId } = req.params;
   try {
@@ -219,43 +261,24 @@ const cancelBooking = async (req, res, next) => {
       { _id: updatedBooking.user },
       { $inc: { wallet: updatedBooking.totalAmount } }
     );
+    const walletHistory = new Wallet({
+      user: updatedBooking.user,
+      bookingId: updatedBooking._id,
+      creditedAmount: updatedBooking.totalAmount,
+      transactionId: uuidv4()
+    }); 
+    const saveWalletHistory = await walletHistory.save();
     res.status(200).json({ message: 'Successfully cancelled the booking', updatedBooking });
   } catch (error) {
     next(error);
   }
 };
 
-const createBookingWithWallet = async (req, res, next) => {
-  const { user, hotel, checkInDate, checkOutDate,
-    noOfGuests, selectedRooms, totalAmount, balanceTotal, dates, wallet } = req.body;
+const getWalletHistory = async (req, res, next) => {
+  const { id: userId } = req.params;
   try {
-    const bookHotel = new Booking({
-      user, hotel, checkInDate, checkOutDate, noOfGuests,
-      selectedRooms,
-      totalAmount,
-      isWalletApplied: true,
-      balanceTotal,
-      paymentId: uuidv4(),
-      paymentStatus: 'paid'
-    });
-    const saveBooking = await bookHotel.save();
-    await Promise.all(selectedRooms.map(async (roomId) => {
-      const unAvailableRooms = await Room.updateOne(
-        { "roomNumbers._id": roomId },
-        {
-          $push: {
-            "roomNumbers.$.unAvailableDates": dates,
-          },
-        }
-      );
-      return unAvailableRooms;
-    }));
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: saveBooking.user },
-      { $set: { wallet: wallet } },
-      { new: true }
-    );
-    res.status(200).json({ message: 'Booked successfully', saveBooking ,updatedUser});
+    const walletHistory = await Wallet.find({ user: userId });
+    res.status(200).json(walletHistory);
   } catch (error) {
     next(error);
   }
@@ -263,7 +286,8 @@ const createBookingWithWallet = async (req, res, next) => {
 
 module.exports = {
   createStripeCheckout, createWebhook,
+  createBookingWithWallet,
   userBookingDetails, 
   cancelBooking,
-  createBookingWithWallet,
+  getWalletHistory
 }

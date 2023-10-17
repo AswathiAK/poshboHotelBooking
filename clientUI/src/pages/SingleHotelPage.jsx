@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import PlaceIcon from '@mui/icons-material/Place';
 import StarIcon from '@mui/icons-material/Star';
 import Person4Icon from '@mui/icons-material/Person4';
@@ -14,14 +14,12 @@ const SingleHotelPage = () => {
   const { id } = useParams();
   const { user } = useContext(AuthContext);
   const { data, loading, error } = useFetch(`/hotels/${id}`); 
-
   const mapRef = useRef(null);
   const scrollToMap = () => {
     if (mapRef.current) {
       mapRef.current.scrollIntoView();
     }
   };
-
   const navigate = useNavigate();
 
   const handleClickMessage = async () => {
