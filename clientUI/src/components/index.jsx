@@ -22,7 +22,7 @@ export { default as BookingWidget } from "./BookingWidget";
 export { default as Layout } from "./Layout";
 export { default as ChooseRoomModal } from "./ChooseRoomModal";
 export { default as Conversations } from "./Conversations";
-export { default as Message } from "./Message";
+export { default as ChatBox } from "./ChatBox";
 export { default as SidebarUserAccount } from "./SidebarUserAccount";
 export { default as SidebarHostAccount } from "./SidebarHostAccount";
 export { default as PersonalInfo } from "./PersonalInfo";
@@ -36,5 +36,3 @@ export { default as MyReviews } from "./MyReviews";
 export { default as HostEarnings } from "./HostEarnings";
 export { default as EarningsofHotel } from "./EarningsofHotel";
 export { default as MessageModal } from "./MessageModal";
-export { default as ChatBox } from "./ChatBox";
-

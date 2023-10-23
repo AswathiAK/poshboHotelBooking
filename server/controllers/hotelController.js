@@ -5,6 +5,7 @@ const Booking = require("../models/bookingModel.js");
 const { ObjectId } = require("mongodb");
 const createError = require("../middlewares/errorHandling.js");
 const Review = require("../models/reviewModel.js");
+const moment = require('moment');
 
 //CREATION
 const createHotel = async (req, res, next) => {   
@@ -187,8 +188,9 @@ const searchHotelsResults = async (req, res, next) => {
   }
 };
 
+//originalbookingslist
 const hotelBookingsList = async (req, res, next) => {
-  const { id:hotelId } = req.params;
+  const { id: hotelId } = req.params;
   try {
     const pipeline = [
       { $match: { hotel: new ObjectId(hotelId) } },
@@ -209,8 +211,52 @@ const hotelBookingsList = async (req, res, next) => {
         }
       }
     ];
-    const bookingDetails = await Booking.aggregate(pipeline);
+    const bookingDetails = await Booking.aggregate(pipeline); 
     res.status(200).json(bookingDetails);
+  } catch (error) {
+    next(error);
+  }
+};
+
+const todaysHotelBookingsList = async (req, res, next) => {
+  const { id: hotelId } = req.params;
+  const today = moment().format('DD/MM/YYYY');
+  try {
+    const pipeline = [
+      { $match: { hotel: new ObjectId(hotelId) } },
+      {
+        $lookup: {
+          from: "rooms",
+          localField: "selectedRooms",
+          foreignField: "roomNumbers._id",
+          as: "roomDetails",
+        },
+      },
+      {
+        $lookup: {
+          from: 'users',
+          localField: 'user',
+          foreignField: '_id',
+          as:'userDetails'
+        }
+      },
+      {
+        $addFields: {
+          checkInDateFormatted: {
+            $dateToString: {
+              format: '%d/%m/%Y',
+              date: '$checkInDate',
+              timezone: 'UTC'
+            }
+          }
+        }
+      },
+      {
+        $match: { checkInDateFormatted: today } 
+      }
+    ];
+    const todaysBooking = await Booking.aggregate(pipeline);
+    res.status(200).json(todaysBooking);
   } catch (error) {
     next(error);
   }
@@ -292,7 +338,7 @@ module.exports = {
   hotelsOfHost,singleHotelOfHost,
   getAllHotels, getSingleHotel,
   searchHotelsResults,
-  hotelBookingsList,
+  hotelBookingsList,todaysHotelBookingsList,
   updateBookingStatus,
   getHotelReviews,
   hotelEarnings

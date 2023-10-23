@@ -22,18 +22,32 @@ const BookingsHotelSide = () => {
     }
   }, [data]);
   
-  const showBookings = (row) => {
+  const showTodaysBookings = (row) => {
+    navigate(`/host/todaysBookings/${row._id}`);
+  }
+  const showAllBookings = (row) => {
     navigate(`/host/bookings/${row._id}`);
   };
 
   const bookingsColumn = [
     {
-      field: 'bookings', headerName: 'Bookings', width: 150, renderCell: (params) => {
+      field: 'todaysBookings', headerName: 'Todays Bookings', width: 150, renderCell: (params) => {
         return (
-          <button onClick={()=>showBookings(params.row)}
+          <button onClick={()=>showTodaysBookings(params.row)}
             className="border border-dashed border-black py-2 px-3 rounded-md hover:bg-gray-300"
           >
             Bookings
+          </button>
+        );
+      }
+    },
+    {
+      field: 'allBookings', headerName: 'All Bookings', width: 150, renderCell: (params) => {
+        return (
+          <button onClick={()=>showAllBookings(params.row)}
+            className="border border-dashed border-black py-2 px-3 rounded-md hover:bg-gray-300"
+          >
+            All Bookings
           </button>
         );
       }

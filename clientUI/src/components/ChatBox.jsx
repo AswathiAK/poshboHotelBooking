@@ -117,7 +117,7 @@ const ChatBox = ({ chat, currentUser, setSendMessage, receiveMessage, socket, ty
                   {userData?.name}
                 </div>
               </div>
-              {typing&& <div className='mt-3'>Typing...</div>}
+              {typing&& <div className='mt-3 text-xs'>typing...</div>}
             </div>
             <div className="flex flex-col gap-2 p-6 overflow-scroll border-b">
               {messages.map((message,index) => (

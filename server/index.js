@@ -46,7 +46,7 @@ app.use(express.urlencoded({ extended: true, limit:"500mb" }));
 //Routes
 app.use('/users', userRoute);
 app.use('/admin', adminRoute);
-app.use('/hotels', hotelRoute);
+app.use('/hotels', hotelRoute); 
 app.use('/rooms', roomRoute);
 app.use('/bookings', bookingRoute);
 app.use('/reviews', reviewRoute);
@@ -86,11 +86,11 @@ io.on("connection", (socket) => {
       });
     }
     console.log("Connected Users", onlineUsers);
-    io.emit("getOnlineUsers", onlineUsers);  
+    io.emit("getOnlineUsers", onlineUsers);
   });
   //send message 
   socket.on("sendMessage", (message) => {
-    const { receiverId, senderId } = message; 
+    const { receiverId, senderId } = message;
     const user = onlineUsers.find((user) => user.userId === receiverId);
     console.log('Message: ', message);
     console.log("Sending from socket to: ", user);
@@ -99,23 +99,23 @@ io.on("connection", (socket) => {
       io.to(user.socketId).emit("getNotification", {
         senderId: senderId,
         isRead: false,
-        date:new Date() 
-      }); 
+        date: new Date()
+      });
     }
-  });  
-
+  });
+  //typing started indication
   socket.on("typingStarted", () => {
     socket.broadcast.emit("typingStartedFromServer");
-  })
+  });
+  //typing stopped indication
   socket.on("typingStopped", () => {
     socket.broadcast.emit("typingStoppedFromServer");
-  })
-
+  });
   //user disconnect
   socket.on("disconnect", () => {
     onlineUsers = onlineUsers.filter((user) => user.socketId !== socket.id);
     console.log("User disconnected", onlineUsers);
-    io.emit("getOnlineUsers", onlineUsers); 
+    io.emit("getOnlineUsers", onlineUsers);
   });
 });
 

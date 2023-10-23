@@ -10,33 +10,6 @@ const Wallet = require('../models/walletHistoryModel.js');
 const { v4: uuidv4 } = require('uuid');
 const nodemailer = require('nodemailer');
 
-//Send email to the user about the booking details
-const sendBookingDetailsMail = async () => {
-  const link = `http://localhost:3000/account/bookings`;
-  const transport = nodemailer.createTransport({
-    service: "gmail",
-    host: "smtp.gmail.com",
-    port: 465,
-    auth: {
-      user: process.env.SENDEREMAIL,
-      pass: process.env.SENDERPASSWORD
-    }
-  });
-  const mailOptions = {
-    from: process.env.SENDEREMAIL,
-    to: email,
-    subject: "Booking Details",
-    html: `<p>Your booking is successful. Click here to <a href=${link}> see the booking details</a></p>`
-  };
-  transport.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-    } else {
-      console.log("Email has been sent: ", info.response);
-    }
-  });
-};
-
 //stripe trial
 let tempBookingData = null;
 const createStripeCheckout = async (req, res, next) => {
@@ -100,7 +73,6 @@ const createBooking = async (customer, data, tempBookingData, next) => {
       paymentStatus: data.payment_status,
     });
     const saveBooking = await bookHotel.save();
-    sendBookingDetailsMail();
     await Promise.all(selectedRooms.map(async (roomId) => {
       const unAvailableRooms = await Room.updateOne(
         { "roomNumbers._id": roomId },
@@ -169,7 +141,6 @@ const createBookingWithWallet = async (req, res, next) => {
       paymentStatus: 'paid'
     });
     const saveBooking = await bookHotel.save();
-    sendBookingDetailsMail();
     await Promise.all(selectedRooms.map(async (roomId) => {
       const unAvailableRooms = await Room.updateOne(
         { "roomNumbers._id": roomId },

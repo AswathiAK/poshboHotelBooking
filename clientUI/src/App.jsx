@@ -45,7 +45,7 @@ function App() {
           <Route path='/host/edit_property/:id' element={<EditPropertyPage />} />        
           <Route path='/host/account/:active' element={<HostProfilePage />} />
           <Route path='/host/messages' element={<HostMessagePage />} />
-          <Route path='/host/bookings/:id' element={<HotelBookings />} />
+          <Route path='/host/:bookingType/:hotelId' element={<HotelBookings />} />
           <Route path='/host/earnings/:id' element={<EarningsofHotel />} />
         </Route>
         

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useLocation } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import useFetch from '../hooks/useFetch';
 import PropertyHeader from './PropertyHeader';
 import Footer from './Footer';
@@ -11,9 +11,12 @@ import { toast, Flip } from 'react-toastify';
 import { format } from 'date-fns';
 
 const HotelBookings = () => {
-  const location = useLocation();
-  const hotelId = location.pathname.split('/')[3];
-  const { data, loading, error } = useFetch(`/hotels/find/host/bookings/${hotelId}`);
+  const { bookingType, hotelId } = useParams();
+  const { data, loading, error } = useFetch(
+    bookingType === 'bookings'
+      ? `/hotels/find/host/bookings/${hotelId}`
+      : `/hotels/find/host/todaysBookings/${hotelId}`
+  );
   const [list, setList] = useState([]);
   useEffect(() => {
     if (data) {
@@ -68,7 +71,7 @@ const HotelBookings = () => {
 
   const actionColumns = [
     {
-      field: 'roomDetails', headerName: 'Selected Rooms', width: 150, renderCell: (params) => {
+      field: 'roomDetails', headerName: 'Selected Rooms', width: 180, renderCell: (params) => {
         const selectedRoomDetails = getSelectedRoomDetails(params.row.selectedRooms, params.row.roomDetails);
         return (
           <div>
