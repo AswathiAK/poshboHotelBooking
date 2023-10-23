@@ -223,8 +223,11 @@ const BookingWidget = ({hotel}) => {
   const { id } = useParams();
   const { user } = useContext(AuthContext); 
   const { selectedDates, selectedOptions, searchDispatch } = useContext(SearchContext);
-  const { data: userData } = useFetch(`/users/${user?._id}`); 
-  // const { data: hotel } = useFetch(`/hotels/${id}`);
+  let userData;
+  if (user) {
+    const { data } = useFetch(`/users/${user?._id}`); 
+    userData = data;
+  }
   
   const navigate = useNavigate();
   const [openDate, setOpenDate] = useState(false);
@@ -297,13 +300,13 @@ const BookingWidget = ({hotel}) => {
     const fetchUserWallet = async () => {
       try {
         const response = await axios.get(`/users/${user._id}`);
-        const userData = response.data;
-        setWallet(userData.wallet || 0); // Set the wallet state
+        const userWallet = response.data;
+        setWallet(userWallet.wallet || 0); 
       } catch (error) {
         console.error('Error fetching user wallet:', error);
       }
     };
-    fetchUserWallet();
+    if(user) fetchUserWallet();
   }, []);
 
   const totalPriceWithNights = totalPrice * totalNights;
@@ -424,7 +427,7 @@ const BookingWidget = ({hotel}) => {
           </div>
         )}
       </div>
-      <div className="border p-3.5 my-4" onClick={()=>setOpenChooseRoom(open=>!open)}>
+      <div className="border p-3.5 my-4" onClick={()=>setOpenChooseRoom(true)}>
         select room
       </div>
       {openChooseRoom &&

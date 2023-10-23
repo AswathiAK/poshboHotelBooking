@@ -35,4 +35,6 @@ export { default as ReviewFormModal } from "./ReviewFormModal";
 export { default as MyReviews } from "./MyReviews";
 export { default as HostEarnings } from "./HostEarnings";
 export { default as EarningsofHotel } from "./EarningsofHotel";
+export { default as MessageModal } from "./MessageModal";
+export { default as ChatBox } from "./ChatBox";
 

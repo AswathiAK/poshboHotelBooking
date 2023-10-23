@@ -15,7 +15,7 @@ hotel_route.get('/:id', hotelController.getSingleHotel);
 hotel_route.get('/find/search', hotelController.searchHotelsResults);
 
 hotel_route.get('/find/host/bookings/:id', verifyUserToken, verifyHotel, hotelController.hotelBookingsList);
-hotel_route.patch('/bookings/:bookingId', hotelController.updateBookingStatus);
+hotel_route.patch('/bookings/:bookingId', verifyUserToken, hotelController.updateBookingStatus);
 
 hotel_route.get('/reviews/:hotelId', hotelController.getHotelReviews);
 

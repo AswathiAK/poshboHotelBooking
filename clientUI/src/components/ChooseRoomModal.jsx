@@ -80,6 +80,15 @@ const ChooseRoomModal = ({ setOpen, hotelId, selectedRooms, setSelectedRooms, is
   const [roomPrices, setRoomPrices] = useState({});
   const [roomCount, setRoomCount] = useState(0);
 
+  const resetState = () => {
+    setSelectedRooms([]);
+    setTotalPrice(0);
+  };
+  const handleClose = () => {
+    resetState(); 
+    setOpen(false);
+  };
+
   useEffect(() => {
     const initialRoomPrices = {};
     data?.rooms?.forEach((room) => {
@@ -101,7 +110,7 @@ const ChooseRoomModal = ({ setOpen, hotelId, selectedRooms, setSelectedRooms, is
 
   const handleSelect = (e) => {
     const checked = e.target.checked;
-    const value = e.target.value;
+    const value = e.target.value; 
     if (checked) {
       if (roomCount < maxRooms) {
         setSelectedRooms((prevSelectedRooms) =>
@@ -119,7 +128,7 @@ const ChooseRoomModal = ({ setOpen, hotelId, selectedRooms, setSelectedRooms, is
   return (
     <div className='bg-blue-50 rounded-lg'>
       <div className="p-5 relative">
-        <CancelIcon onClick={() => setOpen(false)} className='cursor-pointer absolute top-3 right-3 ' />
+        <CancelIcon onClick={handleClose} className='cursor-pointer absolute top-3 right-3 ' />
       </div>
       {data?.rooms?.map((room) => (
         <div className="flex items-center justify-between gap-12 p-5" key={room._id}>

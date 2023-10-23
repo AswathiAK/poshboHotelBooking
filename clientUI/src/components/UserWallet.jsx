@@ -36,7 +36,7 @@ const UserWallet = () => {
               <div className='my-10 text-center font-semibold text-lg'>
                 Wallet Balance = Rs. {data?.wallet}/-
               </div>
-              <div style={{ height: '100%' }} >
+              <div style={{ height: '100%', width:'100%'}} >
                 <DataGrid
                   rows={list}
                   columns={walletColumns}

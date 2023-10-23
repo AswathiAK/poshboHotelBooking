@@ -1,18 +1,17 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { toast, Flip } from 'react-toastify';
+import { format } from 'date-fns';
 import PlaceIcon from '@mui/icons-material/Place';
 import StarIcon from '@mui/icons-material/Star';
 import Person4Icon from '@mui/icons-material/Person4';
-import { BookingWidget, ImageGallery, Loader, Map } from '../components';
+import { BookingWidget, ImageGallery, Loader, Map, MessageModal } from '../components';
 import useFetch from '../hooks/useFetch';
 import { AuthContext } from '../context/AuthContext';
-import { toast, Flip } from 'react-toastify';
-import axios from '../services/axios';
-import { format } from 'date-fns';
 
 const SingleHotelPage = () => {
   const { id } = useParams();
-  const { user } = useContext(AuthContext);
+  const { user,dispatch } = useContext(AuthContext); 
   const { data, loading, error } = useFetch(`/hotels/${id}`); 
   const mapRef = useRef(null);
   const scrollToMap = () => {
@@ -21,36 +20,24 @@ const SingleHotelPage = () => {
     }
   };
   const navigate = useNavigate();
-
-  const handleClickMessage = async () => {
-    try {
-      if (user) {
-        const requestData = {
-          senderId: user._id,
-          receiverId: data.owner?._id,
-        };
-        const res = await axios.post('/chats', requestData);
-        console.log('data', res.data);
-        // navigate(`/account/inbox/messages/${data._id}`);
-        navigate(`/account/inbox/messages`);
-
-      } else {
-        navigate(`/login`);
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message ?? error.response?.statusText ?? error.message;
-      toast.error(errorMessage, {
+  const [openMessageModal, setOpenMessageModal] = useState(false);
+  const handleClickMessage = () => {
+    if (user) {
+      setOpenMessageModal(true);
+    } else {
+      toast.warn("Please login to send message", {
         position: toast.POSITION.TOP_CENTER,
         transition: Flip,
-        autoClose: 2000,
+        autoClose: 2000
       });
-    }
+      navigate('/login');
+   }
   };
-
   const totalRating = data?.reviews?.reduce((acc, curr) => {
     return acc + curr.rating;
   }, 0);
   const averageRating = (totalRating / data?.reviews?.length).toFixed(2); 
+
   
   return (
     <div>
@@ -92,6 +79,9 @@ const SingleHotelPage = () => {
                         Message Host
                       </button>
                     </div>
+                    {openMessageModal &&
+                      <MessageModal receiver={data.owner?._id} open={openMessageModal} setOpen={setOpenMessageModal} />
+                    }
                     <div className="pb-6 border-b">
                       {data.rooms?.map((room, index) => (
                         <div className="w-full border rounded-md p-5 mb-2" key={index}>
