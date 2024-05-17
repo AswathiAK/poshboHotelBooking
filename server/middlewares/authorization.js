@@ -4,7 +4,7 @@ const createError = require('./errorHandling');
 const Hotel = require('../models/hotelModel');
 
 const verifyUserToken = (req, res, next) => {
-  const token = req.cookies.userToken;
+  const token = req.cookies.userToken; 
   if (!token) {
     return next(createError(401, "You are not authenticated"));
   }

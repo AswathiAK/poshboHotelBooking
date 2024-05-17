@@ -96,7 +96,7 @@ const createBooking = async (customer, data, tempBookingData, next) => {
 
 let endpointSecret;
 // const endpointSecret = process.env.WEBHOOK_SECRET;
-const createWebhook = (req, res, next) => {  
+const createWebhook = (req, res, next) => {  console.log('entered webhook');
   const sig = req.headers['stripe-signature'];
   let eventType;
   let data;
@@ -113,7 +113,8 @@ const createWebhook = (req, res, next) => {
   } else {
     data = req.body.data.object;
     eventType = req.body.type;      
-  } 
+  }
+  console.log('event type', eventType);
   // Handle the event
   if (eventType==='checkout.session.completed') {
     stripe.customers.retrieve(data.customer)
