@@ -24,4 +24,3 @@ This application is built using React.js, Node.js, Express.js, and MongoDB, with
 - Charting Library: Recharts
 
 Visit at : https://poshboonline.netlify.app/
-Admin Panel : https://poshbo-admin.netlify.app/login
